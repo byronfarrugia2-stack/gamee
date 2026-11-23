@@ -1,1474 +1,241 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Blackout Express</title>
-
-<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
-<script>
-
-let puzzle1Solved = false;
-let puzzle2Solved = false;
-let puzzle3Solved = false;
-let puzzle4Solved = false;
-let puzzle5Solved = false;
-let puzzle6Solved = false;
-
-let buttonSequence = [];
-const correctSequence = [
-  "red",
-  "blue",
-  "yellow",
-  "green"
-];
-
-function updateObjective(text){
-  document.querySelector("#objective")
-    .setAttribute("value", text);
-}
-
-function solvePassengerPuzzle(){
-
-  if(puzzle1Solved) return;
-
-  puzzle1Solved = true;
-
-  document
-  .querySelector("#door1")
-  .setAttribute(
-    "animation",
-    "property: position; to: 0 3 -30; dur: 2000"
-  );
-
-  updateObjective(
-    "Go to the Dining Car"
-  );
-
-}
-
-function solveDiningPuzzle(){
-
-  if(puzzle2Solved) return;
-
-  puzzle2Solved = true;
-
-  document
-  .querySelector("#door2")
-  .setAttribute(
-    "animation",
-    "property: position; to: 0 3 -60; dur: 2000"
-  );
-
-  updateObjective(
-    "Go to the Mirror Car"
-  );
-
-}
-
-function pressMirrorButton(color){
-
-  buttonSequence.push(color);
-
-  if(buttonSequence.length < 4){
-    return;
-  }
-
-  let correct = true;
-
-  for(let i = 0; i < 4; i++){
-
-    if(buttonSequence[i] !== correctSequence[i]){
-
-      correct = false;
-
-    }
-
-  }
-
-  if(correct){
-
-    puzzle3Solved = true;
-
-    document
-    .querySelector("#door3")
-    .setAttribute(
-      "animation",
-      "property: position; to: 0 3 -90; dur: 2000"
-    );
-
-    updateObjective(
-      "Move into the Sleeping Cabins"
-    );
-
-  }
-
-  buttonSequence = [];
-
-}
-
-AFRAME.registerComponent("train-sway",{
-
-  tick:function(time){
-
-    let sway =
-      Math.sin(time/1200)*0.01;
-
-    this.el.object3D.rotation.z =
-      sway;
-
-  }
-
-});
-
-AFRAME.registerComponent("flicker",{
-
-  tick:function(time){
-
-    let value =
-      1.2 + Math.sin(time/100)*0.2;
-
-    this.el.setAttribute(
-      "intensity",
-      value
-    );
-
-  }
-
-});
-
-</script>
-
-</head>
-
-<body>
-
-<a-scene background="color:#050505">
-
-<a-sky color="#050505"></a-sky>
-
-<a-entity id="train" train-sway>
-
-<!-- FLOOR -->
-
-<a-box
-position="0 -0.1 -105"
-width="8"
-height="0.2"
-depth="240"
-color="#4b3523">
-</a-box>
-
-<!-- LEFT WALL -->
-
-<a-box
-position="-4 2 -105"
-width="0.2"
-height="4"
-depth="240"
-color="#2d1a0f">
-</a-box>
-
-<!-- RIGHT WALL -->
-
-<a-box
-position="4 2 -105"
-width="0.2"
-height="4"
-depth="240"
-color="#2d1a0f">
-</a-box>
-
-<!-- CEILING -->
-
-<a-box
-position="0 4 -105"
-width="8"
-height="0.2"
-depth="240"
-color="#1a120a">
-</a-box>
-
-<!-- LIGHTS -->
-
-<a-light
-flicker
-type="point"
-position="0 3 -20"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -50"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -80"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -110"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -140"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -170"
-color="#ffe1a3">
-</a-light>
-
-<a-light
-flicker
-type="point"
-position="0 3 -200"
-color="#ffe1a3">
-</a-light>
-
-<!-- OBJECTIVE TEXT -->
-
-<a-text
-id="objective"
-value="Find the code in the Passenger Car"
-position="-3 3 -5"
-width="12"
-color="white">
-<!-- ================================================= -->
-<!-- CARRIAGE 1 - PASSENGER CAR -->
-<!-- ================================================= -->
-
-<a-text
-value="PASSENGER CAR"
-position="-2 3 -15"
-color="white"
-width="10">
-</a-text>
-
-<!-- Seats -->
-
-<a-box position="-2 0.5 -12"
-width="1"
-height="1"
-depth="1"
-color="#661111">
-</a-box>
-
-<a-box position="2 0.5 -12"
-width="1"
-height="1"
-depth="1"
-color="#661111">
-</a-box>
-
-<a-box position="-2 0.5 -18"
-width="1"
-height="1"
-depth="1"
-color="#661111">
-</a-box>
-
-<a-box position="2 0.5 -18"
-width="1"
-height="1"
-depth="1"
-color="#661111">
-</a-box>
-
-<!-- Passenger Tags -->
-
-<a-text
-value="47"
-position="-2 1.5 -12"
-color="yellow">
-</a-text>
-
-<a-text
-value="13"
-position="2 1.5 -12"
-color="yellow">
-</a-text>
-
-<a-text
-value="82"
-position="-2 1.5 -18"
-color="yellow">
-</a-text>
-
-<a-text
-value="31"
-position="2 1.5 -18"
-color="yellow">
-</a-text>
-
-<!-- Clue -->
-
-<a-plane
-position="0 1.5 -22"
-width="3"
-height="2"
-color="#dddddd">
-</a-plane>
-
-<a-text
-value="TIMETABLE&#10;SMALLEST TO LARGEST"
-position="-1.2 1.8 -21.9"
-width="6"
-color="black">
-</a-text>
-
-<!-- Buttons -->
-
-<a-box
-onclick="document.querySelector('#code').setAttribute('value','1')"
-position="-3 1 -25"
-width="0.8"
-height="0.8"
-depth="0.2"
-color="#444">
-</a-box>
-
-<a-text
-value="1"
-position="-3.1 1 -24.8"
-color="white">
-</a-text>
-
-<a-box
-onclick="document.querySelector('#code').setAttribute('value','3')"
-position="-1 1 -25"
-width="0.8"
-height="0.8"
-depth="0.2"
-color="#444">
-</a-box>
-
-<a-text
-value="3"
-position="-1.1 1 -24.8"
-color="white">
-</a-text>
-
-<a-box
-onclick="document.querySelector('#code').setAttribute('value','4')"
-position="1 1 -25"
-width="0.8"
-height="0.8"
-depth="0.2"
-color="#444">
-</a-box>
-
-<a-text
-value="4"
-position="0.9 1 -24.8"
-color="white">
-</a-text>
-
-<a-box
-onclick="solvePassengerPuzzle()"
-position="3 1 -25"
-width="1.3"
-height="0.8"
-depth="0.2"
-color="green">
-</a-box>
-
-<a-text
-value="OPEN"
-position="2.6 1 -24.8"
-color="white">
-</a-text>
-
-<!-- Display -->
-
-<a-text
-id="code"
-value="?"
-position="-0.2 2 -25"
-color="cyan"
-width="10">
-</a-text>
-
-<!-- Door 1 -->
-
-<a-box
-id="door1"
-position="0 2 -30"
-width="4"
-height="4"
-depth="0.3"
-color="#111111">
-</a-box>
-
-<!-- Windows -->
-
-<a-plane
-position="-3.9 2 -14"
-width="2"
-height="1.5"
-color="#88bbff">
-</a-plane>
-
-<a-plane
-position="-3.9 2 -20"
-width="2"
-height="1.5"
-color="#88bbff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -14"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#88bbff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -20"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#88bbff">
-</a-plane>
-  <!-- ================================================= -->
-<!-- CARRIAGE 2 - DINING CAR -->
-<!-- ================================================= -->
-
-<a-text
-value="DINING CAR"
-position="-2 3 -42"
-color="white"
-width="10">
-</a-text>
-
-<!-- Table 1 -->
-
-<a-cylinder
-position="-2 0.6 -45"
-radius="0.9"
-height="0.2"
-color="#5b3c11">
-</a-cylinder>
-
-<a-circle
-position="-2 0.72 -45"
-rotation="-90 0 0"
-radius="0.25"
-color="white">
-</a-circle>
-
-<!-- Table 2 -->
-
-<a-cylinder
-position="2 0.6 -45"
-radius="0.9"
-height="0.2"
-color="#5b3c11">
-</a-cylinder>
-
-<a-circle
-position="2 0.72 -45"
-rotation="-90 0 0"
-radius="0.25"
-color="white">
-</a-circle>
-
-<!-- Table 3 -->
-
-<a-cylinder
-position="-2 0.6 -52"
-radius="0.9"
-height="0.2"
-color="#5b3c11">
-</a-cylinder>
-
-<a-circle
-position="-2 0.72 -52"
-rotation="-90 0 0"
-radius="0.25"
-color="white">
-</a-circle>
-
-<!-- Missing Table Setting -->
-
-<a-cylinder
-position="2 0.6 -52"
-radius="0.9"
-height="0.2"
-color="#5b3c11">
-</a-cylinder>
-
-<a-ring
-onclick="solveDiningPuzzle()"
-position="2 0.72 -52"
-rotation="-90 0 0"
-radius-inner="0.15"
-radius-outer="0.3"
-color="red">
-</a-ring>
-
-<a-text
-value="?"
-position="1.9 1.3 -52"
-color="red">
-</a-text>
-
-<!-- Clue -->
-
-<a-plane
-position="0 2 -56"
-width="4"
-height="2"
-color="#ddd">
-</a-plane>
-
-<a-text
-value="EVERY PASSENGER WAS SERVED EXCEPT THE TRAITOR"
-position="-1.8 2.3 -55.9"
-width="8"
-color="black">
-</a-text>
-
-<!-- Decorations -->
-
-<a-box
-position="-3 1 -49"
-width="0.5"
-height="2"
-depth="0.5"
-color="#222">
-</a-box>
-
-<a-box
-position="3 1 -49"
-width="0.5"
-height="2"
-depth="0.5"
-color="#222">
-</a-box>
-
-<!-- Windows -->
-
-<a-plane
-position="-3.9 2 -46"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="-3.9 2 -54"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -46"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -54"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<!-- Door To Mirror Car -->
-
-<a-box
-id="door2"
-position="0 2 -60"
-width="4"
-height="4"
-depth="0.3"
-color="#111">
-</a-box>
-
-<!-- Creepy Message -->
-
-<a-text
-value="Someone is watching."
-position="-2 3 -58"
-color="red"
-width="8">
-</a-text>
-  <!-- ================================================= -->
-<!-- CARRIAGE 3 - MIRROR CAR -->
-<!-- ================================================= -->
-
-<a-text
-value="MIRROR CAR"
-position="-2 3 -72"
-color="white"
-width="10">
-</a-text>
-
-<!-- Mirror Walls -->
-
-<a-plane
-position="-3.8 2 -75"
-rotation="0 90 0"
-width="12"
-height="4"
-color="#aaaaaa">
-</a-plane>
-
-<a-plane
-position="3.8 2 -75"
-rotation="0 -90 0"
-width="12"
-height="4"
-color="#aaaaaa">
-</a-plane>
-
-<!-- Reflection Figure -->
-
-<a-sphere
-position="0 1.5 -70"
-radius="0.5"
-color="#dddddd">
-</a-sphere>
-
-<a-cylinder
-position="0 0.5 -70"
-radius="0.3"
-height="1"
-color="#dddddd">
-</a-cylinder>
-
-<a-text
-value="THE REFLECTION KNOWS"
-position="-2 3 -68"
-color="red"
-width="8">
-</a-text>
-
-<!-- Sequence Hint -->
-
-<a-plane
-position="0 2 -78"
-width="4"
-height="2"
-color="#eeeeee">
-</a-plane>
-
-<a-text
-value="RED BLUE&#10;YELLOW GREEN"
-position="-1.6 2.3 -77.9"
-width="8"
-color="black">
-</a-text>
-
-<!-- Puzzle Buttons -->
-
-<a-box
-onclick="pressMirrorButton('red')"
-position="-3 1 -82"
-width="1"
-height="1"
-depth="1"
-color="red">
-</a-box>
-
-<a-box
-onclick="pressMirrorButton('blue')"
-position="-1 1 -82"
-width="1"
-height="1"
-depth="1"
-color="blue">
-</a-box>
-
-<a-box
-onclick="pressMirrorButton('yellow')"
-position="1 1 -82"
-width="1"
-height="1"
-depth="1"
-color="yellow">
-</a-box>
-
-<a-box
-onclick="pressMirrorButton('green')"
-position="3 1 -82"
-width="1"
-height="1"
-depth="1"
-color="green">
-</a-box>
-
-<!-- Decorative Mirrors -->
-
-<a-box
-position="-2 2 -88"
-width="1.5"
-height="2.5"
-depth="0.1"
-color="#bbbbbb">
-</a-box>
-
-<a-box
-position="2 2 -88"
-width="1.5"
-height="2.5"
-depth="0.1"
-color="#bbbbbb">
-</a-box>
-
-<!-- Ghost Passenger -->
-
-<a-sphere
-position="0 2 -86"
-radius="0.4"
-color="#ffffff"
-opacity="0.4">
-</a-sphere>
-
-<a-cylinder
-position="0 1 -86"
-radius="0.25"
-height="1.5"
-color="#ffffff"
-opacity="0.4">
-</a-cylinder>
-
-<!-- Windows -->
-
-<a-plane
-position="-3.9 2 -74"
-width="2"
-height="1.5"
-color="#6688ff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -74"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#6688ff">
-</a-plane>
-
-<!-- Door To Sleeping Cabins -->
-
-<a-box
-id="door3"
-position="0 2 -90"
-width="4"
-height="4"
-depth="0.3"
-color="#111111">
-</a-box>
-
-<a-text
-value="ONLY THE CORRECT MEMORY OPENS THE WAY"
-position="-3 3 -91"
-width="10"
-color="cyan">
-</a-text>
-  <!-- ================================================= -->
-<!-- CARRIAGE 4 - SLEEPING CABINS -->
-<!-- ================================================= -->
-
-<script>
-
-function getPocketWatch(){
-
-    if(puzzle4Solved) return;
-
-    puzzle4Solved = true;
-
-    document.querySelector("#door4")
-    .setAttribute(
-      "animation",
-      "property: position; to: 0 3 -120; dur: 2000"
-    );
-
-    updateObjective(
-      "Enter the Frozen Carriage"
-    );
-
-}
-
-</script>
-
-<a-text
-value="SLEEPING CABINS"
-position="-3 3 -102"
-width="10"
-color="white">
-</a-text>
-
-<!-- Cabin 1 -->
-
-<a-box
-position="-2 1.5 -102"
-width="2"
-height="3"
-depth="0.2"
-color="#553311">
-</a-box>
-
-<a-text
-value="CABIN 1"
-position="-2.8 3 -101.8"
-color="white">
-</a-text>
-
-<!-- Cabin 4 -->
-
-<a-box
-position="2 1.5 -102"
-width="2"
-height="3"
-depth="0.2"
-color="#553311">
-</a-box>
-
-<a-text
-value="CABIN 4"
-position="1.2 3 -101.8"
-color="white">
-</a-text>
-
-<!-- Cabin 7 -->
-
-<a-box
-position="-2 1.5 -110"
-width="2"
-height="3"
-depth="0.2"
-color="#553311">
-</a-box>
-
-<a-text
-value="CABIN 7"
-position="-2.8 3 -109.8"
-color="white">
-</a-text>
-
-<!-- Cabin 9 -->
-
-<a-box
-position="2 1.5 -110"
-width="2"
-height="3"
-depth="0.2"
-color="#553311">
-</a-box>
-
-<a-text
-value="CABIN 9"
-position="1.2 3 -109.8"
-color="white">
-</a-text>
-
-<!-- Clue Paper -->
-
-<a-plane
-position="0 1.5 -106"
-width="3"
-height="2"
-color="#dddddd">
-</a-plane>
-
-<a-text
-value="4&#10;7&#10;1&#10;9"
-position="-0.3 1.8 -105.9"
-color="black"
-width="4">
-</a-text>
-
-<!-- Suitcase -->
-
-<a-box
-position="0 0.6 -115"
-width="2"
-height="1"
-depth="1"
-color="#442200">
-</a-box>
-
-<a-text
-value="CONDUCTOR'S SUITCASE"
-position="-2 2 -115"
-width="8"
-color="yellow">
-</a-text>
-
-<!-- Pocket Watch -->
-
-<a-cylinder
-onclick="getPocketWatch()"
-position="0 1.3 -115"
-radius="0.25"
-height="0.1"
-color="gold">
-</a-cylinder>
-
-<a-text
-value="TAKE WATCH"
-position="-1 2 -114.8"
-width="5"
-color="gold">
-</a-text>
-
-<!-- Ghost Passenger -->
-
-<a-sphere
-position="3 2 -113"
-radius="0.4"
-color="#ffffff"
-opacity="0.25">
-</a-sphere>
-
-<a-cylinder
-position="3 1 -113"
-radius="0.25"
-height="1.4"
-color="#ffffff"
-opacity="0.25">
-</a-cylinder>
-
-<!-- Creepy Message -->
-
-<a-text
-value="11:47 PM"
-position="-1 3 -116"
-color="red"
-width="6">
-</a-text>
-
-<a-text
-value="THE CLOCK NEVER MOVES"
-position="-3 3.5 -117"
-width="8"
-color="red">
-</a-text>
-
-<!-- Windows -->
-
-<a-plane
-position="-3.9 2 -104"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="-3.9 2 -112"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -104"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -112"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#77aaff">
-</a-plane>
-
-<!-- Door To Frozen Car -->
-
-<a-box
-id="door4"
-position="0 2 -120"
-width="4"
-height="4"
-depth="0.3"
-color="#111">
-</a-box>
-  <!-- ================================================= -->
-<!-- CARRIAGE 5 - FROZEN CARRIAGE -->
-<!-- ================================================= -->
-
-<script>
-
-function restoreHeat(){
-
-    if(puzzle5Solved) return;
-
-    puzzle5Solved = true;
-
-    updateObjective(
-      "Proceed to the Observatory"
-    );
-
-    document.querySelector("#door5")
-    .setAttribute(
-      "animation",
-      "property: position; to: 0 3 -150; dur: 2000"
-    );
-
-    document.querySelector("#ice1")
-    .setAttribute("opacity","0.2");
-
-    document.querySelector("#ice2")
-    .setAttribute("opacity","0.2");
-
-    document.querySelector("#ice3")
-    .setAttribute("opacity","0.2");
-
-}
-
-</script>
-
-<a-text
-value="FROZEN CARRIAGE"
-position="-3 3 -132"
-width="10"
-color="#88ddff">
-</a-text>
-
-<!-- Ice Passenger 1 -->
-
-<a-box
-id="ice1"
-position="-2 1.3 -130"
-width="1.2"
-height="2.4"
-depth="1.2"
-color="#88ddff"
-opacity="0.7">
-</a-box>
-
-<a-cylinder
-position="-2 1 -130"
-radius="0.25"
-height="1.5"
-color="white">
-</a-cylinder>
-
-<!-- Ice Passenger 2 -->
-
-<a-box
-id="ice2"
-position="0 1.3 -136"
-width="1.2"
-height="2.4"
-depth="1.2"
-color="#88ddff"
-opacity="0.7">
-</a-box>
-
-<a-cylinder
-position="0 1 -136"
-radius="0.25"
-height="1.5"
-color="white">
-</a-cylinder>
-
-<!-- Ice Passenger 3 -->
-
-<a-box
-id="ice3"
-position="2 1.3 -142"
-width="1.2"
-height="2.4"
-depth="1.2"
-color="#88ddff"
-opacity="0.7">
-</a-box>
-
-<a-cylinder
-position="2 1 -142"
-radius="0.25"
-height="1.5"
-color="white">
-</a-cylinder>
-
-<!-- Heating Machine -->
-
-<a-box
-position="0 1 -145"
-width="3"
-height="2"
-depth="1"
-color="#555">
-</a-box>
-
-<a-text
-value="HEATING SYSTEM"
-position="-1.5 2.5 -144.5"
-color="orange"
-width="8">
-</a-text>
-
-<!-- Valve -->
-
-<a-cylinder
-onclick="restoreHeat()"
-position="0 1.1 -144"
-radius="0.4"
-height="0.2"
-rotation="90 0 0"
-color="red">
-</a-cylinder>
-
-<a-text
-value="TURN VALVE"
-position="-1 0.2 -144"
-color="white"
-width="6">
-</a-text>
-
-<!-- Frozen Warning -->
-
-<a-text
-value="-27 DEGREES"
-position="-2 3 -140"
-color="#88ddff"
-width="8">
-</a-text>
-
-<a-text
-value="RESTORE HEAT"
-position="-2 2.5 -140"
-color="white"
-width="8">
-</a-text>
-
-<!-- Icicles -->
-
-<a-cone
-position="-3 3.5 -134"
-radius-bottom="0.2"
-radius-top="0"
-height="1"
-color="#aaddff">
-</a-cone>
-
-<a-cone
-position="0 3.5 -138"
-radius-bottom="0.2"
-radius-top="0"
-height="1"
-color="#aaddff">
-</a-cone>
-
-<a-cone
-position="3 3.5 -142"
-radius-bottom="0.2"
-radius-top="0"
-height="1"
-color="#aaddff">
-</a-cone>
-
-<!-- Windows -->
-
-<a-plane
-position="-3.9 2 -135"
-width="2"
-height="1.5"
-color="#dff4ff">
-</a-plane>
-
-<a-plane
-position="3.9 2 -135"
-rotation="0 180 0"
-width="2"
-height="1.5"
-color="#dff4ff">
-</a-plane>
-
-<!-- Door To Observatory -->
-
-<a-box
-id="door5"
-position="0 2 -150"
-width="4"
-height="4"
-depth="0.3"
-color="#111">
-</a-box>
-
-<a-text
-value="THE TRAIN IS GETTING FASTER"
-position="-3 3 -148"
-color="red"
-width="10">
-</a-text>
-  <!-- ================================================= -->
-<!-- CARRIAGE 6 - OBSERVATORY -->
-<!-- ================================================= -->
-
-<script>
-
-function chooseConstellation(){
-
-    if(puzzle6Solved) return;
-
-    puzzle6Solved = true;
-
-    updateObjective(
-      "Reach the Engine Room"
-    );
-
-    document.querySelector("#engineDoor")
-    .setAttribute(
-      "animation",
-      "property: position; to: 0 3 -180; dur: 2000"
-    );
-
-}
-
-function escapeEnding(){
-
-    document.querySelector("#endingText")
-    .setAttribute(
-      "value",
-      "YOU ESCAPED THE BLACKOUT EXPRESS"
-    );
-
-}
-
-function conductorEnding(){
-
-    document.querySelector("#endingText")
-    .setAttribute(
-      "value",
-      "YOU BECAME THE NEW CONDUCTOR"
-    );
-
-}
-
-</script>
-
-<a-text
-value="OBSERVATORY CAR"
-position="-3 3 -162"
-width="10"
-color="white">
-</a-text>
-
-<!-- Glass Roof -->
-
-<a-plane
-position="0 4 -165"
-rotation="90 0 0"
-width="8"
-height="18"
-color="#112244"
-opacity="0.6">
-</a-plane>
-
-<!-- Stars -->
-
-<a-sphere position="-2 4 -162" radius="0.08" color="white"></a-sphere>
-<a-sphere position="1 4 -164" radius="0.08" color="white"></a-sphere>
-<a-sphere position="3 4 -169" radius="0.08" color="white"></a-sphere>
-<a-sphere position="-1 4 -171" radius="0.08" color="white"></a-sphere>
-<a-sphere position="2 4 -175" radius="0.08" color="white"></a-sphere>
-
-<!-- Constellations -->
-
-<a-box
-onclick="chooseConstellation()"
-position="-2 1.5 -170"
-width="1.5"
-height="1.5"
-depth="0.2"
-color="cyan">
-</a-box>
-
-<a-text
-value="CONSTELLATION A"
-position="-3 2.5 -169.8"
-width="6">
-</a-text>
-
-<a-box
-position="0 1.5 -170"
-width="1.5"
-height="1.5"
-depth="0.2"
-color="#444">
-</a-box>
-
-<a-text
-value="CONSTELLATION B"
-position="-1 2.5 -169.8"
-width="6">
-</a-text>
-
-<a-box
-position="2 1.5 -170"
-width="1.5"
-height="1.5"
-depth="0.2"
-color="#444">
-</a-box>
-
-<a-text
-value="CONSTELLATION C"
-position="1 2.5 -169.8"
-width="6">
-</a-text>
-
-<a-text
-value="THE WATCH POINTS TO THE TRUE STAR"
-position="-3 3.5 -175"
-width="10"
-color="gold">
-</a-text>
-
-<!-- Door To Engine -->
-
-<a-box
-id="engineDoor"
-position="0 2 -180"
-width="4"
-height="4"
-depth="0.3"
-color="#111">
-</a-box>
-
-<!-- ================================================= -->
-<!-- ENGINE ROOM -->
-<!-- ================================================= -->
-
-<a-text
-value="ENGINE ROOM"
-position="-2 3 -192"
-width="10"
-color="orange">
-</a-text>
-
-<!-- Engine -->
-
-<a-cylinder
-position="0 1 -195"
-radius="1"
-height="2"
-color="#666">
-</a-cylinder>
-
-<a-cylinder
-position="-2 1 -195"
-radius="0.6"
-height="1.5"
-color="#555">
-</a-cylinder>
-
-<a-cylinder
-position="2 1 -195"
-radius="0.6"
-height="1.5"
-color="#555">
-</a-cylinder>
-
-<!-- Exit Lever -->
-
-<a-box
-onclick="escapeEnding()"
-position="-2 1 -202"
-width="1"
-height="2"
-depth="1"
-color="red">
-</a-box>
-
-<a-text
-value="STOP TRAIN"
-position="-3 2.5 -201.8"
-width="6"
-color="white">
-</a-text>
-
-<!-- Watch Ending -->
-
-<a-cylinder
-onclick="conductorEnding()"
-position="2 1 -202"
-radius="0.5"
-height="0.2"
-color="gold">
-</a-cylinder>
-
-<a-text
-value="TAKE WATCH"
-position="1 2.5 -201.8"
-width="6"
-color="white">
-</a-text>
-
-<!-- Ending Text -->
-
-<a-text
-id="endingText"
-value="Choose Your Fate"
-position="-4 4 -205"
-width="16"
-align="center"
-color="white">
-</a-text>
-
-<!-- Final Warning -->
-
-<a-text
-value="11:47 PM"
-position="-1 3 -198"
-width="8"
-color="red">
-</a-text>
-
-<a-text
-value="THE TRAIN NEVER STOPPED."
-position="-4 4.5 -198"
-width="12"
-color="red">
-</a-text>
-
-</a-entity>
-
-<!-- Player -->
-
-<a-entity
-position="0 1.6 2">
-
-<a-camera>
-
-<a-cursor
-color="white">
-</a-cursor>
-
-</a-camera>
-
-</a-entity>
-
+<html lang="en"><head><meta charset="UTF-8"><title>THE LAST TRANSIT :: Halloway Observatory</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe.min.js"></script>
+<style>
+:root{--a:#e8b04a;--g:#5fd39a;--r:#ff5a4e;--ink:#f3e9d2}
+html,body{margin:0;height:100%;overflow:hidden;background:#05060d;font-family:Georgia,'Times New Roman',serif;color:var(--ink)}
+#hud{position:fixed;inset:0;pointer-events:none;z-index:5}
+.box{position:absolute;background:rgba(18,12,8,.82);border:1px solid rgba(232,176,74,.25);border-radius:10px;padding:10px 14px;font-size:13px;backdrop-filter:blur(6px)}
+#meterBox{top:18px;left:18px;width:210px}
+#meterLabel{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:#cdb27a;margin-bottom:7px}
+#meterTrack{height:5px;background:rgba(255,255,255,.1);border-radius:4px}
+#meterFill{height:100%;width:0;border-radius:4px;background:#6a7bd8;transition:width .4s,background .4s}
+#tasks{top:18px;right:18px;width:220px}
+.tk-top{font-size:10px;letter-spacing:2px;color:#cdb27a}.tk-name{font-size:15px;margin-top:5px;font-weight:bold}
+.tk-bar{display:flex;gap:3px;margin-top:9px}.tk-bar i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.14)}.tk-bar i.d{background:var(--g)}.tk-bar i.c{background:var(--a)}
+#obj{bottom:18px;left:18px;max-width:430px;line-height:1.6;border-left:3px solid var(--a);opacity:0;transition:opacity .6s}
+#obj.show{opacity:1}
+#toast{position:absolute;bottom:92px;left:50%;transform:translateX(-50%);background:rgba(18,12,8,.95);border:1px solid var(--a);border-radius:999px;padding:8px 20px;font-size:13px;opacity:0;transition:.3s;max-width:80vw;text-align:center}
+#toast.show{opacity:1}
+#crosshair{position:fixed;top:50%;left:50%;width:8px;height:8px;margin:-4px;border-radius:50%;border:1.5px solid #fff;pointer-events:none;z-index:15;transition:.12s}
+#crosshair.hot{border-color:var(--a);background:var(--a);transform:scale(1.8)}#crosshair.hidden{display:none}
+#flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:6}
+#relock{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(18,12,8,.92);border:1px solid var(--a);color:#ffe3a3;padding:8px 20px;border-radius:999px;font-size:12px;letter-spacing:1px;z-index:11;pointer-events:none;display:none}
+.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:safe center;flex-direction:column;background:radial-gradient(ellipse at center,#1d1428 0%,#05060d 75%);z-index:20;text-align:center;padding:40px;overflow-y:auto}
+.overlay.active{display:flex}
+.overlay h1{font-size:clamp(26px,5vw,48px);margin:0 0 14px;letter-spacing:5px}
+.overlay p{max-width:620px;color:#c9bca0;font-size:16px;line-height:1.75;margin:0 0 22px;text-align:left}
+.how{max-width:620px;text-align:left;font-size:14px;line-height:1.8;color:#e4d4ae;background:rgba(30,20,12,.8);border:1px solid rgba(232,176,74,.25);border-radius:12px;padding:14px 20px;margin-bottom:22px}
+button{font-family:inherit;background:rgba(232,176,74,.08);color:var(--ink);border:1px solid rgba(232,176,74,.5);border-radius:8px;padding:11px 24px;font-size:14px;letter-spacing:1px;cursor:pointer}
+button:hover{background:var(--a);color:#1a1006}
+#modal{display:none;position:fixed;inset:0;background:rgba(3,3,8,.85);z-index:30;align-items:center;justify-content:center}
+#modal.active{display:flex}
+.mb{background:#150f0a;border:1px solid rgba(232,176,74,.3);border-radius:14px;box-shadow:0 24px 70px #000;padding:26px 28px;width:360px;text-align:center;max-height:86vh;overflow:auto}
+.mb h2{margin:0 0 4px;font-size:13px;letter-spacing:2.4px;color:var(--a)}
+.sub{font-size:12px;color:#a79576;margin-bottom:14px;line-height:1.5}
+.mb p{text-align:left;font-size:14px;line-height:1.65;color:#e8dcc0;white-space:pre-line;margin:0}
+.mclose{margin-top:14px;border:none!important;background:none!important;color:#a79576!important;font-size:12px;text-decoration:underline}
+.disp{font-size:26px;letter-spacing:8px;background:#0a0705;border:1px solid rgba(232,176,74,.25);border-radius:10px;padding:10px 0;margin-bottom:12px;color:var(--g);min-height:1.4em}.disp.wrong{color:var(--r)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.grid button{font-size:17px;padding:12px 0}
+.grid button.done{background:var(--g);color:#06140c}.grid button.bad{background:var(--r);color:#fff}
+.dial{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0}
+.dial span.l{font-size:12px;letter-spacing:1.5px;color:#cdb27a;width:90px;text-align:left}
+.dial span.v{flex:1;font-size:22px;background:#0a0705;border:1px solid rgba(232,176,74,.25);border-radius:8px;padding:6px 0}
+.row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+</style></head><body>
+<div id="hud">
+ <div class="box" id="meterBox"><div id="meterLabel"><span>DAWN</span><span id="pct">0%</span></div><div id="meterTrack"><div id="meterFill"></div></div></div>
+ <div class="box" id="tasks" style="display:none"></div>
+ <div class="box" id="obj"></div><div id="toast"></div>
+</div>
+<div id="crosshair"></div><div id="flash"></div><div id="relock">CLICK ON THE ROOM TO LOOK AROUND AGAIN</div>
+
+<div id="intro" class="overlay active"><h1 style="color:var(--a)">THE LAST TRANSIT</h1>
+<p>Halloway Observatory, 1893. 10:40 p.m.<br><br>Professor Halloway promised you a front-row seat to the return of Comet Vesper, a once-in-a-lifetime visitor. Then the great door swung shut behind you. Its clockwork lock is wound to release only for the transit, and the transit ends at dawn. After sunrise the door will not open again for seventy-six years.<br><br>The Professor is nowhere to be found. His notes, instruments and half-finished sums are scattered around the dome. Read them, wake the instruments, and open the door before the sky turns gold.</p>
+<div class="how"><b style="color:var(--a)">HOW TO PLAY</b><br>• <b>WASD</b> to walk, <b>mouse</b> to look, <b>click</b> glowing things to use them.<br>• Opening a note or instrument frees your mouse. Close it, then <b>click the room once</b> to look around again.<br>• Brass-framed notes are clues. Read them all.<br>• <b>Wrong answers move the dawn closer.</b><br>• Press <b>H</b> for an optional hint for the current task.</div>
+<button id="enter">ENTER THE OBSERVATORY</button></div>
+<div id="fail" class="overlay"><h1 style="color:var(--r)">DAWN BREAKS</h1><p>Gold light spills through the shutters and the lock winds itself shut with a heavy clunk. The comet has come and gone. Somewhere in the walls, seventy-six years begin to tick.</p><button onclick="location.reload()">TRY AGAIN</button></div>
+<div id="win" class="overlay"><h1 style="color:var(--g)">THE DOOR OPENS</h1><p>The vault door groans upward and cold night air rushes in. Behind you, Comet Vesper blazes across the shutters, exactly on time. You step out into the dark with the stars still overhead. You are free, and you never did find the Professor.</p><button onclick="location.reload()">PLAY AGAIN</button></div>
+<div id="modal"><div class="mb"><h2 id="mt"></h2><div class="sub" id="ms"></div><div id="mc"></div><button class="mclose" id="mx">close</button></div></div>
+
+<a-scene id="scene" background="color:#05060d" fog="type:exponential;color:#0a0a18;density:0.02" renderer="antialias:true" loading-screen="enabled:false">
+ <a-entity id="rig" position="0 0 4.5"><a-camera position="0 1.6 0" fov="75" look-controls="pointerLockEnabled:true" wasd-controls="acceleration:55" roomcollide>
+  <a-cursor raycaster="objects:.clickable;far:14" material="opacity:0" geometry="radiusInner:.001;radiusOuter:.002"></a-cursor></a-camera></a-entity>
+ <a-entity id="amb" light="type:ambient;color:#6f7fd0;intensity:.35"></a-entity>
+ <a-entity light="type:hemisphere;color:#9fb0ff;groundColor:#3a2410;intensity:.25"></a-entity>
+ <a-entity id="world"></a-entity>
 </a-scene>
 
-</body>
-</html>
-</a-text>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const BX=[[-1.4,1.4,-1.4,1.4],[2,3.1,-5.9,-4.7],[-4,-2.5,-4.3,-2.7],[5,6,-3.9,-2.5],[-6,-5,-1.6,1.6],[3,5.6,3.3,5.6]];
+AFRAME.registerComponent('roomcollide',{tick(){const p=this.el.object3D.position,r=this.el.parentNode.object3D.position;p.y=1.6;
+ const bl=(x,z)=>Math.abs(x)>5.6||Math.abs(z)>5.6||BX.some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3);
+ if(!this.l){this.l={x:p.x,z:p.z};return}
+ if(bl(p.x+r.x,p.z+r.z)){if(!bl(this.l.x+r.x,p.z+r.z))p.x=this.l.x;else if(!bl(p.x+r.x,this.l.z+r.z))p.z=this.l.z;else{p.x=this.l.x;p.z=this.l.z}}
+ this.l.x=p.x;this.l.z=p.z}});
+const sc=$('#scene');sc.hasLoaded?boot():sc.addEventListener('loaded',boot);
+
+function boot(){
+const R=$('#world'),ch=$('#crosshair');
+const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||R).appendChild(e);return e};
+const M=(c,o)=>`color:${c};roughness:.7;metalness:.2;${o||''}`;
+const E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1};roughness:.5`;
+const B=(x,y,z,w,h,d,m,ry,p)=>mk('a-box',{position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,width:w,height:h,depth:d,material:m},p);
+const C=(x,y,z,r,h,m,rot,p)=>mk('a-cylinder',{position:`${x} ${y} ${z}`,rotation:rot||'0 0 0',radius:r,height:h,material:m},p);
+const S=(x,y,z,r,m,p)=>mk('a-sphere',{position:`${x} ${y} ${z}`,radius:r,material:m},p);
+const T=(v,x,y,z,ry,w,c,p)=>mk('a-text',{value:v,position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,align:'center',width:w||2,color:c||'#e8d6a8'},p);
+const G=(x,y,z,ry)=>mk('a-entity',{position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`});
+const L=(x,y,z,c,i,d)=>mk('a-entity',{position:`${x} ${y} ${z}`,light:`type:point;color:${c};intensity:${i};distance:${d||12};decay:2`});
+const K=(e,fn)=>{e.classList.add('clickable');e.addEventListener('click',()=>{if(!st.over)fn(e)});e.addEventListener('mouseenter',()=>ch.classList.add('hot'));e.addEventListener('mouseleave',()=>ch.classList.remove('hot'));return e};
+const hit=(x,y,z,w,h,d,fn)=>K(B(x,y,z,w,h,d,'opacity:0;transparent:true'),typeof fn==='string'?()=>toast(fn,6000):fn);
+let tt;const toast=(m,ms)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),ms||3000)};
+const tex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c.toDataURL()};
+
+/* ---------- audio ---------- */
+const AC=new (window.AudioContext||window.webkitAudioContext)();
+const tone=(f,d,ty,v,w)=>{try{const o=AC.createOscillator(),g=AC.createGain(),t0=AC.currentTime+(w||0);o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.12,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+d)}catch(e){}};
+const SFX={ok:()=>{tone(660,.15);tone(990,.3,'sine',.12,.12)},bad:()=>{tone(180,.2,'triangle');tone(130,.3,'triangle',.12,.16)},click:()=>tone(520,.08),chime:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.9,'sine',.1,i*.22)),thud:()=>{tone(60,.7,'square',.25);tone(40,.9,'sawtooth',.2)}};
+const snd=n=>SFX[n]&&SFX[n]();
+
+/* ---------- room shell ---------- */
+const floorT=tex(256,256,(g,w,h)=>{g.fillStyle='#3a2414';g.fillRect(0,0,w,h);for(let i=0;i<8;i++){g.fillStyle=i%2?'#4a2f1a':'#3f2816';g.fillRect(0,i*32+1,w,30)}for(let i=0;i<400;i++){g.fillStyle='rgba(0,0,0,.08)';g.fillRect(Math.random()*w,Math.random()*h,18,1)}});
+const wallT=tex(256,256,(g,w,h)=>{g.fillStyle='#2a3a3a';g.fillRect(0,0,w,h);for(let x=0;x<w;x+=32){g.fillStyle='#233131';g.fillRect(x,0,16,h)}g.fillStyle='#4a2f1a';g.fillRect(0,h*.7,w,h*.3);g.fillStyle='#5c3a20';g.fillRect(0,h*.7,w,6)});
+const starT=tex(256,256,(g,w,h)=>{g.fillStyle='#070b24';g.fillRect(0,0,w,h);for(let i=0;i<180;i++){g.fillStyle=`rgba(255,255,255,${.3+Math.random()*.7})`;const s=Math.random()<.1?2:1;g.fillRect(Math.random()*w,Math.random()*h,s,s)}});
+mk('a-plane',{rotation:'-90 0 0',width:12,height:12,material:{src:floorT,repeat:'3 3',roughness:.6}});
+mk('a-plane',{rotation:'90 0 0',position:'0 5 0',width:12,height:12,material:M('#1a120a')});
+[[0,-6,0],[0,6,180],[-6,0,90],[6,0,-90]].forEach(([x,z,r])=>mk('a-plane',{position:`${x} 2.5 ${z}`,rotation:`0 ${r} 0`,width:12,height:5,material:{src:wallT,repeat:'6 1',roughness:.9}}));
+/* skylight + sliding shutter */
+const sky=mk('a-circle',{position:'0 4.97 0',rotation:'90 0 0',radius:2,material:{src:starT,shader:'flat',fog:false}});
+const shutter=B(0,4.9,0,4.2,.08,4.2,M('#2b1c10'));
+for(let i=-2;i<=2;i++)B(i*.8,-.05,0,.06,.04,4.2,M('#5c3a20'),0,shutter);
+const goldRing=mk('a-torus',{position:'0 4.95 0',rotation:'90 0 0',radius:2.05,'radius-tubular':.06,material:M('#b8893a','metalness:.8')});
+/* lamps (off until stage 1) */
+const lamps=[[-5.6,3,-5.6],[5.6,3,-5.6],[-5.6,3,5.6],[5.6,3,5.6]].map(([x,y,z])=>{B(x*.98,y,z*.98,.2,.3,.2,M('#b8893a','metalness:.8'));return L(x*.9,y-.2,z*.9,'#ffb55a',0,14)});
+const lampGlow=[[-5.6,5.6],[5.6,5.6],[-5.6,-5.6],[5.6,-5.6]].map(([x,z])=>S(x*.98,3,z*.98,.1,E('#ffb55a',.1)));
+const setLamps=on=>{lamps.forEach(l=>l.setAttribute('light','intensity',on?.9:0));lampGlow.forEach(g=>g.setAttribute('material','emissiveIntensity',on?2:.1))};
+/* always-on candle on the desk */
+B(3.6,.4,4.7,1.6,.8,.9,M('#3a2414'));B(3.6,.82,4.7,1.7,.05,1,M('#5c3a20'));C(3.2,.95,4.6,.04,.2,M('#f3e9d2'));const flame=S(3.2,1.08,4.6,.03,E('#ffcc66',3));L(3.2,1.3,4.6,'#ffb055',.8,6);
+flame.setAttribute('animation','property:scale;dir:alternate;loop:true;to:1 1.5 1;dur:300');
+
+/* ---------- centerpiece: orrery (decor) ---------- */
+B(0,.45,0,2,.9,2,M('#3a2414'));B(0,.93,0,2.1,.06,2.1,M('#b8893a','metalness:.8'));
+const sun=S(0,1.5,0,.18,E('#ffcf4a',2));L(0,1.6,0,'#ffcf4a',.6,5);
+const arms=G(0,1.5,0);arms.setAttribute('animation','property:rotation;to:0 360 0;dur:40000;loop:true;easing:linear');
+[['#9aa0a6',.4,.05],['#e8d27a',.55,.07],['#3b82f6',.72,.08],['#d9482b',.9,.06],['#e39b4a',1.1,.13]].forEach(([c,r,s],i)=>{mk('a-torus',{position:'0 1.5 0',rotation:'90 0 0',radius:r,'radius-tubular':.004,material:M('#b8893a')});const a=i*1.3;S(Math.cos(a)*r,0,Math.sin(a)*r,s,M(c),arms)});
+T('ORRERY',0,2.3,0,0,1.2,'#ffcf4a');
+
+/* ---------- west wall: planet rack (puzzle 1) ---------- */
+B(-5.7,.5,0,.6,1,3.2,M('#3a2414'));B(-5.7,1.02,0,.7,.06,3.3,M('#5c3a20'));
+const PL={mercury:'#9aa0a6',venus:'#e8d27a',earth:'#3b82f6',mars:'#d9482b',jupiter:'#e39b4a'};
+const SEQ=['mercury','venus','earth','mars','jupiter'],ORD=['mars','jupiter','mercury','earth','venus'];
+const orbs={};let got=[];
+ORD.forEach((n,i)=>{const z=-1.2+i*.6;const o=S(-5.6,1.3,z,.16,E(PL[n],.25));orbs[n]=o;K(o,()=>orbClick(n))});
+T('WAKE THEM FROM THE SUN OUTWARD',-5.97,2.9,0,90,2.8,'#ffcf4a');
+B(-5.97,2,0,.04,1.5,3,M('#0d1414'));
+[['MERCURY','mercury','0.39 AU'],['VENUS','venus','0.72 AU'],['EARTH','earth','1.00 AU'],['MARS','mars','1.52 AU'],['JUPITER','jupiter','5.20 AU']].forEach(([n,k,au],i)=>{const z=1.1-i*.5;S(-5.93,2.25,z,.06,E(PL[k],1));T(n+'  '+au,-5.93,2.25-.22,z,90,.9,'#e8d6a8')});
+/* ---------- north wall: star ledger + astrolabe (puzzle 2) ---------- */
+B(-2.5,2.4,-5.97,3,1.7,.05,M('#0d1414'));T('STAR LEDGER — APPARENT MAGNITUDE',-2.5,3.1,-5.93,0,2.6,'#ffcf4a');
+[['POLARIS','1.98'],['SIRIUS','-1.46'],['MIZAR','2.27'],['SPICA','0.97'],['VEGA','0.03']].forEach(([n,m],i)=>T(n+'   '+m,-2.5,2.7-i*.28,-5.92,0,2.2,'#e8d6a8'));
+B(2.5,.5,-5.3,.8,1,.8,M('#3a2414'));
+const astro=mk('a-torus',{position:'2.5 1.35 -5.3',rotation:'70 0 0',radius:.35,'radius-tubular':.03,material:E('#e8b04a',.9)});mk('a-torus',{position:'2.5 1.35 -5.3',rotation:'20 40 0',radius:.28,'radius-tubular':.02,material:E('#b8893a',.6)});
+K(B(2.5,1.3,-5.3,.9,.9,.9,'opacity:0;transparent:true'),starUI);T('ASTROLABE\n(click it)',2.5,2.1,-5.3,0,1.8,'#ffe27a');
+
+/* ---------- telescope (puzzle 3) ---------- */
+C(-3.2,.5,-3.5,.04,1,M('#b8893a','metalness:.8'));B(-3.2,.04,-3.5,.9,.06,.06,M('#3a2414'));B(-3.2,.04,-3.5,.06,.06,.9,M('#3a2414'));
+const tube=C(-3.2,1.55,-3.5,.18,1.9,M('#1a2a3a','metalness:.7'),'0 0 -25');C(-3.2,1.55,-3.5,.2,.1,M('#b8893a','metalness:.8'),'0 0 -25');
+K(B(-3.2,1.5,-3.5,.9,1.8,.9,'opacity:0;transparent:true'),scopeUI);T('GREAT REFRACTOR\n(click it)',-3.2,2.9,-3.5,0,1.8,'#ffe27a');
+B(-5.97,1.7,-4.4,.04,.9,1.4,M('#0d1414'));T('COMPASS\nN 0°  E 90°\nS 180°  W 270°',-5.93,1.7,-4.4,90,1.3,'#e8d6a8');
+/* ---------- east wall: grandfather clock (puzzle 4) ---------- */
+B(5.5,1,-3.2,.8,2,.6,M('#4a2f1a'));B(5.5,2.2,-3.2,.9,.9,.7,M('#5c3a20'));
+const face=mk('a-circle',{position:'5.12 2.2 -3.2',rotation:'0 -90 0',radius:.34,material:M('#efe6c8')});
+for(let i=0;i<12;i++){const a=i/12*6.283;B(5.1,2.2+Math.cos(a)*.28,-3.2+Math.sin(a)*.28,.01,.04,.02,M('#222'))}
+const hh=B(5.09,2.28,-3.2,.01,.2,.02,M('#111'));B(5.09,2.2,-3.1,.01,.02,.3,M('#111'));
+C(5.5,.85,-3.2,.06,.7,M('#b8893a','metalness:.8'));
+K(B(5.2,1.6,-3.2,.5,2.2,.9,'opacity:0;transparent:true'),clockUI);T('GRANDFATHER CLOCK\n(click it)',5.1,3.1,-3.2,-90,1.8,'#ffe27a');
+const plaque=B(5.2,.95,-3.2,.04,.3,.4,E('#e8b04a',1.4));plaque.setAttribute('visible',false);
+const plaqueT=T('MAKER\'S MARK  38',5.17,.95,-3.2,-90,.9,'#2a1a06');plaqueT.setAttribute('visible',false);
+
+/* ---------- south wall: vault door (puzzle 5) ---------- */
+const door=B(0,1.5,5.95,3,3,.12,M('#2a2a2e','metalness:.8'));
+for(let i=0;i<4;i++)B(0,-1.1+i*.7,-.08,2.9,.08,.02,M('#b8893a','metalness:.8'),0,door);
+mk('a-torus',{position:'0 1.6 5.85',radius:.45,'radius-tubular':.04,material:M('#b8893a','metalness:.8')});T('THE TRANSIT DOOR',0,3.3,5.88,180,2.4,'#ffcf4a');
+B(2.4,1.3,5.9,.4,.55,.1,M('#1a1208'));const pad=mk('a-plane',{position:'2.4 1.4 5.84',rotation:'0 180 0',width:.28,height:.16,material:E('#1f7a4c',1)});T('KEYPAD',2.4,1.75,5.85,180,.9,'#ffe27a');
+K(B(2.4,1.3,5.8,.5,.6,.2,'opacity:0;transparent:true'),pinUI);
+const outside=mk('a-plane',{position:'0 1.5 6.2',rotation:'0 180 0',width:3,height:3,visible:false,material:'color:#0a1030;shader:flat'});
+
+/* ---------- flavour props & clues ---------- */
+const clip=(x,y,z,ry,title,body)=>{const g=G(x,y,z,ry);B(0,0,-.015,.6,.76,.03,M('#b8893a','metalness:.7'),0,g);K(B(0,0,.01,.5,.66,.02,M('#efe6c8','roughness:.9'),0,g),()=>openM(title,'',c=>{const p=document.createElement('p');p.textContent=body;c.appendChild(p)}));const d=S(.2,.26,.03,.03,E('#ff5a4e',1.8),g);d.setAttribute('animation','property:material.emissiveIntensity;dir:alternate;loop:true;from:.2;to:2;dur:800');T('READ',0,-.25,.025,0,1,'#555',g)};
+clip(-5.95,1.7,2.6,90,'PLANET LEDGER NOTE',"The sun wakes first, and the rest follow in order of how far they travel from it. Match each coloured orb to the chart.");
+clip(-1.0,2.1,-5.95,0,'ASTROLABE NOTE',"Press the stars BRIGHTEST first.\n\nRemember: in astronomy a LOWER magnitude means a BRIGHTER star. Negative numbers outshine them all.");
+clip(-5.95,1.7,-2.9,90,'VESPER LOG — HALLOWAY',"Comet Vesper rises in the WEST, 45 degrees above the horizon.\n\nWhen she is centred in the refractor, read her catalogue number off the eyepiece.");
+clip(2.4,2.2,5.95,180,'PROFESSOR\'S DIARY',"Vesper crosses the meridian a QUARTER TO MIDNIGHT. The old clock must be set to that moment to release its mark.");
+clip(-1.8,2.2,5.95,180,'VAULT NOTE',"The transit door answers to four digits: the comet's catalogue number, then the clockmaker's mark.");
+hit(3.6,1.0,4.9,.3,.2,.3,'A cold cup of tea. The saucer is dated 10:15 p.m. — the Professor left in a hurry.');
+S(3.8,1.1,4.6,.2,M('#2a5aa0','metalness:.4'));hit(3.8,1.1,4.6,.4,.4,.4,'A brass globe. A pin marks a mountaintop: "Best seeing in the world."');
+B(-5.7,1.5,5.4,.5,3,1.8,M('#3a2414'));hit(-5.5,1.5,5.4,.6,3,1.9,'A bookcase of star atlases. One slot is empty. The dust outline is the size of a diary.');
+B(0,2.9,-5.96,2,1.2,.06,M('#2b1c10'));hit(0,2.9,-5.93,2,1.2,.1,'A portrait of Halloway, mid-laugh. A pencil is tucked behind his ear. The eyes seem to follow you.');
+for(let i=0;i<8;i++){const x=-4+Math.random()*7,z=1+Math.random()*3.5;mk('a-plane',{position:`${x} .015 ${z}`,rotation:`-90 0 ${Math.random()*360}`,width:.3,height:.21,material:'color:#e8e4d0;roughness:1'})}
+for(let i=0;i<14;i++){const x=(Math.random()-.5)*10,y=.5+Math.random()*4,z=(Math.random()-.5)*10;S(x,y,z,.012,'color:#fff;emissive:#fff;opacity:.35;transparent:true').setAttribute('animation',`property:position;to:${x+.5} ${y+.6} ${z+.3};dur:${6000+Math.random()*5000};dir:alternate;loop:true;easing:easeInOutSine`)}
+
+/* ---------- modal system ---------- */
+const mod=$('#modal');
+function openM(t,s,build){document.exitPointerLock&&document.exitPointerLock();ch.classList.add('hidden');$('#mt').textContent=t;$('#ms').textContent=s||'';const c=$('#mc');c.innerHTML='';build(c);mod.classList.add('active')}
+function closeM(){mod.classList.remove('active');ch.classList.remove('hidden')}
+$('#mx').onclick=closeM;
+const btn=(txt,fn,cls,p)=>{const b=document.createElement('button');b.textContent=txt;if(cls)b.className=cls;b.onclick=fn;p.appendChild(b);return b};
+function dial(c,label,vals,i0,fmt){const d=document.createElement('div');d.className='dial';let i=i0;const l=document.createElement('span');l.className='l';l.textContent=label;const v=document.createElement('span');v.className='v';const up=()=>v.textContent=fmt?fmt(vals[i]):vals[i];btn('−',()=>{i=(i+vals.length-1)%vals.length;up();snd('click')},'',d);d.insertBefore(l,d.firstChild);d.insertBefore(v,d.children[2]);btn('+',()=>{i=(i+1)%vals.length;up();snd('click')},'',d);up();c.appendChild(d);return()=>vals[i]}
+
+/* ---------- game state ---------- */
+const STEPS=[['orrery','Wake the planets'],['stars','Order the stars'],['scope','Find the comet'],['clock','Set the clock'],['vault','Open the door']];
+const OBJ={orrery:'TASK 1 of 5 — Click the five glowing orbs on the west-wall rack in order of distance from the sun. The chart on the wall tells you which colour is which planet.',
+stars:'TASK 2 of 5 — The shutters slide open. Read the astrolabe note and the star ledger, then click the astrolabe and press the stars brightest first.',
+scope:'TASK 3 of 5 — Read the Vesper log. Use the compass plaque, then aim the Great Refractor and read the catalogue number.',
+clock:'TASK 4 of 5 — The Professor\'s diary gives the moment Vesper crosses the meridian. Set the grandfather clock to it.',
+vault:'TASK 5 of 5 — Combine the comet\'s catalogue number with the clockmaker\'s mark and enter it on the door keypad.'};
+const HINT={orrery:['Order by distance: Mercury (grey), Venus (yellow), Earth (blue), Mars (red), Jupiter (orange).'],stars:['Brightest first means the LOWEST number, including negatives: Sirius, Vega, Spica, Polaris, Mizar.'],scope:['West is 270°. Set Azimuth 270° and Altitude 45°.'],clock:['A quarter to midnight is 11:45.'],vault:['Catalogue number 61, then maker\'s mark 38: 6138.']};
+const MARK={orrery:[-5.4,2.7,0],stars:[2.5,2.4,-5.3],scope:[-3.2,3.3,-3.5],clock:[5.2,3.4,-3.2],vault:[2.4,2.1,5.8]};
+const st={stage:'intro',dawn:0,over:false};
+const mkr=mk('a-cone',{rotation:'180 0 0','radius-bottom':.15,'radius-top':0,height:.3,visible:false,material:E('#ffd25a',2)});
+function setStage(s){st.stage=s;const k=STEPS.findIndex(x=>x[0]===s);
+ const t=$('#tasks');t.style.display='block';t.innerHTML=`<div class="tk-top">TASK ${k+1} OF ${STEPS.length}</div><div class="tk-name">${STEPS[k][1]}</div><div class="tk-bar">${STEPS.map((x,i)=>`<i class="${i<k?'d':i===k?'c':''}"></i>`).join('')}</div>`;
+ const o=$('#obj');o.classList.remove('show');setTimeout(()=>{o.textContent=OBJ[s];o.classList.add('show')},200);
+ const [x,y,z]=MARK[s];mkr.setAttribute('position',`${x} ${y} ${z}`);mkr.setAttribute('animation',`property:position;from:${x} ${y} ${z};to:${x} ${y+.25} ${z};dir:alternate;loop:true;dur:700`);mkr.setAttribute('visible',true)}
+const flash=c=>{const f=$('#flash');f.style.background=c||'#e8b04a';f.style.transition='none';f.style.opacity='.35';requestAnimationFrame(()=>{f.style.transition='opacity .3s';f.style.opacity='0'})};
+function dawn(d){if(st.over)return;st.dawn=Math.max(0,Math.min(100,st.dawn+d));const p=st.dawn,f=$('#meterFill');f.style.width=p+'%';f.style.background=p<40?'#6a7bd8':p<75?'#d89a5a':'#ff7a4e';$('#pct').textContent=Math.round(p)+'%';
+ sc.setAttribute('fog',`type:exponential;color:${p<40?'#0a0a18':p<75?'#2a1a28':'#4a2a20'};density:${(.02+p*.0002).toFixed(4)}`);
+ sky.setAttribute('material','color',p<40?'#ffffff':p<75?'#ffc9a0':'#ff9a5a');
+ if(d>0){flash('#ff7a4e');}if(p>=100)end('#fail','bad')}
+function wrong(m,d){toast(m);snd('bad');dawn(d)}
+function end(id,s){st.over=true;st.stage='ended';snd(s==='ok'?'chime':'thud');setTimeout(()=>$(id).classList.add('active'),s==='ok'?2200:300)}
+setInterval(()=>{if(!st.over&&st.stage!=='intro'&&!mod.classList.contains('active'))dawn(1)},20000);
+$('#enter').onclick=()=>{AC.resume();$('#intro').classList.remove('active');setStage('orrery')};
+addEventListener('keydown',e=>{if(e.code==='KeyH'&&!st.over&&st.stage!=='intro'&&!mod.classList.contains('active'))toast('HINT: '+HINT[st.stage][0],9000)});
+setInterval(()=>{const need=!document.pointerLockElement&&!document.querySelector('.overlay.active')&&!mod.classList.contains('active')&&st.stage!=='intro'&&!st.over;$('#relock').style.display=need?'block':'none'},400);
+
+/* ---------- puzzle 1: orrery rack ---------- */
+function orbClick(n){if(st.stage!=='orrery'||got.includes(n))return;if(n!==SEQ[got.length]){got=[];Object.keys(orbs).forEach(k=>{orbs[k].setAttribute('material','emissiveIntensity',.25);orbs[k].setAttribute('scale','1 1 1')});return wrong('The rack dims. Wrong order — begin again from the sun.',5)}
+ got.push(n);orbs[n].setAttribute('material','emissiveIntensity',2.5);orbs[n].setAttribute('scale','1.4 1.4 1.4');snd('ok');
+ if(got.length===5){toast('Every planet is awake. The lamps flare up!',4500);snd('chime');setLamps(true);$('#amb').setAttribute('light','intensity',.8);setTimeout(()=>{toast('Overhead, the shutters grind open.',4000);shutter.setAttribute('animation','property:position;to:5 4.9 0;dur:2500;easing:easeInOutQuad');setStage('stars')},1800)}}
+/* ---------- puzzle 2: star order ---------- */
+const STARS=['MIZAR','POLARIS','SIRIUS','SPICA','VEGA'],STAR_SEQ=['SIRIUS','VEGA','SPICA','POLARIS','MIZAR'];
+function starUI(){if(st.stage!=='stars')return toast(st.stage==='orrery'?'The astrolabe is dark. Wake the planets first.':'The astrolabe has already been aligned.');
+ let p=[];openM('ASTROLABE','Press the stars in order of brightness, brightest first.',c=>{const g=document.createElement('div');g.className='grid';g.style.gridTemplateColumns='1fr 1fr';STARS.forEach(n=>{const b=btn(n,()=>{p.push(n);if(n!==STAR_SEQ[p.length-1]){b.classList.add('bad');snd('bad');dawn(3);setTimeout(()=>{g.querySelectorAll('button').forEach(x=>x.className='');p=[]},450);return}b.classList.add('done');snd('ok');if(p.length===5){snd('chime');setTimeout(()=>{closeM();toast('The astrolabe spins. The refractor swings toward the open sky.',5000);tube.setAttribute('animation','property:rotation;to:0 0 -40;dur:1800');setStage('scope')},500)}},'',g)});c.appendChild(g)})}
+/* ---------- puzzle 3: telescope ---------- */
+function scopeUI(){if(st.stage!=='scope')return toast(st.stage==='orrery'||st.stage==='stars'?'The refractor is not ready yet.':'You already found Vesper.');
+ openM('GREAT REFRACTOR','Aim at Comet Vesper using the log and the compass plaque.',c=>{const az=dial(c,'AZIMUTH',Array.from({length:24},(_,i)=>i*15),0,v=>v+'°'),al=dial(c,'ALTITUDE',[0,15,30,45,60,75,90],0,v=>v+'°');const r=document.createElement('div');r.className='row';btn('LOOK',()=>{if(az()===270&&al()===45){snd('chime');c.innerHTML='<p style="text-align:center;font-size:15px">A silver tail fills the eyepiece. Etched on the lens ring:<br><br><b style="font-size:26px;color:#e8b04a;letter-spacing:6px">VESPER No. 61</b></p>';setTimeout(()=>{},0);setTimeout(()=>{closeM();setStage('clock')},3200)}else{snd('bad');dawn(3);toast('Only black sky. Check your bearing and angle.')}},'',r);c.appendChild(r)})}
+/* ---------- puzzle 4: clock ---------- */
+function clockUI(){if(st.stage!=='clock')return toast(st.stage==='vault'?'The clock is stopped at the moment of transit.':'The clock ticks on, indifferent.');
+ openM('GRANDFATHER CLOCK','Set the clock to the moment from the Professor\'s diary.',c=>{const h=dial(c,'HOUR',[1,2,3,4,5,6,7,8,9,10,11,12],0),m=dial(c,'MINUTE',Array.from({length:12},(_,i)=>i*5),0,v=>String(v).padStart(2,'0'));const r=document.createElement('div');r.className='row';btn('SET',()=>{if(h()===11&&m()===45){snd('chime');closeM();hh.setAttribute('rotation','0 0 -30');plaque.setAttribute('visible',true);plaqueT.setAttribute('visible',true);toast('The clock chimes and a brass plate drops open: MAKER\'S MARK 38.',6000);setStage('vault')}else{snd('bad');dawn(3);toast('The clock whirs, then falls silent. Wrong time.')}},'',r);c.appendChild(r)})}
+/* ---------- puzzle 5: vault keypad ---------- */
+function pinUI(){if(st.stage!=='vault')return toast('The keypad is dead. The clockwork has not been released yet.');
+ let v='';openM('TRANSIT DOOR','ENTER THE 4-DIGIT CODE',c=>{const d=document.createElement('div');d.className='disp';d.textContent='_ _ _ _';c.appendChild(d);const up=bad=>{d.textContent=v.padEnd(4,'_').split('').join(' ');d.classList.toggle('wrong',!!bad)};const g=document.createElement('div');g.className='grid';
+ [1,2,3,4,5,6,7,8,9,'⌫',0,'↵'].forEach(k=>btn(k,()=>{if(k==='⌫')v=v.slice(0,-1);else if(k==='↵'){if(v==='6138'){closeM();finish()}else{up(1);snd('bad');dawn(4);setTimeout(()=>{v='';up()},500)}return}else if(v.length<4)v+=k;up()},'',g));c.appendChild(g)})}
+function finish(){st.stage='ended';mkr.setAttribute('visible',false);outside.setAttribute('visible',true);door.setAttribute('animation','property:position;to:0 5 5.95;dur:2600;easing:easeInOutQuad');snd('chime');toast('The door groans open. Fresh night air!',4000);setTimeout(()=>end('#win','ok'),2200)}
+}
+})();
+</script>
+</body></html>
