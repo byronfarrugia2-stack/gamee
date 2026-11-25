@@ -1,217 +1,1073 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>THE LAST TRANSIT II :: Halloway Observatory</title>
+<html lang="en"><head><meta charset="UTF-8"><title>CONTAINMENT :: Lab 07</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>
-(function(){var U=['https://aframe.io/releases/1.5.0/aframe.min.js','https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe.min.js','https://unpkg.com/aframe@1.5.0/dist/aframe.min.js','https://cdn.jsdelivr.net/npm/aframe@1.6.0/dist/aframe.min.js','https://cdnjs.cloudflare.com/ajax/libs/aframe/1.5.0/aframe.min.js'],i=0,q=[],ok=false,dead=false;
-window.addEventListener('error',function(e){if(!e.message)return;var d=document.getElementById('errb')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'errb',style:'position:fixed;bottom:0;left:0;right:0;background:#400;color:#fcc;font:12px monospace;padding:6px 10px;z-index:99'}));d.textContent='Error: '+e.message+' ('+(e.filename||'').split('/').pop()+':'+e.lineno+')'});
-function dg(t){var d=document.getElementById('diag');if(d)d.textContent=t}
-var glok=(function(){try{var c=document.createElement('canvas');return !!(c.getContext('webgl2')||c.getContext('webgl'))}catch(e){return false}})();
-window.dg=function(t){dg('WebGL: '+(glok?'ok':'NOT AVAILABLE (open this file in a normal browser tab)')+'  |  '+t)};
-document.addEventListener('DOMContentLoaded',function(){window.dg('Loading A-Frame...')});
-window.afReady=function(f){ok?f():q.push(f)};
-function next(){if(i>=U.length){dead=true;document.addEventListener('DOMContentLoaded',function(){window.dispatchEvent(new ErrorEvent('error',{message:'A-Frame is blocked on this network. Allow aframe.io, jsdelivr or unpkg, then reload',filename:'loader'}))});return}
-var s=document.createElement('script');s.crossOrigin='anonymous';s.src=U[i++];s.onload=function(){if(window.AFRAME){ok=true;window.dg('A-Frame '+AFRAME.version+' loaded');q.forEach(function(f){f()})}else next()};s.onerror=next;document.head.appendChild(s)}
-next()})();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe-master.min.js" onerror="document.write('<script src=&quot;https://cdn.jsdelivr.net/npm/aframe@1.5.0/dist/aframe.min.js&quot;><\/script>')"></script>
 <style>
-:root{--a:#e8b04a;--g:#5fd39a;--r:#ff5a4e;--ink:#f3e9d2}
-html,body{margin:0;height:100%;overflow:hidden;background:#05060d;font-family:Georgia,serif;color:var(--ink)}
+:root{--c:#27d3ff;--d:#ff3b4e;--w:#ffa51f;--s:#2ee58a;--ink:#d8f3fa}
+html,body{margin:0;height:100%;overflow:hidden;background:#05090b;font-family:'Courier New',monospace;color:var(--ink)}
 #hud{position:fixed;inset:0;pointer-events:none;z-index:5}
-.box{position:absolute;background:rgba(18,12,8,.84);border:1px solid rgba(232,176,74,.25);border-radius:10px;padding:10px 14px;font-size:13px;backdrop-filter:blur(6px)}
-#mb2{top:18px;left:18px;width:210px}#ml{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:#cdb27a;margin-bottom:7px}
-#mt2{height:5px;background:rgba(255,255,255,.1);border-radius:4px}#mf{height:100%;width:0;border-radius:4px;background:#6a7bd8;transition:.4s}
-#tasks{top:18px;right:18px;width:230px;display:none}.tk{font-size:10px;letter-spacing:2px;color:#cdb27a}.tn{font-size:15px;margin:5px 0;font-weight:bold}
-.bar{display:flex;gap:3px;margin-top:8px}.bar i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.14)}.bar i.d{background:var(--g)}.bar i.c{background:var(--a)}
-#code{margin-top:9px;font-size:15px;letter-spacing:4px;color:var(--g)}
-#obj{bottom:18px;left:18px;max-width:430px;line-height:1.6;border-left:3px solid var(--a);opacity:0;transition:opacity .6s}#obj.show{opacity:1}
-#toast{position:absolute;bottom:92px;left:50%;transform:translateX(-50%);background:rgba(18,12,8,.95);border:1px solid var(--a);border-radius:999px;padding:8px 20px;font-size:13px;opacity:0;transition:.3s;max-width:80vw;text-align:center}#toast.show{opacity:1}
-#ch{display:none;position:fixed;top:50%;left:50%;width:8px;height:8px;margin:-4px;border-radius:50%;border:1.5px solid #fff;pointer-events:none;z-index:15;transition:.12s}
-#ch.hot{border-color:var(--a);background:var(--a);transform:scale(1.8)}#ch.hidden{display:none}
-#fl{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:6}
-#rl{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(18,12,8,.92);border:1px solid var(--a);padding:8px 20px;border-radius:999px;font-size:12px;z-index:11;pointer-events:none;display:none}
-.ov{position:fixed;inset:0;display:none;align-items:center;justify-content:safe center;flex-direction:column;background:radial-gradient(ellipse at center,#1d1428,#05060d 75%);z-index:20;text-align:center;padding:40px;overflow-y:auto}.ov.on{display:flex}#intro{background:radial-gradient(ellipse at center,rgba(29,20,40,.86),rgba(5,6,13,.93) 75%)}
-.ov h1{font-size:clamp(26px,5vw,46px);margin:0 0 14px;letter-spacing:5px}.ov p{max-width:620px;color:#c9bca0;font-size:16px;line-height:1.75;margin:0 0 20px;text-align:left}
-.how{max-width:620px;text-align:left;font-size:14px;line-height:1.8;background:rgba(30,20,12,.8);border:1px solid rgba(232,176,74,.25);border-radius:12px;padding:14px 20px;margin-bottom:20px}
-button{font-family:inherit;background:rgba(232,176,74,.08);color:var(--ink);border:1px solid rgba(232,176,74,.5);border-radius:8px;padding:11px 24px;font-size:14px;cursor:pointer}button:hover{background:var(--a);color:#1a1006}
-#modal{display:none;position:fixed;inset:0;background:rgba(3,3,8,.85);z-index:30;align-items:center;justify-content:center}#modal.on{display:flex}
-.mb{background:#150f0a;border:1px solid rgba(232,176,74,.3);border-radius:14px;padding:26px 28px;width:360px;text-align:center;max-height:86vh;overflow:auto}
-.mb h2{margin:0 0 4px;font-size:13px;letter-spacing:2.4px;color:var(--a)}.sub{font-size:12px;color:#a79576;margin-bottom:14px;line-height:1.5}
-.mb p{text-align:left;font-size:14px;line-height:1.65;white-space:pre-line;margin:0}.mx{margin-top:14px;border:none!important;background:none!important;color:#a79576!important;font-size:12px;text-decoration:underline}
-.disp{font-size:26px;letter-spacing:8px;background:#0a0705;border:1px solid rgba(232,176,74,.25);border-radius:10px;padding:10px 0;margin-bottom:12px;color:var(--g);min-height:1.4em}.disp.w{color:var(--r)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.grid button{font-size:17px;padding:12px 0}
-.dial{display:flex;align-items:center;gap:10px;margin:10px 0}.dial .l{font-size:12px;letter-spacing:1.5px;color:#cdb27a;width:80px;text-align:left}
-.dial .v{flex:1;font-size:22px;background:#0a0705;border:1px solid rgba(232,176,74,.25);border-radius:8px;padding:6px 0}.row{display:flex;gap:8px;justify-content:center;margin-top:12px}
-input{width:100%;box-sizing:border-box;font:22px Georgia;letter-spacing:6px;text-align:center;text-transform:uppercase;background:#0a0705;color:var(--g);border:1px solid rgba(232,176,74,.3);border-radius:8px;padding:10px}
+.box{position:absolute;background:#071014d9;border:1px solid #1d4452;padding:10px 14px;font-size:12px;backdrop-filter:blur(3px)}
+#meterBox{top:18px;left:18px;width:280px;border-left:3px solid var(--c)}
+#meterLabel{display:flex;justify-content:space-between;letter-spacing:2px;color:#7fb6c6;margin-bottom:6px;font-size:11px}
+#meterTrack{height:8px;background:#0b1d24;border:1px solid #1d4452}
+#meterFill{height:100%;width:0;background:var(--s);transition:width .4s,background .4s;box-shadow:0 0 8px currentColor}
+#stageBox{top:18px;right:18px;max-width:320px;text-align:right;color:#7fb6c6;border-right:3px solid var(--w)}
+#stageBox b{display:block;color:var(--ink);letter-spacing:1px;margin-bottom:3px}
+#objectiveBox{bottom:18px;left:18px;max-width:460px;line-height:1.5;border-left:3px solid var(--w);opacity:0;transform:translateY(6px);transition:.5s}
+#objectiveBox.show{opacity:1;transform:none}
+#toast{position:absolute;bottom:90px;left:50%;transform:translate(-50%,10px);background:#071014f0;border:1px solid var(--c);padding:7px 16px;font-size:12px;opacity:0;transition:.3s;max-width:80vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#crosshair{position:fixed;top:50%;left:50%;width:14px;height:14px;margin:-7px;border-radius:50%;border:2px solid #fff;background:#fff3;pointer-events:none;z-index:15;transition:.12s}
+#crosshair.hot{border-color:var(--s);background:var(--s);transform:scale(1.5)}#crosshair.hidden{display:none}
+#flash{position:fixed;inset:0;opacity:0;pointer-events:none;z-index:6;background:var(--d)}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:4;background:radial-gradient(ellipse at center,#0000 55%,#0007 100%)}
+#startHint{position:fixed;bottom:18px;right:18px;font-size:12px;color:#7fb6c6;z-index:5;pointer-events:none}
+.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:#04080af2;z-index:20;text-align:center;padding:40px}
+.overlay.active{display:flex}
+.overlay h1{font-size:clamp(24px,5vw,40px);margin:0 0 14px;letter-spacing:2px;text-shadow:0 0 18px currentColor}
+.overlay p{max-width:620px;color:#9ab9c2;font-size:15px;line-height:1.7;margin:0 0 22px;text-align:left}
+button{font-family:inherit;background:transparent;color:var(--ink);border:1px solid var(--c);padding:11px 24px;font-size:13px;letter-spacing:1px;cursor:pointer}
+button:hover{background:var(--c);color:#041014}
+#modal{display:none;position:fixed;inset:0;background:#030709d9;z-index:30;align-items:center;justify-content:center}
+#modal.active{display:flex}
+.mb{background:#091419;border:1px solid #1d4452;box-shadow:0 0 40px #27d3ff22;padding:24px 28px;width:340px;text-align:center;max-height:86vh;overflow:auto}
+.mb h2{margin:0 0 4px;font-size:14px;letter-spacing:2px;color:var(--c)}
+.sub{font-size:11px;color:#6d94a0;margin-bottom:14px;line-height:1.5}
+.mb p{text-align:left;font-size:13px;line-height:1.6;color:#c3dde4;white-space:pre-line;margin:0}
+.mclose{margin-top:14px;border:none;color:#6d94a0;font-size:11px;text-decoration:underline;padding:4px}
+.disp{font-size:28px;letter-spacing:8px;background:#04090b;border:1px solid #1d4452;padding:10px 0;margin-bottom:12px;color:var(--s);min-height:1.4em}.disp.wrong{color:var(--d)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px}
+.grid button{font-size:18px;padding:12px 0;background:#10222a;border-color:#1d4452}
+.grid button.done{background:var(--s);color:#041014}.grid button.wrong{background:var(--d)}
+.row{display:flex;gap:8px;justify-content:center}.row button{padding:10px 18px}
+.mir{width:58px;height:58px;font-size:26px;color:var(--c);background:#10222a}
+#scope{position:relative;width:320px;height:230px;margin:0 auto 10px;border-radius:50%;overflow:hidden;background:radial-gradient(#143026,#050c09);border:4px solid #1d4452}
+#scopeG{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:34px}
+.dg{display:grid;grid-template-columns:repeat(3,22px);grid-auto-rows:22px;gap:6px}.dg i{border-radius:50%}.dg i.on{background:#5ef2a0;box-shadow:0 0 10px #5ef2a0}
+.nz{position:absolute;border-radius:50%;background:#5ef2a052}
+#hintBody{text-align:left;font-size:12px;line-height:1.6}#hintBody b{color:var(--c)}
 </style></head><body>
-<div id="hud"><div class="box" id="mb2"><div id="ml"><span>DAWN</span><span id="pct">0%</span></div><div id="mt2"><div id="mf"></div></div></div>
-<div class="box" id="tasks"></div><div class="box" id="obj"></div><div id="toast"></div></div>
-<div id="ch"></div><div id="fl"></div><div id="rl">CLICK ON THE ROOM TO LOOK AROUND AGAIN</div>
-<div id="intro" class="ov on"><h1 style="color:var(--a)">THE LAST TRANSIT II</h1>
-<p>Halloway Observatory, 1893. The dome door slammed shut behind you, but the Professor's real secret lies deeper: a library of forbidden charts, and beneath it the great clockwork engine that drives the lock. Three rooms. Six locks. Dawn is coming.<br><br>Clues travel between rooms. What you learn upstairs will be needed below.</p>
-<div class="how"><b style="color:var(--a)">HOW TO PLAY</b><br>• <b>WASD</b> to walk, <b>click and drag</b> to look around, <b>click</b> glowing things.<br>• Wrong answers pull dawn closer. <b>H</b> gives a hint (costs 3% dawn).<br>• <b>N</b> opens your journal of every note you've read.<br>• Found digits appear in the top-right panel.</div>
-<div id="diag" style="font:12px monospace;color:#a79576;margin-bottom:16px">Loading A-Frame...</div>
-<button id="enter" disabled>LOADING...</button></div>
-<div id="fail" class="ov"><h1 style="color:var(--r)">DAWN BREAKS</h1><p>Gold light floods the shutters and the engine winds the lock shut. Seventy-six years begin to tick.</p><button onclick="location.reload()">TRY AGAIN</button></div>
-<div id="win" class="ov"><h1 style="color:var(--g)">THE ENGINE RELEASES</h1><p>The final door unwinds in a storm of brass. Cold night air, and above you, Comet Vesper blazing exactly on time. You walk out free.</p><button onclick="location.reload()">PLAY AGAIN</button></div>
-<div id="modal"><div class="mb"><h2 id="mt"></h2><div class="sub" id="ms"></div><div id="mc"></div><button class="mx" id="mx">close</button></div></div>
-<a-scene id="scene" background="color:#05060d" fog="type:exponential;color:#0a0a18;density:0.02" renderer="antialias:true" loading-screen="enabled:false">
-<a-entity id="rig" position="0 0 4.5"><a-camera position="0 1.6 0" fov="75" look-controls="pointerLockEnabled:false" wasd-controls="acceleration:55" rc>
-<a-entity cursor="rayOrigin:mouse" raycaster="objects:.clickable;far:14"></a-entity></a-camera></a-entity>
-<a-entity id="amb" light="type:ambient;color:#8f9fe0;intensity:.9"></a-entity>
-<a-entity light="type:hemisphere;color:#9fb0ff;groundColor:#3a2410;intensity:.5"></a-entity>
-<a-entity id="world"></a-entity></a-scene>
+
+<div id="hud">
+  <div class="box" id="meterBox"><div id="meterLabel"><span>CONTAMINATION</span><span id="meterPct">0%</span></div><div id="meterTrack"><div id="meterFill"></div></div></div>
+  <div class="box" id="stageBox"><b id="stageName">SYSTEM BOOT</b><span id="stageHint">Initializing containment lab…</span></div>
+  <div class="box" id="objectiveBox"></div><div id="toast"></div>
+</div>
+<div id="crosshair"></div><div id="vig"></div><div id="flash"></div>
+<div id="startHint" style="display:none">Mouse look · WASD move · click to interact · ESC releases the mouse</div>
+
+<div id="introOverlay" class="overlay active"><h1 style="color:#ff5e6c">LAB 07 — CONTAINMENT BREACH</h1>
+<p>Nexonyx Biotech, Sublevel 4. 03:14.<br><br>Dr. Alden Voss ran gene-splicing trials on an unlisted subject — logged only as "Subject 07" — without clearance. Forty minutes ago the containment pod cracked. Power failed. Comms went dark. You're the only technician still on-site.<br><br>Restore power, stabilize the sample, and reach the containment override before contamination seals the room for good. The incident board on the west wall has hints if you get stuck — but the real clues are scattered through the lab.</p>
+<div style="border:1px solid #1d4452;padding:14px 20px;margin:0 0 22px;max-width:620px;text-align:left;font-size:13px;line-height:1.8;color:#9ad8e8;background:#071014">
+<b style="color:#27d3ff;letter-spacing:2px">HOW TO PLAY</b><br>
+• <b>WASD</b> to walk. Move the <b>mouse</b> to look. <b>Click</b> glowing things to use them.<br>
+• When you click a note, a panel or anything that opens a window, your mouse is freed so you can use it. When you close it, <b>click once on the room</b> to look around again.<br>
+• Almost nothing here is just decoration. Most things either tell the story or help you solve a puzzle.<br>
+• Remember: <b style="color:#ffd25a">the periodic table is your friend!</b><br>
+• Press <b>N</b> for your notebook: write notes and re-read clues.<br>• Stuck? Press <b>H</b> for an optional hint. Hints only appear when you ask.<br>• Take your time. You have plenty of it.</div><button id="enterBtn">ENTER THE LAB</button></div>
+<div id="failOverlay" class="overlay"><h1 style="color:#ff5e6c">CONTAINMENT LOST</h1><p>Contamination reached 100%. The outer door seals automatically. Whatever Voss was hiding down here, it stays hidden — and so do you.</p><button onclick="location.reload()">RESTART</button></div>
+<div id="successOverlay" class="overlay"><h1 style="color:#3ddc8a">CONTAINMENT RESTORED</h1><p>You punch in the final code and the exit door hisses open. Cold air and daylight pour in. Behind you, the hallway lights die one by one. Whatever Voss made is still out there — but you are free.</p><button onclick="location.reload()">RESTART</button></div>
+
+<div id="modal"><div class="mb"><h2 id="mt"></h2><div class="sub" id="ms"></div><div id="mc"></div><button class="mclose" id="mx">close</button></div></div>
+
+<a-scene id="scene" background="color:#05090b" fog="type:exponential;color:#081216;density:0.014" renderer="antialias:true" loading-screen="enabled:false">
+  <a-entity id="rig" position="0 0 4"><a-camera position="0 1.6 0" fov="75" look-controls="pointerLockEnabled:true" wasd-controls="acceleration:60" labcollide>
+    <a-cursor raycaster="objects:.clickable;far:14" material="opacity:0" geometry="radiusInner:.001;radiusOuter:.002"></a-cursor></a-camera></a-entity>
+  <a-entity id="amb" light="type:ambient;color:#7fa8b8;intensity:.18"></a-entity>
+  <a-entity light="type:hemisphere;color:#9fdcf0;groundColor:#1a2226;intensity:.35"></a-entity>
+  <a-entity id="world"></a-entity>
+</a-scene>
+
 <script>
-afReady(function(){
-const $=s=>document.querySelector(s);let BX=[];
-AFRAME.registerComponent('rc',{tick(){const p=this.el.object3D.position,r=this.el.parentNode.object3D.position;p.y=1.6;
-const bl=(x,z)=>Math.abs(x)>5.6||Math.abs(z)>5.6||BX.some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3);
-if(!this.l){this.l={x:p.x,z:p.z};return}
-if(bl(p.x+r.x,p.z+r.z)){if(!bl(this.l.x+r.x,p.z+r.z))p.x=this.l.x;else if(!bl(p.x+r.x,this.l.z+r.z))p.z=this.l.z;else{p.x=this.l.x;p.z=this.l.z}}
-this.l.x=p.x;this.l.z=p.z}});
-const sc=$('#scene');
-const safe=()=>{try{boot()}catch(e){console.error(e);window.dispatchEvent(new ErrorEvent('error',{message:e.message,filename:'boot'}))}};
-sc.hasLoaded?safe():sc.addEventListener('loaded',safe);
+(function(){
+const $=s=>document.querySelector(s);
 function boot(){
-const R=$('#world'),ch=$('#ch');let P=R;
-const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||P).appendChild(e);return e};
-const M=(c,o)=>`color:${c};roughness:.7;metalness:.2;${o||''}`,E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1};roughness:.5`;
+const R=$('#world');
+const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||R).appendChild(e);return e};
+const M=(c,o)=>`color:${c};roughness:.65;metalness:.25;${o||''}`;
+const E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1};roughness:.5`;
 const B=(x,y,z,w,h,d,m,ry,p)=>mk('a-box',{position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,width:w,height:h,depth:d,material:m},p);
 const C=(x,y,z,r,h,m,rot,p)=>mk('a-cylinder',{position:`${x} ${y} ${z}`,rotation:rot||'0 0 0',radius:r,height:h,material:m},p);
 const S=(x,y,z,r,m,p)=>mk('a-sphere',{position:`${x} ${y} ${z}`,radius:r,material:m},p);
-const T=(v,x,y,z,ry,w,c,p)=>mk('a-text',{value:v,position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,align:'center',width:w||2,color:c||'#e8d6a8'},p);
-const L=(x,y,z,c,i,d)=>mk('a-entity',{position:`${x} ${y} ${z}`,light:`type:point;color:${c};intensity:${i};distance:${d||14};decay:2`});
-const K=(e,fn)=>{e.classList.add('clickable');e.addEventListener('click',()=>{if(!st.over)fn(e)});e.addEventListener('mouseenter',()=>ch.classList.add('hot'));e.addEventListener('mouseleave',()=>ch.classList.remove('hot'));return e};
-const hit=(x,y,z,w,h,d,fn)=>K(B(x,y,z,w,h,d,'opacity:0;transparent:true'),typeof fn==='string'?()=>toast(fn,6000):fn);
-let tt;const toast=(m,ms)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),ms||3000)};
-const tex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c.toDataURL()};
+const T=(v,x,y,z,ry,w,c,p)=>mk('a-text',{value:v,position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,align:'center',width:w||2,color:c||'#9fd8e6'},p);
+const G=(x,y,z,ry,vis)=>mk('a-entity',{position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,visible:vis!==false});
+const L=(x,y,z,c,i,d)=>mk('a-entity',{position:`${x} ${y} ${z}`,light:`type:point;color:${c};intensity:${i};distance:${d||12};decay:2`});
+const pulse=(e,p,to,dur)=>e.setAttribute('animation__p',`property:${p};dir:alternate;loop:true;to:${to};dur:${dur};easing:easeInOutSine`);
+const ch=$('#crosshair');
+const K=(e,fn)=>{e.classList.add('clickable');e.addEventListener('click',fn);e.addEventListener('mouseenter',()=>ch.classList.add('hot'));e.addEventListener('mouseleave',()=>ch.classList.remove('hot'));return e};
+let tt;const toast=(m,ms)=>{const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),ms||2800)};
+const flavor=(e,m)=>K(e,()=>toast(m));
+
+/* ---------- audio (synthesised, no files needed) ---------- */
 const AC=new (window.AudioContext||window.webkitAudioContext)();
-const tone=(f,d,ty,v,w)=>{try{const o=AC.createOscillator(),g=AC.createGain(),t0=AC.currentTime+(w||0);o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.12,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+d)}catch(e){}};
-const snd=n=>({ok:()=>{tone(660,.15);tone(990,.3,'sine',.12,.12)},bad:()=>{tone(180,.2,'triangle');tone(130,.3,'triangle',.12,.16)},click:()=>tone(520,.08),chime:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.9,'sine',.1,i*.22)),thud:()=>{tone(60,.7,'square',.25);tone(40,.9,'sawtooth',.2)}})[n]();
+const tone=(f,d,t,v,w)=>{const o=AC.createOscillator(),g=AC.createGain(),t0=AC.currentTime+(w||0);o.type=t||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.12,t0);g.gain.exponentialRampToValueAtTime(.001,t0+d);o.connect(g);g.connect(AC.destination);o.start(t0);o.stop(t0+d)};
+const SFX={success:()=>{tone(660,.15);tone(990,.3,'sine',.12,.12)},error:()=>{tone(180,.18,'triangle',.12);tone(130,.25,'triangle',.12,.16)},bang:()=>{tone(60,.6,'square',.3);tone(38,.8,'sawtooth',.3)},
+ glitch:()=>[0,1,2,3,4].forEach(i=>tone(200+Math.random()*900,.06,'square',.08,i*.07)),alarm:()=>[0,1,2,3].forEach(i=>tone(i%2?500:700,.3,'square',.1,i*.3)),power:()=>{tone(80,1.2,'sine',.14);tone(160,1.2,'triangle',.1,.3)}};
+const snd=n=>{try{SFX[n]&&SFX[n]()}catch(e){}};
 
-/* ---------- room factory ---------- */
-const floorT=tex(256,256,(g,w,h)=>{g.fillStyle='#3a2414';g.fillRect(0,0,w,h);for(let i=0;i<8;i++){g.fillStyle=i%2?'#4a2f1a':'#3f2816';g.fillRect(0,i*32+1,w,30)}});
-const wallT=c=>tex(256,256,(g,w,h)=>{g.fillStyle=c;g.fillRect(0,0,w,h);for(let x=0;x<w;x+=32){g.fillStyle='rgba(0,0,0,.18)';g.fillRect(x,0,16,h)}g.fillStyle='#4a2f1a';g.fillRect(0,h*.7,w,h*.3)});
-const starT=tex(256,256,(g,w,h)=>{g.fillStyle='#070b24';g.fillRect(0,0,w,h);for(let i=0;i<180;i++){g.fillStyle=`rgba(255,255,255,${.3+Math.random()*.7})`;g.fillRect(Math.random()*w,Math.random()*h,1.5,1.5)}});
-const rooms=[];
-function room(wall,ceil,lit){const g=document.createElement('a-entity');g.setAttribute('visible',false);R.appendChild(g);P=g;
-mk('a-plane',{rotation:'-90 0 0',width:12,height:12,material:{src:floorT,repeat:'3 3',roughness:.6}});
-mk('a-plane',{rotation:'90 0 0',position:'0 5 0',width:12,height:12,material:ceil});
-[[0,-6,0],[0,6,180],[-6,0,90],[6,0,-90]].forEach(([x,z,r])=>mk('a-plane',{position:`${x} 2.5 ${z}`,rotation:`0 ${r} 0`,width:12,height:5,material:{src:wallT(wall),repeat:'6 1',roughness:.9}}));
-const lights=[[-5,-5],[5,-5],[-5,5],[5,5]].map(([x,z])=>{B(x,3,z,.2,.3,.2,M('#b8893a','metalness:.8'));return mk('a-entity',{position:`${x} 2.7 ${z}`,light:`type:point;color:#ffb55a;intensity:${lit?.9:0};distance:14;decay:2`},g)});
-const o={g,lights,bx:[],set(on){lights.forEach(l=>l.setAttribute('light','intensity',on?.9:0))}};rooms.push(o);return o}
-const JR=[];const clip=(x,y,z,ry,title,body)=>{const g=mk('a-entity',{position:`${x} ${y} ${z}`,rotation:`0 ${ry} 0`});B(0,0,-.015,.6,.76,.03,M('#b8893a','metalness:.7'),0,g);K(B(0,0,.01,.5,.66,.02,M('#efe6c8','roughness:.9'),0,g),()=>{if(!JR.find(j=>j[0]===title))JR.push([title,body]);openM(title,'',c=>{const p=document.createElement('p');p.textContent=body;c.appendChild(p)})});S(.2,.26,.03,.03,E('#ff5a4e',1.8),g);T('READ',0,-.25,.025,0,1,'#555',g)};
+/* ---------- textures ---------- */
+const tex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c.toDataURL()};
+const floorT=tex(256,256,(g,w,h)=>{g.fillStyle='#0c1316';g.fillRect(0,0,w,h);[[0,0],[1,1]].forEach(([a,b])=>{g.fillStyle='#222f35';g.fillRect(a*w/2+5,b*h/2+5,w/2-10,h/2-10)});[[1,0],[0,1]].forEach(([a,b])=>{g.fillStyle='#1b272c';g.fillRect(a*w/2+5,b*h/2+5,w/2-10,h/2-10)});for(let i=0;i<500;i++){g.fillStyle='rgba(255,255,255,.035)';g.fillRect(Math.random()*w,Math.random()*h,2,2)}});
+const wallT=tex(256,256,(g,w,h)=>{g.fillStyle='#24323a';g.fillRect(0,0,w,h);g.fillStyle='#1c282e';g.fillRect(6,6,w-12,h*.6);g.fillStyle='#2b3b43';g.fillRect(6,h*.66,w-12,h*.3);g.strokeStyle='#0a1114';g.lineWidth=4;g.strokeRect(0,0,w,h);g.fillStyle='#4a606a';[[16,16],[w-16,16],[16,h-16],[w-16,h-16]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,4,0,6.3);g.fill()})});
 
-/* ---------- modal ---------- */
+/* ---------- shell ---------- */
+mk('a-plane',{rotation:'-90 0 0',width:14,height:14,material:{src:floorT,repeat:'7 7',roughness:.45,metalness:.5}});
+mk('a-plane',{rotation:'90 0 0',position:'0 5 0',width:14,height:14,material:M('#0d1417')});
+[[0,-7,0],[0,7,180],[-7,0,90],[7,0,-90]].forEach(([x,z,r])=>mk('a-plane',{position:`${x} 2.5 ${z}`,rotation:`0 ${r} 0`,width:14,height:5,material:{src:wallT,repeat:'7 2',roughness:.85,metalness:.2}}));
+[[0,-6.96,14,.06],[0,6.96,14,.06],[-6.96,0,.06,14],[6.96,0,.06,14]].forEach(([x,z,w,d])=>{B(x,.07,z,w,.1,d,E('#1ec8ff',.9));B(x,4.35,z,w,.07,d,E('#ff9d1a',.7));B(x,.4,z,w,.5,d,M('#0b1215'))});
+[[-6.8,-6.8],[6.8,-6.8],[-6.8,6.8],[6.8,6.8]].forEach(([x,z])=>B(x,2.5,z,.5,5,.5,M('#141d21')));
+
+/* ceiling: beams, lights, pipes, vents */
+const lamps=[],panels=[];
+[-3.5,3.5].forEach(x=>B(x,4.88,0,.3,.24,14,M('#141d21')));
+[[-3.5,-3],[3.5,-3],[-3.5,3],[3.5,3]].forEach(([x,z])=>{panels.push(B(x,4.93,z,1.8,.06,1,E('#eaf8ff',.05)));lamps.push(L(x,4.3,z,'#dff4ff',0,22))});
+[['0 4.55 -6.8','0 0 90'],['0 4.55 6.8','0 0 90'],['-6.8 4.4 0','90 0 0'],['6.8 4.4 0','90 0 0']].forEach(([p,r],i)=>{mk('a-cylinder',{position:p,rotation:r,radius:.09,height:13.6,material:M(i%2?'#4a5e66':'#6b7f88')})});
+for(let i=0;i<3;i++){const x=-4+i*4;B(x,4.97,0,1.2,.04,.8,M('#0a0f11'));for(let s=-3;s<=3;s++)B(x,4.94,s*.1,1.1,.02,.03,M('#344a53'))}
+[[-6.3,-6.3],[6.3,-6.3],[-6.3,6.3],[6.3,6.3]].forEach(([x,z])=>{const b=S(x,4.5,z,.13,E('#ff2b3d',1.2));pulse(b,'material.emissiveIntensity',.1,700)});
+const red=[L(-4,2.5,-3,'#ff2b3d',0,10),L(4,2.5,2,'#ff2b3d',0,10)];
+const redOn=on=>red.forEach((r,i)=>{r.removeAttribute('animation__r');r.setAttribute('light','intensity',0);if(on)r.setAttribute('animation__r',`property:light.intensity;from:.1;to:.8;dir:alternate;loop:true;dur:${900+i*250};easing:easeInOutSine`)});
+redOn(true);
+const setPower=on=>{lamps.forEach(l=>l.setAttribute('light','intensity',on?.8:0));panels.forEach(p=>p.setAttribute('material','emissiveIntensity',on?1.5:.05));$('#amb').setAttribute('light','intensity',on?1.7:.3)};
+
+/* ---------- containment pod ---------- */
+C(0,.12,-5.8,1.5,.24,M('#10181b','metalness:.7'));
+mk('a-torus',{position:'0 .26 -5.8',rotation:'90 0 0',radius:1.35,'radius-tubular':.03,material:E('#ff9d1a',1)});
+const podRing=[2.5,.4].map((y,i)=>{const t=mk('a-torus',{position:`0 ${y} -5.8`,rotation:'90 0 0',radius:.95,'radius-tubular':.035,material:E('#27d3ff',1.5)});pulse(t,'material.emissiveIntensity',.3,1000+i*300);return t});
+mk('a-cylinder',{position:'0 1.45 -5.8',radius:.9,height:2.3,material:'color:#9fe8d6;opacity:.16;transparent:true;metalness:.9;roughness:.05;side:double'});
+mk('a-cylinder',{position:'0 1.4 -5.8',radius:.7,height:2,material:'color:#0f5a40;emissive:#0f5a40;emissiveIntensity:.5;opacity:.45;transparent:true'});
+C(0,2.7,-5.8,1,.18,M('#1a2428','metalness:.8'));C(0,.34,-5.8,1,.2,M('#1a2428','metalness:.8'));
+[[.95,0],[-.95,0],[0,.95],[0,-.95]].forEach(([x,z])=>B(x,1.5,-5.8+z,.09,2.4,.09,M('#4a5e66','metalness:.9')));
+const blob=S(0,.85,-5.8,.3,E('#39ff88',1.6));blob.setAttribute('animation','property:scale;dir:alternate;loop:true;to:1.25 1.25 1.25;dur:1400;easing:easeInOutSine');
+S(.25,.7,-5.7,.14,E('#39ff88',1.4));S(-.2,.65,-5.9,.12,E('#39ff88',1.4));
+[[.55,1.6,.8,12],[.25,1.1,.88,-8]].forEach(([x,y,z,r])=>mk('a-box',{position:`${x*.8} ${y} ${-5.8+z*.95}`,rotation:`0 0 ${r}`,width:.025,height:.9,depth:.02,material:E('#39ff88',1)}));
+for(let i=0;i<9;i++){const a=Math.random()*6.28,r=Math.random()*.5,x=Math.cos(a)*r,z=-5.8+Math.sin(a)*r;const b=S(x,.5,z,.03+Math.random()*.03,'color:#9fe8c9;emissive:#9fe8c9;emissiveIntensity:1;opacity:.6;transparent:true');b.setAttribute('animation',`property:position;from:${x} .5 ${z};to:${x} 2.5 ${z};dur:${2200+Math.random()*2500};loop:true;delay:${i*350};easing:linear`)}
+const podLight=L(0,1.4,-5.6,'#39ff88',1.6,8);
+for(let i=0;i<16;i++)B(-1.5+i*.2,.015,-4.2,.2,.01,.14,i%2?M('#111'):E('#ffa51f',.6));
+T('CONTAINMENT POD // BREACHED',0,3.2,-6.9,0,4,'#ff5e6c');T('SUBLEVEL 4  //  LAB 07',0,3.7,-6.93,0,4,'#a8d0dc');
+B(-1.9,.5,-6.7,.5,1,.5,M('#141d21'));mk('a-plane',{position:'-1.9 1.1 -6.43',width:.4,height:.3,material:E('#0f6b4a',.8)});T('POD\nDIAG',-1.9,1.1,-6.42,0,.8,'#3ddc8a');
+
+/* ---------- centerpiece: holo genome table ---------- */
+B(0,.5,.5,2,1,1.1,M('#17232a'));B(0,1.01,.5,2.1,.04,1.2,M('#2a3c45'));mk('a-torus',{position:'0 1.05 .5',rotation:'90 0 0',radius:.4,'radius-tubular':.015,material:E('#27d3ff',1.5)});
+const helix=G(0,1.6,.5);helix.setAttribute('animation','property:rotation;to:0 360 0;dur:9000;loop:true;easing:linear');
+for(let i=0;i<18;i++){const a=i*.55,y=(i-9)*.07;S(Math.cos(a)*.22,y,Math.sin(a)*.22,.032,E('#27d3ff',1.5),helix);S(-Math.cos(a)*.22,y,-Math.sin(a)*.22,.032,E('#ff4fd8',1.5),helix);if(i%2==0)B(0,y,0,.44,.01,.01,E('#cfeeff',.6),-a*57.3,helix)}
+T('SUBJECT 07 // GENOME',0,2.45,.5,0,1.6,'#27d3ff');L(0,1.6,.5,'#27d3ff',.7,5);
+
+/* ---------- west wall: power relay, sample rack, board, log ---------- */
+B(-6.92,1.5,-2,.1,1.7,2.1,M('#10181b'));
+const pp=G(-6.85,1.5,-2,90);B(0,0,-.02,2,1.6,.04,M('#1b272d'),0,pp);T('POWER RELAY',0,.62,.01,0,1.8,'#9fd8e6',pp);
+const swData=[['gold','#ffa51f',-.6,'A'],['red','#ff3b4e',-.2,'B'],['blue','#2d8cff',.2,'C']],swEls=[];
+swData.forEach(([n,c,x,l])=>{const s=B(x,0,.08,.26,.5,.14,M('#e0293c'),0,pp);s.dataset.color=n;K(s,()=>powerClick(s));swEls.push(s);S(x,.36,.1,.05,E(c,2),pp);T(l,x,-.42,.02,0,1.2,'#9fd8e6',pp)});
+const sx=K(B(.6,0,.08,.26,.5,.14,M('#6a7a80'),0,pp),()=>{if(st.stage!=='power')return;toast('WARNING: relay fault triggered');snd('error');cont(3)});T('X',.6,-.42,.02,0,1.2,'#9fd8e6',pp);
+B(-6.7,.45,.45,.55,.9,2.2,M('#1d2a30'));B(-6.7,.93,.45,.6,.06,2.3,M('#3a4d56'));
+['#2d8cff','#ffa51f','#ff3b4e','#39ff88','#b36bff','#ff8bc0'].forEach((c,i)=>{const z=1.3-i*.32;C(-6.7,1.12,z,.05,.32,'color:#cfe;opacity:.35;transparent:true;metalness:.5');C(-6.7,1.04,z,.042,.16,E(c,1.2))});
+T('SAMPLE RACK  (LEFT → RIGHT)',-6.93,1.55,.45,90,1.8,'#a8d0dc');
+const board=B(-6.95,2,3.5,.06,1.6,1.9,M('#6e5232'));K(board,hintModal);T('INCIDENT BOARD — CLICK FOR HINTS',-6.9,2.95,3.5,90,1.9,'#ffa51f');
+for(let i=0;i<6;i++)B(-6.9,2.25-Math.floor(i/2)*.4,3.15+(i%2)*.7,.01,.3,.55,M(i%3?'#f3ecd2':'#ffe08a'),0).setAttribute('rotation',`0 0 ${(i%3-1)*4}`);
+B(-6.55,.5,-5.8,.8,1,.8,M('#1d2a30'));flavor(B(-6.55,1.05,-5.8,.5,.1,.5,M('#2a3c45')),'Filing cabinet. Locked. The label says "07 — DO NOT LOG."');
+/* desk */
+B(-6.4,.4,5.6,.9,.8,2,M('#1d2a30'));B(-6.4,.82,5.6,.95,.04,2.05,M('#2f424b'));B(-6.65,1.07,5.6,.06,.42,.74,M('#0b1012'));
+mk('a-plane',{position:'-6.617 1.07 5.6',rotation:'0 90 0',width:.64,height:.34,material:E('#0f6b4a',1)});T('LOGIN DISABLED\nUSER: VOSS_A',-6.6,1.07,5.6,90,.9,'#3ddc8a');
+flavor(B(-6.6,1.07,5.6,.12,.46,.78,'opacity:0;transparent:true'),'Voss\'s workstation. Everything is encrypted except one folder: "07 - MINE?"');
+B(-6.2,.86,5.6,.25,.03,.5,M('#0b1012'));B(-5.55,.5,5.4,.5,.06,.5,M('#2a3c45'));B(-5.3,.8,5.4,.06,.6,.5,M('#2a3c45'));C(-5.55,.25,5.4,.04,.5,M('#6b7f88'));
+
+/* ---------- east wall: vent, microscope, rack, vial ---------- */
+const vent=G(6.9,2,0,0);B(0,0,0,.1,1.3,1.3,M('#0b1012'),0,vent);for(let i=-3;i<=3;i++)B(.06,i*.15,0,.03,.06,1.15,M('#35505a'),0,vent);
+const ventA=G(6.85,1.5,-2,-90,false);B(0,.05,-.02,1.4,1.4,.04,M('#1b272d'),0,ventA);T('AIRFLOW PURGE',0,.62,.01,0,1.4,'#ffa51f',ventA);
+[['Ar',-.4],['He',0],['Ne',.4]].forEach(([n,x])=>{const b=K(B(x,0,.07,.28,.28,.12,M('#2a3c45'),0,ventA),()=>ventClick(n,b));E;S(x,.22,.1,.03,E('#27d3ff',1.5),ventA);T(n,x,-.28,.02,0,1.4,'#cfeeff',ventA)});
+B(6.5,.5,1.5,.9,1,2.3,M('#1d2a30'));B(6.5,1.02,1.5,.95,.04,2.35,M('#2f424b'));
+const ms=G(6.5,1.04,2.2,0);C(0,.03,0,.12,.06,M('#0b1012'),'',ms);C(0,.2,-.02,.025,.34,M('#6b7f88'),'',ms);K(B(0,.38,.05,.09,.26,.09,M('#10181b'),0,ms),()=>openScope('72')).setAttribute('rotation','55 0 0');T('MICROSCOPE\n(click it)',0,.75,0,-90,2.2,'#ffe27a',ms);
+[.9,1.3].forEach((z,i)=>C(6.5,1.14,z,.08,.16,i?E('#39ff88',1):E('#27d3ff',1)));
+flavor(B(6.62,1.1,-4.6,.7,2.2,1.2,M('#10181b')),'Server rack. Fans spinning, drives wiped clean.');
+for(let i=0;i<10;i++){const l=S(6.26,.5+i*.17,-4.9+(i%2)*.4,.025,E(['#3ddc8a','#ffa51f','#27d3ff'][i%3],1.5));pulse(l,'material.emissiveIntensity',.1,400+Math.random()*900)}
+B(6.3,.45,5.6,.5,.9,.5,M('#1d2a30'));C(6.3,.96,5.6,.1,.12,M('#2a3c45'));
+const vialV=C(6.3,1.16,5.6,.09,.3,E('#ffa51f',1.8));L(6.3,1.5,5.6,'#ffa51f',.5,3);T('SUBJECT 07',6.3,1.6,5.6,0,1.2,'#ffa51f');
+const vialHit=K(B(6.3,1.15,5.6,.4,.5,.4,'opacity:0;transparent:true'),()=>toast('A sealed vial labelled SUBJECT 07. The tag says the cells inside belong to "A. VOSS".',6000));
+/* safety station */
+B(5.5,.9,6.8,.5,.6,.2,M('#dfe8ea'));B(5.5,.9,6.69,.3,.07,.02,E('#ff3b4e',.8));B(5.5,.9,6.69,.07,.3,.02,E('#ff3b4e',.8));C(5.5,.45,6.7,.14,.5,M('#8a9aa0'));T('SAFETY STATION',5.5,1.4,6.7,180,1.6,'#a8d0dc');
+
+/* ---------- north wall: periodic table, sequencer, chem bench ---------- */
+const els=[['H',1,1,'n'],['He',1,18,'noble'],['Li',2,1,'alkali'],['Be',2,2,'n'],['B',2,13,'n'],['C',2,14,'n'],['N',2,15,'n'],['O',2,16,'n'],['F',2,17,'halogen'],['Ne',2,18,'noble'],['Na',3,1,'alkali'],['Mg',3,2,'n'],['Al',3,13,'n'],['Si',3,14,'n'],['P',3,15,'n'],['S',3,16,'n'],['Cl',3,17,'halogen'],['Ar',3,18,'noble']];
+const cc={n:'#6b7f88',alkali:'#ff8aa0',halogen:'#ffd25a',noble:'#6cc2ff'},cs=.24,ox=-6.3,oy=4;
+B(-4.2,3.4,-6.95,4.7,1.8,.05,M('#0b1215'));T('PERIODIC TABLE OF THE ELEMENTS (1-18)',-4.2,4.17,-6.9,0,3.8,'#9fd8e6');
+els.forEach(([s,r,c,k])=>{const x=ox+(c-1)*cs,y=oy-(r-1)*cs;B(x,y,-6.91,cs*.9,cs*.9,.03,E(cc[k],.5));T(s,x,y,-6.88,0,1.4,'#071014')});
+[['alkali','ALKALI METAL  ->  restores RED strands'],['halogen','HALOGEN  ->  restores YELLOW strands'],['noble','NOBLE GAS  ->  restores BLUE strands']].forEach(([k,t],i)=>{const y=3.05-i*.26;B(-5.6,y,-6.91,.18,.18,.03,E(cc[k],.8));T(t,-3.5,y,-6.89,0,3.3,'#cfeeff').setAttribute('align','left')});
+/* sequencer */
+B(-2.5,.5,-5.8,2.2,1,1.4,M('#1d2a30'));B(-2.5,1.01,-5.8,2.3,.04,1.5,M('#2f424b'));B(-2.5,1.45,-6.15,1.8,.85,.6,M('#26363e'));T('GENE SEQUENCER',-2.5,2.0,-5.83,0,2.2,'#9fd8e6');
+const slots={};[['A',-3.05,'He','fragB'],['B',-2.5,'F','fragC'],['C',-1.95,'Li','fragA']].forEach(([id,x,n,ok])=>{const s=B(x,1.17,-5.5,.44,.32,.44,M('#3a4d56','emissive:#27d3ff;emissiveIntensity:.6'));K(B(x,1.3,-5.5,.64,.62,.64,'opacity:0;transparent:true'),()=>slotClick(id,s,ok));slots[id]=null;T(n,x,1.72,-5.5,0,3,'#ffe27a');mk('a-ring',{position:`${x} 1.02 -5.5`,rotation:'-90 0 0','radius-inner':.3,'radius-outer':.34,material:E('#27d3ff',1.5)})});
+B(-4.6,.5,-5.35,1.6,1,.8,M('#1d2a30'));B(-4.6,1.01,-5.35,1.7,.04,.9,M('#2f424b'));T('GENE FRAGMENTS',-4.6,1.8,-5.35,0,2.4,'#ffe27a');
+const fragsG=G(0,0,0,0,false);const frags=[['fragA','#ff3b4e',-5.1],['fragB','#2d8cff',-4.6],['fragC','#ffa51f',-4.1]].map(([id,c,x])=>{const f=K(S(x,1.2,-5.35,.15,E(c,1.6),fragsG),()=>fragClick(f,id));return f});
+/* sample cart */
+B(-2,.45,-3,.7,.9,.5,M('#1d2a30'));B(-2,.92,-3,.75,.05,.55,M('#3a4d56'));
+const sample=K(S(-2,1.2,-3,.16,E('#2ee58a',1.8)),sampleClick);sample.setAttribute('animation','property:position;dir:alternate;loop:true;to:-2 1.28 -3;dur:1600;easing:easeInOutSine');
+T('UNSTABLE SAMPLE — CLICK TO RETRIEVE',-2,1.75,-3,0,2.2,'#a8d0dc');L(-2,1.4,-3,'#2ee58a',.5,3);
+/* chem bench */
+B(4.5,.5,-5.9,2.8,1,1.2,M('#1d2a30'));B(4.5,1.01,-5.9,2.9,.04,1.3,M('#2f424b'));B(4.5,1.15,-5.45,.5,.3,.4,M('#3a4d56'));
+const chem=G(0,0,0,0,false);const bottles=[['Cl',3.8],['Na',4.5],['Ar',5.2]].map(([n,x])=>{const b=K(C(x,1.25,-6.1,.14,.42,'color:#e8f4f8;opacity:.85;transparent:true;metalness:.3',null,chem),()=>bottleClick(b,n,x));T(n,x,1.6,-6.1,0,1.1,'#cfeeff',chem);b.dataset.x=x;return b});
+mk('a-plane',{position:'4.5 2.7 -6.93',width:2.6,height:.6,material:E('#3a0a12',.6)},chem);T('READOUT: STABILIZER MATCHES\nCHART COLOR [PINK]',4.5,2.7,-6.9,0,2.4,'#ff8aa0',chem);
+const mixer=B(4.5,1.15,-5.45,.5,.3,.4,M('#3a4d56'));
+B(2.9,3.4,-6.95,.6,.6,.04,E('#ffd25a',.7));T('BIO\nHAZARD',2.9,3.4,-6.9,0,.9,'#1a1a1a');
+const clock=flavor(mk('a-circle',{position:'1.8 3.5 -6.94',radius:.3,material:M('#dfe8ea')}),'Stopped at 03:14 — the moment the pod cracked.');B(1.8,3.58,-6.92,.02,.18,.01,M('#111'));
+
+/* ---------- south wall: override ---------- */
+B(0,1.5,6.95,4.2,3.2,.2,M('#2a3a42','metalness:.7'));for(let i=0;i<6;i++)B(0,.2+i*.55,6.84,4.1,.08,.02,E(i%2?'#ffa51f':'#111',.4));
+[-2.25,2.25].forEach(x=>B(x,1.6,6.85,.3,3.3,.35,M('#141d21')));B(0,3.25,6.85,4.8,.3,.35,M('#141d21'));
+B(0,3.7,6.9,1.1,.3,.05,E('#1f9d5c',1.5));T('EXIT',0,3.7,6.86,180,1.4,'#eafff2');T('AUTHORIZED PERSONNEL ONLY',0,4.0,6.92,180,2.6,'#ff5e6c');
+const fin=G(0,1.3,6.78,180,false);T('CONTAINMENT OVERRIDE',0,1.15,0,0,3,'#9fd8e6',fin);
+const finItems=[['scan',-1.9,'#2d8cff','HAND SCAN'],['stabiliser',-.65,'#ffa51f','STABILISER'],['lasers',.65,'#ff3b4e','ALIGN LASERS']].map(([n,x,c,l])=>{B(x,.3,-.02,.7,.9,.1,M('#10181b'),0,fin);const b=K(B(x,.4,.04,.5,.6,.06,E(c,.9),0,fin),()=>finalOpen(n,b));T(l,x,-.05,.05,0,1.4,'#cfeeff',fin);return b});
+B(1.9,.3,-.02,.7,.9,.1,M('#10181b'),0,fin);const term=K(mk('a-plane',{position:'1.9 .4 .05',width:.5,height:.6,material:E('#0f6b4a',1)},fin),()=>finalOpen('code',term));T('TERMINAL',1.9,.4,.06,0,1.1,'#cfffe8',fin);T('ENTER CODE',1.9,-.05,.05,0,1.4,'#cfeeff',fin);
+const guide=mk('a-plane',{position:'0 .02 5',rotation:'-90 0 0',width:.5,height:3.6,visible:false,material:E('#1f9d5c',1)});pulse(guide,'material.emissiveIntensity',.2,1000);
+const fogL=null;
+
+/* ---------- clipboards ---------- */
+const clip=(x,y,z,ry,title,body)=>{const g=G(x,y,z,ry);B(0,0,-.015,.6,.76,.03,M('#6e5232'),0,g);const b=K(B(0,0,.01,.5,.66,.02,M('#efe6c8','roughness:.9;metalness:0'),0,g),()=>openM(title,'',m=>{const p=document.createElement('p');p.textContent=body;m.appendChild(p)}));B(0,.34,.03,.18,.06,.03,M('#6b7f88'),0,g);const d=S(.2,.26,.03,.03,E('#ff3b4e',1.8),g);pulse(d,'material.emissiveIntensity',.2,800);T('READ',0,-.25,.025,0,1.1,'#555',g)};
+clip(-3.9,1.9,6.9,180,'SECURITY MEMO',"Hand-scan order:\n\n7 - 5 - 3 - 1 - 9\n\n(Numbers are as shown on the scanner.)");
+clip(3.9,1.9,6.9,180,'OPTICS NOTE',"Mirror directions, left to right:\n\nRIGHT, LEFT, DOWN");
+clip(-6.95,1.7,-3.9,90,'PERSONAL LOG — DR. A. VOSS',"Day 41.\nThe backup relay is NOT fine. I colour-tagged its switches to match the sample vials.\n\n(In the margin: OVERRIDE CODE, DIGITS 1-2: 4 1)");
+clip(-5.3,1.9,-6.94,0,'MAINTENANCE NOTE',"Strand colour now follows the element FAMILY, not its name.\n\nUse the colour chart on the wall.");
+clip(-6.8,1.9,-6.94,0,'ETHICS BOARD MEMO (UNSENT)',"Dr. Voss,\n\nYour request to start the Subject 07 trial was denied twice. We think you did it anyway.\n\n(Never sent.)");
+clip(6.2,1.9,-6.94,0,'MAINTENANCE NOTE — STABILISER',"Set the stabiliser pressure to level 6. Any other number trips the alarm.");
+clip(6.95,2.2,-3.3,-90,'MAINTENANCE NOTE',"VENT PURGE ORDER\n\nPress the buttons in this order:\nHe, then Ne, then Ar.\n\n(Lightest to heaviest. Element numbers: He 2, Ne 10, Ar 18.)");
+clip(6.95,2.1,2.6,-90,'TECHNICIAN LOG',"Comms are down.\n\nVoss left a slide under the microscope on this bench. Look closely. It shows numbers.");
+
+/* ---------- dust ---------- */
+for(let i=0;i<14;i++){const x=(Math.random()-.5)*12,y=.4+Math.random()*4,z=(Math.random()-.5)*12;S(x,y,z,.013,'color:#fff;emissive:#fff;opacity:.4;transparent:true').setAttribute('animation',`property:position;to:${x+.6} ${y+.7} ${z+.4};dur:${6000+Math.random()*6000};dir:alternate;loop:true;easing:easeInOutSine`)}
+const shadow=B(6,1.2,3,.6,1.8,.2,'color:#000');shadow.setAttribute('visible',false);S(-.1,.5,.11,.03,E('#ff2b3d',3),shadow);S(.1,.5,.11,.03,E('#ff2b3d',3),shadow);
+
+/* ---------- modal system ---------- */
 const mod=$('#modal');
-function openM(t,s,b){document.exitPointerLock&&document.exitPointerLock();ch.classList.add('hidden');$('#mt').textContent=t;$('#ms').textContent=s||'';const c=$('#mc');c.innerHTML='';b(c);mod.classList.add('on')}
-const closeM=()=>{mod.classList.remove('on');ch.classList.remove('hidden')};$('#mx').onclick=closeM;
-const btn=(t,f,p)=>{const b=document.createElement('button');b.textContent=t;b.onclick=f;p.appendChild(b);return b};
-function dial(c,label,vals,i0,fmt){const d=document.createElement('div');d.className='dial';let i=i0;const l=document.createElement('span');l.className='l';l.textContent=label;const v=document.createElement('span');v.className='v';const up=()=>v.textContent=fmt?fmt(vals[i]):vals[i];d.appendChild(l);btn('−',()=>{i=(i+vals.length-1)%vals.length;up();snd('click')},d);d.appendChild(v);btn('+',()=>{i=(i+1)%vals.length;up();snd('click')},d);up();c.appendChild(d);return()=>vals[i]}
+function openM(t,s,build){document.exitPointerLock&&document.exitPointerLock();ch.classList.add('hidden');$('#mt').textContent=t;$('#ms').textContent=s||'';const c=$('#mc');c.innerHTML='';build(c);mod.classList.add('active')}
+function closeM(){mod.classList.remove('active');ch.classList.remove('hidden')}
+$('#mx').onclick=closeM;
+const btn=(txt,fn,cls,p)=>{const b=document.createElement('button');b.textContent=txt;if(cls)b.className=cls;b.onclick=fn;p.appendChild(b);return b};
+const HINTS=[['1. POWER',"Read the vial colours on the left wall, left to right. Press the switches with the same dot colours, in that order. Never press X."],['2. SAMPLE',"Click the glowing green sample on the cart."],['3. GENE MACHINE',"Put each ball in a slot. Red = alkali metal (Li), yellow = halogen (F), blue = noble gas (He)."],['4. BOTTLES',"Pink means alkali metal on the chart. Click the bottle Na."],['5. VENT',"Press He, then Ne, then Ar. (Lightest to heaviest: 2, 10, 18.)"],['6. HAND SCAN',"Read the SECURITY MEMO near the exit door."],['7. STABILISER',"Read the note by the bottles. Set that number."],['8. LASERS',"Read the OPTICS NOTE near the exit door."],['9. TERMINAL',"First two digits: Voss's log (left wall). Last two: the microscope slide (right wall)."]];
 
-/* ================= ROOM 0: THE DOME ================= */
-const dome=room('#2a3a3a','color:#1a120a',false);
-B(-5.7,.5,0,.6,1,3.2,M('#3a2414'));B(-5.7,1.02,0,.7,.06,3.3,M('#5c3a20'));
-mk('a-circle',{position:'0 4.97 0',rotation:'90 0 0',radius:2,material:{src:starT,shader:'flat',fog:false}});
-B(0,.45,0,2,.9,2,M('#3a2414'));B(0,.93,0,2.1,.06,2.1,M('#b8893a','metalness:.8'));S(0,1.5,0,.18,E('#ffcf4a',2));
-const arms=mk('a-entity',{position:'0 1.5 0'});arms.setAttribute('animation','property:rotation;to:0 360 0;dur:40000;loop:true;easing:linear');
-[['#9aa0a6',.4,.05],['#e8d27a',.55,.07],['#3b82f6',.72,.08],['#d9482b',.9,.06],['#e39b4a',1.1,.13]].forEach(([c,r,s],i)=>S(Math.cos(i*1.3)*r,0,Math.sin(i*1.3)*r,s,M(c),arms));
-const PL={mercury:'#9aa0a6',venus:'#e8d27a',earth:'#3b82f6',mars:'#d9482b',jupiter:'#e39b4a'},SEQ=['mercury','venus','earth','mars','jupiter'],orbs={};let got=[];
-['mars','jupiter','mercury','earth','venus'].forEach((n,i)=>{const o=S(-5.6,1.3,-1.2+i*.6,.16,E(PL[n],.25));orbs[n]=o;K(o,()=>orb(n))});
-T('WAKE THEM FROM THE SUN OUTWARD',-5.97,2.9,0,90,2.8,'#ffcf4a');B(-5.97,2,0,.04,1.5,3,M('#0d1414'));
-[['MERCURY','mercury','0.39 AU'],['VENUS','venus','0.72 AU'],['EARTH','earth','1.00 AU'],['MARS','mars','1.52 AU'],['JUPITER','jupiter','5.20 AU']].forEach(([n,k,au],i)=>{S(-5.93,2.25,1.1-i*.5,.06,E(PL[k],1));T(n+'  '+au,-5.93,2.03,1.1-i*.5,90,.9)});
-C(-3.2,.5,-3.5,.04,1,M('#b8893a','metalness:.8'));const tube=C(-3.2,1.55,-3.5,.18,1.9,M('#1a2a3a','metalness:.7'),'0 0 -25');
-K(B(-3.2,1.5,-3.5,.9,1.8,.9,'opacity:0;transparent:true'),scopeUI);T('GREAT REFRACTOR\n(click it)',-3.2,2.9,-3.5,0,1.8,'#ffe27a');
-B(-5.97,1.7,-4.4,.04,.9,1.4,M('#0d1414'));T('COMPASS\nN 0°  E 90°\nS 180°  W 270°',-5.93,1.7,-4.4,90,1.3);
-const door0=B(0,1.5,5.95,3,3,.12,M('#2a2a2e','metalness:.8'));T('TO THE LIBRARY\n(needs a brass key)',0,3.3,5.88,180,2.2,'#ffcf4a');K(B(0,1.5,5.8,3,3,.2,'opacity:0;transparent:true'),()=>{if(st.stage!=='keyd')return toast(st.key?'':'The door is locked. There must be a key somewhere.');tp(1)});
-clip(-5.95,1.7,2.6,90,'PLANET LEDGER NOTE',"The sun wakes first; the rest follow in order of how far they travel from it. Match each coloured orb to the chart.\n\n(Scratched underneath: FIVE WAKE. FIVE SHIFT.)");
-clip(-5.95,1.7,-2.9,90,'VESPER LOG — HALLOWAY',"Comet Vesper rises OPPOSITE the direction the sun rises, and stands HALF A RIGHT ANGLE above the horizon.\n\nCentre her in the refractor and read the catalogue number off the lens ring.");
-hit(3.6,1.0,4.9,.3,.2,.3,'A cold cup of tea. The saucer is dated 10:15 p.m.');B(3.6,.4,4.7,1.6,.8,.9,M('#3a2414'));
-dome.bx=[[-1.4,1.4,-1.4,1.4],[-6,-5,-1.6,1.6],[-4,-2.5,-4.3,-2.7],[2.8,4.4,4.2,5.2]];
+function hintModal(){openM('INCIDENT BOARD — HINTS','Stuck? Find your puzzle below.',c=>{const d=document.createElement('div');d.id='hintBody';d.innerHTML=HINTS.map(([t,h])=>`<b>${t}</b><br>${h}<br><br>`).join('');c.appendChild(d)})}
+const DP={0:'111101101101111',1:'010110010010111',2:'111001111100111',3:'111001111001111',4:'101101111001001',5:'111100111001111',6:'111100111101111',7:'111001010010010',8:'111101111101111',9:'111101111001111'};
+function openScope(d){openM('MICROSCOPE — CULTURE SLIDE','These glowing dots form two numbers. They are digits 3 and 4 of the override code.',c=>{const sc=document.createElement('div');sc.id='scope';const g=document.createElement('div');g.id='scopeG';d.split('').forEach(n=>{const w=document.createElement('div');w.className='dg';DP[n].split('').forEach(b=>{const i=document.createElement('i');if(b==='1')i.className='on';w.appendChild(i)});g.appendChild(w)});sc.appendChild(g);for(let i=0;i<26;i++){const n=document.createElement('div');n.className='nz';const z=4+Math.random()*6;n.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%`;sc.appendChild(n)}c.appendChild(sc)})}
 
-/* ================= ROOM 1: THE LIBRARY ================= */
-const lib=room('#3a2a2a','color:#20140c',true);
-const BK=[['ATLAS','#9b2d30',1687],['ALMANAC','#2d6a9b',1543],['ORBITS','#2d9b5a',1632],['CHARTS','#9b7a2d',1759],['TREATISE','#7a2d9b',1610]];
-B(-5.7,1.1,0,.5,2.2,5,M('#3a2414'));const bkOrder=[...BK].sort((a,b)=>a[2]-b[2]).map(b=>b[0]);let bk=[];const bks={};
-BK.forEach(([n,c,y],i)=>{const b=B(-5.4,1.5,-2+i*1,.3,.8,.5,M(c));T(n,-5.24,1.5,-2+i*1,90,.9,'#fff');bks[n]=b;K(B(-5.35,1.5,-2+i*1,.4,.9,.6,'opacity:0;transparent:true'),()=>book(n,b))});
-T('SHELVE THEM OLDEST FIRST',-5.97,3.4,0,90,2.5,'#ffcf4a');
-B(-5.97,2.5,3.2,.04,1,1.8,M('#0d1414'));T('CATALOGUE CARD\nAtlas 1687 · Almanac 1543\nOrbits 1632 · Charts 1759\nTreatise 1610',-5.93,2.5,3.2,90,1.4);
-const lect=B(2.5,.55,-4.5,1,1.1,.7,M('#4a2f1a'));B(2.5,1.15,-4.5,1.1,.08,.8,M('#5c3a20'),0,null);const lectGlow=B(2.5,1.22,-4.5,.7,.02,.5,E('#e8b04a',.3));
-K(B(2.5,1.2,-4.5,1.2,1.3,.9,'opacity:0;transparent:true'),cipherUI);T('LECTERN\n(click it)',2.5,2.2,-4.5,0,1.5,'#ffe27a');
-clip(4.9,1.7,-5.95,0,'THE CIPHER PAGE',"Letters have been pushed FORWARD along the alphabet. Slide each one BACK to read it.\n\nThe shift equals the number of planets you woke upstairs.\n\nCIPHERTEXT:  L J F W X");
-clip(-1.5,1.9,5.95,180,'HALLOWAY\'S MARGINALIA',"The engine room answers to three valves, A, B and C, each set from 0 to 5.\n\n• A and B together make seven.\n• B is exactly twice C.\n• A is smaller than B.");
-const trap=B(0,.02,-3.5,2.4,.04,1.8,M('#2b1c10'));T('TRAPDOOR\n(sealed)',0,.1,-3.5,0,1.4,'#ffcf4a');trap.setAttribute('rotation','0 0 0');
-K(B(0,.15,-3.5,2.4,.3,1.8,'opacity:0;transparent:true'),()=>{if(st.stage!=='trap')return toast('The trapdoor is sealed by a clockwork latch.');tp(2)});
-hit(3.8,1.0,3.6,.6,.5,.6,'A reading chair, still warm. A bookmark sits in a star atlas open to the constellation Lyra.');B(3.8,.5,3.6,1,.9,1,M('#6a2020'));
-lib.bx=[[-6,-5,-3,3],[2,3,-5,-4],[3.3,4.3,3.1,4.1]];
+/* ---------- game state ---------- */
+const st={stage:'intro',cont:0,paused:false,over:false,marked:false,power:[],dna:{A:0,B:0,C:0},sel:null,armed:false,vent:[],fin:{scan:0,stabiliser:0,lasers:0,code:0}};
+const setObj=t=>{const b=$('#objectiveBox');b.classList.remove('show');setTimeout(()=>{b.textContent=t;b.classList.add('show')},150)};
+const setStage=(a,b)=>{$('#stageName').textContent=a;$('#stageHint').textContent=b};
+const flash=(c,d)=>{const f=$('#flash');f.style.background=c||'#ff3b4e';f.style.transition='none';f.style.opacity='.4';requestAnimationFrame(()=>{f.style.transition=`opacity ${d||250}ms`;f.style.opacity='0'})};
+function cont(d){if(st.over)return;st.cont=Math.max(0,Math.min(100,st.cont+d));const p=st.cont,f=$('#meterFill'),col=p<40?'#2ee58a':p<75?'#ffa51f':'#ff3b4e';f.style.width=p+'%';f.style.background=col;f.style.color=col;$('#meterPct').textContent=Math.round(p)+'%';blob.setAttribute('material','color',col);blob.setAttribute('material','emissive',col);podLight.setAttribute('light','color',col);if(d>0)flash();if(p>=100)end('#failOverlay','alarm',()=>{setPower(false)})}
+function end(id,s,pre){st.over=true;st.stage='ended';snd(s);pre&&pre();setTimeout(()=>$(id).classList.add('active'),s==='success'?1800:200)}
+setInterval(()=>{if(!st.paused&&!st.over&&st.stage!=='intro')cont(1)},30000);
+const wrong=(m,d,s)=>{toast(m);snd('error');cont(Math.ceil(d/2))};
 
-/* ================= ROOM 2: THE ENGINE ================= */
-const eng=room('#2a2a30','color:#14110e',true);
-const gears=[];[[-3,-3,1.3,'#b8893a'],[-1.1,-3.4,.8,'#8a6a2a'],[3,-3,1.1,'#a87a30'],[1.3,-4,.7,'#7a5a22']].forEach(([x,z,r,c],i)=>{const g=C(x,2,-5.9,r,.15,M(c,'metalness:.8'),'90 0 0');g.setAttribute('animation',`property:rotation;to:90 ${i%2?360:-360} 0;dur:${9000+i*2500};loop:true;easing:linear`)});
-C(-4.5,2.4,-5.9,.5,.15,M('#b8893a','metalness:.8'),'90 0 0');
-const vlv=[];['A','B','C'].forEach((n,i)=>{const x=-3+i*1.6;C(x,1.2,-5.7,.12,2.4,M('#4a5a60','metalness:.7'));mk('a-torus',{position:`${x} 1.4 -5.5`,radius:.25,'radius-tubular':.05,material:E('#e8b04a',.8)});T(n,x,2.7,-5.6,0,1.4,'#ffcf4a')});
-K(B(-1.4,1.4,-5.5,5.2,2.4,.8,'opacity:0;transparent:true'),valveUI);T('PRESSURE VALVES\n(click them)',-1.4,3.4,-5.6,0,2.4,'#ffe27a');
-B(5.7,1.2,0,.5,2.4,4,M('#2a2f33','metalness:.6'));for(let i=0;i<6;i++)S(5.4,.6+i*.35,-1.5+(i%3)*1.5,.07,E(['#5fd39a','#ffa51f','#ff5a4e'][i%3],1.5));
-clip(5.95,1.8,3.5,-90,'ENGINEER\'S SLATE',"The final lock reads five digits.\n\n• First two: the comet's catalogue number.\n• Last three: the valve settings in order A, B, C.\n\nEverything you found is in the panel on your screen.");
-const fdoor=B(0,1.5,5.95,3.2,3,.2,M('#2a2a2e','metalness:.85'));mk('a-torus',{position:'0 1.6 5.8',radius:.7,'radius-tubular':.07,material:M('#b8893a','metalness:.8')});T('THE FINAL DOOR',0,3.3,5.85,180,2.4,'#ffcf4a');
-B(2.5,1.3,5.9,.45,.6,.1,M('#1a1208'));mk('a-plane',{position:'2.5 1.4 5.84',rotation:'0 180 0',width:.3,height:.16,material:E('#1f7a4c',1)});K(B(2.5,1.3,5.78,.5,.6,.2,'opacity:0;transparent:true'),pinUI);T('KEYPAD',2.5,1.75,5.85,180,.9,'#ffe27a');
-hit(-4.3,1.0,4.0,.8,.6,.8,'A toolbox. Inside, a sticky note: "Never trust the pressure gauge. Trust the maths."');B(-4.3,.4,4,1,.8,1,M('#3a2414'));
-eng.bx=[[5,6,-2.2,2.2],[-5.2,-3.4,-6,-4.8]];
+$('#enterBtn').onclick=()=>{AC.resume();$('#introOverlay').classList.remove('active');$('#startHint').style.display='block';setTimeout(()=>$('#startHint').style.display='none',7000);setStage('POWER FAILURE','Restore the relay to bring systems back online.');setObj('Three switches are color-tagged (dot above each). Find that color order on the sample rack (west wall), then press A/B/C in that order. Avoid switch X.');st.stage='power'};
 
-rooms.forEach(o=>{P=o.g;for(let i=0;i<14;i++){const x=(Math.random()-.5)*10,y=.4+Math.random()*4,z=(Math.random()-.5)*10;S(x,y,z,.014,'color:#fff;emissive:#ffe9b0;opacity:.45;transparent:true').setAttribute('animation',`property:position;to:${x+.5} ${y+.7} ${z+.4};dur:${6000+Math.random()*6000};dir:alternate;loop:true;easing:easeInOutSine`)}});
-P=dome.g;mk('a-circle',{position:'1.2 4.96 -.6',rotation:'90 0 0',radius:.22,material:E('#fff6dc',1.2)});
-S(-2,4.93,-2,.06,E('#bfe6ff',3)).setAttribute('animation','property:position;to:2 4.93 2;dur:9000;loop:true;easing:linear');
-P=eng.g;for(let i=0;i<6;i++){const x=-3+i*1.2;S(x,.3,-5.2,.2,'color:#dfe6ea;opacity:.18;transparent:true;shader:flat').setAttribute('animation',`property:position;from:${x} .3 -5.2;to:${x+.3} 3.2 -4.6;dur:3500;delay:${i*600};loop:true;easing:easeOutQuad`)}
-P=R;
-/* ================= GAME LOGIC ================= */
-const STEPS=[['planets','Wake the planets'],['scope','Find the comet'],['keyd','Unlock the library'],['books','Shelve the books'],['cipher','Read the cipher'],['trap','Descend to the engine'],['valves','Set the valves'],['final','Open the final door']];
-const OBJ={planets:'ROOM 1 — Click the five orbs on the west rack in order of distance from the sun. The chart tells you which colour is which planet.',
-scope:'ROOM 1 — Read the Vesper log. Aim the refractor using the compass plaque, then read the catalogue number.',
-keyd:'ROOM 1 — Take the brass key from the lens ring and use it on the south door to reach the library.',
-books:'ROOM 2 — Click the five books oldest-first using the catalogue card.',
-cipher:'ROOM 2 — Decode the cipher page. The shift number is hidden in the dome. Enter the word at the lectern.',
-trap:'ROOM 2 — Step onto the trapdoor to descend.',
-valves:'ROOM 3 — Solve the three valves from Halloway\'s marginalia (found upstairs) and set them.',
-final:'ROOM 3 — Enter the five-digit code on the keypad: catalogue number, then valves A, B, C.'};
-const HINT={planets:'Mercury (grey), Venus (yellow), Earth (blue), Mars (red), Jupiter (orange).',scope:'Opposite the sunrise is WEST (270°). Half a right angle is 45°.',keyd:'Click the south door.',books:'1543 Almanac, 1610 Treatise, 1632 Orbits, 1687 Atlas, 1759 Charts.',cipher:'Shift back 5: L→G, J→E, F→A, W→R, X→S. The word is GEARS.',trap:'Click the trapdoor.',valves:'B is 2C and A+B=7 and A<B gives A=3, B=4, C=2.',final:'61 then 342: 61342.'};
-const MARK={planets:[0,-5.4,2.7,0],scope:[0,-3.2,3.3,-3.5],keyd:[0,0,3.6,5.5],books:[1,-5.4,2.6,0],cipher:[1,2.5,2.7,-4.5],trap:[1,0,1.1,-3.5],valves:[2,-1.4,3.4,-5.6],final:[2,2.5,2.1,5.7]};
-const st={stage:'intro',dawn:0,over:false,key:false,cat:'',vlv:'',room:0};
-const mkr=[0,1,2].map(i=>{P=rooms[i].g;return mk('a-cone',{rotation:'180 0 0','radius-bottom':.15,'radius-top':0,height:.3,visible:false,material:E('#ffd25a',2)})});P=R;
-function codeHud(){$('#code').textContent=(st.cat||'__').padEnd(2,'_')+' '+(st.vlv||'___').padEnd(3,'_')}
-function setStage(s){st.stage=s;const k=STEPS.findIndex(x=>x[0]===s);
-$('#tasks').style.display='block';$('#tasks').innerHTML=`<div class="tk">TASK ${k+1} OF ${STEPS.length}</div><div class="tn">${STEPS[k][1]}</div><div class="bar">${STEPS.map((x,i)=>`<i class="${i<k?'d':i===k?'c':''}"></i>`).join('')}</div><div class="tk" style="margin-top:8px">FOUND DIGITS</div><div id="code"></div>`;codeHud();
-const o=$('#obj');o.classList.remove('show');setTimeout(()=>{o.textContent=OBJ[s];o.classList.add('show')},200);
-mkr.forEach(m=>m.setAttribute('visible',false));const [r,x,y,z]=MARK[s],m=mkr[r];m.setAttribute('position',`${x} ${y} ${z}`);m.setAttribute('animation',`property:position;from:${x} ${y} ${z};to:${x} ${y+.25} ${z};dir:alternate;loop:true;dur:700`);m.setAttribute('visible',true)}
-function tp(n){const f=$('#fl');f.style.background='#000';f.style.transition='none';f.style.opacity=1;setTimeout(()=>{rooms.forEach((r,i)=>r.g.setAttribute('visible',i===n));BX=rooms[n].bx;st.room=n;$('#rig').setAttribute('position','0 0 4.5');f.style.transition='opacity 1.2s';f.style.opacity=0;snd('thud');toast(n===1?'THE LIBRARY':'THE ENGINE ROOM',3500);setStage(n===1?'books':'valves')},350)}
-const flash=c=>{const f=$('#fl');f.style.background=c;f.style.transition='none';f.style.opacity='.35';requestAnimationFrame(()=>{f.style.transition='opacity .3s';f.style.opacity='0'})};
-function dawn(d){if(st.over)return;st.dawn=Math.max(0,Math.min(100,st.dawn+d));const p=st.dawn;$('#mf').style.width=p+'%';$('#mf').style.background=p<40?'#6a7bd8':p<75?'#d89a5a':'#ff7a4e';$('#pct').textContent=Math.round(p)+'%';
-sc.setAttribute('fog',`type:exponential;color:${p<40?'#0a0a18':p<75?'#2a1a28':'#4a2a20'};density:${(.02+p*.0002).toFixed(4)}`);$('#amb').setAttribute('light','color',p<40?'#8f9fe0':p<75?'#d8a0a0':'#ffb070');if(d>0)flash('#ff7a4e');if(p>=100)end('#fail','bad')}
-const wrong=(m,d)=>{toast(m);snd('bad');dawn(d)};
-function end(id,s){st.over=true;snd(s==='ok'?'chime':'thud');setTimeout(()=>$(id).classList.add('on'),s==='ok'?1800:300)}
-setInterval(()=>{if(!st.over&&st.stage!=='intro'&&!mod.classList.contains('on'))dawn(1)},15000);
-let hum=0;addEventListener('click',()=>{try{AC.resume()}catch(e){}if(!hum){hum=1;[55,82.5].forEach(f=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.012;o.connect(g);g.connect(AC.destination);o.start()})}});
-rooms[0].g.setAttribute('visible',true);BX=dome.bx;
-{const en=$('#enter');en.disabled=false;en.textContent='ENTER THE OBSERVATORY';window.dg&&window.dg('Scene ready');
-en.onclick=()=>{$('#intro').classList.remove('on');try{AC.resume()}catch(e){}setStage('planets');setTimeout(()=>toast('The door is locked and dawn is coming. Click glowing things. H = hint, N = journal.',9000),500)}}
-addEventListener('keydown',e=>{if(e.code==='KeyN'&&!st.over&&!mod.classList.contains('on'))openM('JOURNAL',JR.length?'Every note you have read.':'You have not read any notes yet.',c=>JR.forEach(([t,b])=>{const d=document.createElement('p');d.style.margin='12px 0';const h=document.createElement('b');h.style.color='#e8b04a';h.textContent=t;d.appendChild(h);d.appendChild(document.createElement('br'));d.appendChild(document.createTextNode(b));c.appendChild(d)}))});
-setInterval(()=>{rooms.forEach(o=>o.lights.forEach(l=>{const c=l.getAttribute('light');if(c&&c.intensity>0)l.setAttribute('light','intensity',.7+Math.random()*.4)}))},180);
-addEventListener('keydown',e=>{if(e.code==='KeyH'&&!st.over&&st.stage!=='intro'&&!mod.classList.contains('on')){dawn(3);toast('HINT: '+HINT[st.stage],9000)}});
-setInterval(()=>{$('#rl').style.display=false&&!document.querySelector('.ov.on')&&!mod.classList.contains('on')&&st.stage!=='intro'&&!st.over?'block':'none'},400);
+const seq=['blue','gold','red'];
+function powerClick(s){if(st.stage!=='power')return;const c=s.dataset.color;st.power.push(c);if(c!==seq[st.power.length-1]){wrong('Wrong order — relay rejects sequence.',6);st.power=[];swEls.forEach(e=>e.setAttribute('material','color','#e0293c'));return}s.setAttribute('material','color','#1f9d5c');snd('click');if(st.power.length===3){toast('Power restored.');snd('power');redOn(false);setPower(true);setTimeout(startDna,600)}}
+function startDna(){st.stage='dna';setStage('SAMPLE UNSTABLE','Retrieve the sample, then sequence the gene fragments.');setObj('Click the glowing sample on the cart, then place each ball in its slot.')}
+function sampleClick(){if(st.stage!=='dna'||st.armed)return;st.armed=true;sample.removeAttribute('animation');sample.setAttribute('animation__m','property:position;to:-2.5 1.95 -6.15;dur:700;easing:easeInOutQuad');fragsG.setAttribute('visible',true);toast('Sample loaded into sequencer.')}
+function fragClick(f,id){if(st.stage!=='dna'||!st.armed)return;frags.forEach(x=>x.setAttribute('scale','1 1 1'));st.sel=[f,id];f.setAttribute('scale','1.4 1.4 1.4');toast('Fragment selected — now click the matching slot.')}
+function slotClick(id,s,ok){if(st.stage!=='dna'||!st.sel)return;if(st.dna[id]){toast('Slot already filled.');return}const[f,fid]=st.sel;if(fid===ok){s.setAttribute('material','color','#1f9d5c');s.setAttribute('material','emissive','#1f9d5c');f.setAttribute('visible',false);st.dna[id]=1;toast('Fragment locked in.');snd('success')}else{s.setAttribute('animation__w','property:material.color;type:color;from:#e0293c;to:#3a4d56;dur:500');cont(4);snd('error');toast('Wrong strand — sequence rejected.')}f.setAttribute('scale','1 1 1');st.sel=null;if(Object.values(st.dna).every(Boolean)){toast('Sequence complete.');setTimeout(jumpscare,800)}}
+function jumpscare(){st.stage='scare';st.paused=true;setStage('!! ANOMALY !!','...');setObj('');setPower(false);snd('bang');vent.setAttribute('animation__o','property:rotation;to:0 0 70;dur:400;easing:easeOutCubic');shadow.setAttribute('visible',true);shadow.setAttribute('position','6 1.2 3');shadow.setAttribute('animation__d','property:position;to:-6 1.2 -2;dur:500;easing:easeInQuad');setTimeout(()=>shadow.setAttribute('visible',false),550);let n=0;const fl=setInterval(()=>{const on=n%2===0;red.forEach(r=>r.setAttribute('light','intensity',on?1.8:.1));flash(on?'#05090b':'#ff3b4e',150);if(++n>8){clearInterval(fl);red.forEach(r=>r.setAttribute('light','intensity',0));setPower(true);st.paused=false;cont(8);startChem()}},180)}
+function startChem(){st.stage='chem';chem.setAttribute('visible',true);setStage('MIXTURE UNSTABLE','Match the readout to the correct compound.');setObj('The readout names a chart color, not a word. Match it to a category using the periodic table legend, then pick that bottle.')}
+function bottleClick(b,n,x){if(st.stage!=='chem')return;b.setAttribute('animation__pour','property:position;to:4.5 1.45 -5.5;dur:400;easing:easeInQuad');setTimeout(()=>{if(n==='Na'){mixer.setAttribute('material','color','#1f9d5c');mixer.setAttribute('material','emissive','#1f9d5c');snd('success');toast('Compound stabilized.');cont(-15);setTimeout(startVent,700)}else{mixer.setAttribute('animation__f','property:material.color;type:color;from:#e0293c;to:#3a4d56;dur:500');snd('error');toast('Wrong compound — reaction unstable.');cont(5)}b.setAttribute('animation__reset',`property:position;to:${x} 1.25 -6.1;dur:1`)},420)}
+function startVent(){st.stage='vent';ventA.setAttribute('visible',true);setStage('VENT UNSEALED','Seal the vent before fog fills the room.');setObj('A maintenance note on the east wall explains the ordering rule — the periodic table shows which element comes first.')}
+const vs=['He','Ne','Ar'];
+function ventClick(n,b){if(st.stage!=='vent')return;st.vent.push(n);b.setAttribute('animation__pr','property:scale;from:1.3 1.3 1.3;to:1 1 1;dur:250');if(n!==vs[st.vent.length-1]){wrong('Incorrect sequence — vent leaking.',8);st.vent=[];return}snd('click');if(st.vent.length===3){snd('success');toast('Vent sealed.');cont(-10);vent.setAttribute('animation__s','property:rotation;to:0 0 0;dur:500');setTimeout(startFinal,700)}}
+function startFinal(){st.stage='final';fin.setAttribute('visible',true);guide.setAttribute('visible',true);setStage('OVERRIDE AVAILABLE','Reach the containment door and complete the override.');setObj('Four sub-systems: hand scan, stabiliser, lasers, terminal PIN. The incident board says where the answers are.')}
+function done(n,b){st.fin[n]=1;b.setAttribute('material','color','#1f9d5c');b.setAttribute('material','emissive','#1f9d5c');toast(n.toUpperCase()+' confirmed.');snd('success');if(Object.values(st.fin).every(Boolean)){const d=$('#world').children;setTimeout(()=>window.HALL?window.HALL.start():end('#successOverlay','success'),500)}}
+function finalOpen(n,b){if(st.stage!=='final'||st.marked||st.fin[n])return;({scan:()=>scanUI(b),stabiliser:()=>stabUI(b),lasers:()=>laserUI(b),code:()=>pinUI(b)})[n]()}
+function scanUI(b){const T=[7,5,3,1,9];let p=[];openM('HAND SCANNER','Touch the panel in the sequence from the security memo.',c=>{const g=document.createElement('div');g.className='grid';for(let i=1;i<=9;i++){const k=btn(i,()=>{p.push(i);if(T[p.length-1]!==i){k.classList.add('wrong');snd('error');cont(2);setTimeout(()=>{g.querySelectorAll('button').forEach(x=>x.className='');p=[]},400);return}k.classList.add('done');if(p.length===5){snd('success');setTimeout(()=>{closeM();done('scan',b)},400)}},'',g)}c.appendChild(g)})}
+function stabUI(b){let v=0;openM('STABILISER PRESSURE','Set the pressure to the value from the maintenance note.',c=>{const d=document.createElement('div');d.className='disp';d.textContent=0;c.appendChild(d);const r=document.createElement('div');r.className='row';btn('-1',()=>{v=(v+9)%10;d.textContent=v},'',r);btn('+1',()=>{v=(v+1)%10;d.textContent=v},'',r);btn('SET',()=>{if(v===6){snd('success');closeM();done('stabiliser',b)}else{snd('error');cont(2);d.classList.add('wrong')}},'',r);c.appendChild(r)})}
+function laserUI(b){const T=[90,270,180],s=[0,0,0];openM('LASER ALIGNMENT','Click a mirror to rotate it 90°. Match the optics note, then confirm.',c=>{const r=document.createElement('div');r.className='row';s.forEach((_,i)=>{const w=document.createElement('div'),m=btn('↑',()=>{s[i]=(s[i]+90)%360;m.style.transform=`rotate(${s[i]}deg)`;l.textContent=s[i]+'°'},'mir',w),l=document.createElement('div');l.className='sub';l.textContent='0°';w.appendChild(l);r.appendChild(w)});c.appendChild(r);const r2=document.createElement('div');r2.className='row';btn('CONFIRM',()=>{if(s.every((v,i)=>v===T[i])){snd('success');closeM();done('lasers',b)}else{snd('error');cont(2);toast('Beam misaligned.')}},'',r2);c.appendChild(r2)})}
+function pinUI(b){let p='';openM('OVERRIDE TERMINAL','ENTER 4-DIGIT ACCESS CODE',c=>{const d=document.createElement('div');d.className='disp';d.textContent='_ _ _ _';c.appendChild(d);const up=w=>{d.textContent=p.padEnd(4,'_').split('').join(' ');d.classList.toggle('wrong',!!w)};const g=document.createElement('div');g.className='grid';[1,2,3,4,5,6,7,8,9,'⌫',0,'↵'].forEach(k=>btn(k,()=>{if(k==='⌫')p=p.slice(0,-1);else if(k==='↵'){if(p==='4172'){closeM();toast('Access granted.');done('code',b)}else{up(1);snd('error');setTimeout(()=>{p='';up()},500)}return}else if(p.length<4)p+=k;up()},'',g));c.appendChild(g)})}
+window.LAB={cont,st,toast,snd,flash,setPower,end,openM,closeM,btn,setStage,setObj};
+}
+if(window.AFRAME){
+ AFRAME.registerComponent('labcollide',{tick(){const p=this.el.object3D.position,r=this.el.parentNode.object3D.position;p.y=1.6;const bl=(x,z)=>{if(window.HO&&z>6.3){if(window.INR&&window.INR(x,z))return (window.HB||[]).some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3);return Math.abs(x)>2.15||z>(window.HE||34.4)||(window.HB||[]).some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3)}return Math.abs(x)>6.5||Math.abs(z)>6.5||BX.some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3)};if(!this.l){this.l={x:p.x,z:p.z};return}if(bl(p.x+r.x,p.z+r.z)){if(!bl(this.l.x+r.x,p.z+r.z))p.x=this.l.x;else if(!bl(p.x+r.x,this.l.z+r.z))p.z=this.l.z;else{p.x=this.l.x;p.z=this.l.z}}this.l.x=p.x;this.l.z=p.z}});
+ const BX=[[-1.5,1.5,-7,-4.3],[-5.5,-1.3,-6.7,-5.0],[-2.4,-1.6,-3.3,-2.7],[-1.1,1.1,-.1,1.1],[-7,-6.2,-.6,1.5],[-7,-6.2,-6.3,-5.2],[3.1,5.9,-6.6,-5.2],[6.0,7,.3,2.7],[6.1,7,-5.3,-3.9],[6.0,6.6,5.3,5.9],[5.2,5.8,6.3,7],[-7,-5.9,4.6,6.6],[-5.9,-5.2,5.0,5.8]];
+ const sc=$('#scene');sc.hasLoaded?boot():sc.addEventListener('loaded',boot);
+}else document.body.insertAdjacentHTML('beforeend','<div class="overlay active"><h1>3D LIBRARY FAILED TO LOAD</h1><p>A-Frame is loaded from cdn.jsdelivr.net — check your ad-blocker, VPN or network filter.</p></div>');
+})();
+</script>
+<style>
+#nexus{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);max-width:660px;width:calc(100% - 40px);background:#050d11ee;border:1px solid #1d4452;border-left:3px solid #27d3ff;padding:10px 18px;font:14px/1.5 'Courier New',monospace;color:#d8f3fa;z-index:12;opacity:0;transition:opacity .5s;pointer-events:none;text-align:center}
+#nexus.show{opacity:1}#nexus b{color:#27d3ff;letter-spacing:2px;margin-right:8px}
+#rank{margin:0 0 20px;font-size:15px;color:#ffd25a;letter-spacing:2px}
+#jsc{position:fixed;inset:0;width:100%;height:100%;z-index:50;display:none;pointer-events:none}
+#alive{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;background:#000e;z-index:45;font-family:'Courier New',monospace;text-align:center;pointer-events:none;padding:30px}
+#alive h1{color:#ff3b4e;font-size:clamp(34px,8vw,86px);letter-spacing:6px;margin:0 0 18px;text-shadow:0 0 30px #f00;animation:ali .3s steps(2) infinite}
+#alive p{color:#d8f3fa;font-size:clamp(14px,2vw,20px);max-width:640px;line-height:1.7;margin:0}
+@keyframes ali{50%{transform:translate(4px,-3px)}}
+</style>
+<div id="nexus"></div>
+<div id="alive"><h1>IT'S ALIVE</h1><p>The sample you just sequenced has woken up.<br>The gene splice brought Subject 07 back to life — and it has escaped into the vents.<br><br>Calm the lab before the contamination spreads.</p></div>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&$('#world')){clearInterval(w);go()}},200);
+function go(){
+const L=window.LAB,sc=$('#scene'),A=new (window.AudioContext||window.webkitAudioContext)();addEventListener('click',()=>A.resume());
+/* on-screen messages from the lab computer (text only) */
+let nt;const say=(t,ms)=>{const n=$('#nexus');n.innerHTML='<b>LAB SYSTEM</b>'+t;n.classList.add('show');clearTimeout(nt);nt=setTimeout(()=>n.classList.remove('show'),ms||7500)};window.NEXUS=say;
+const hint=$('#startHint');if(hint)hint.textContent='Move the mouse to look · WASD to walk · click glowing things · ESC frees the mouse';
+const lines={'POWER FAILURE':'Welcome. The power is off. Find the switches on the left wall.','SAMPLE UNSTABLE':'Power is on. Now click the glowing green sample.','MIXTURE UNSTABLE':'Subject 07 woke up and escaped into the vents! Calm the lab by picking the right bottle.','VENT UNSEALED':'The vent is open. Press the buttons: He, then Ne, then Ar.','OVERRIDE AVAILABLE':'The exit is unlocked. Finish the four panels on the big door.'};
+let start=0;
+new MutationObserver(()=>{const s=$('#stageName').textContent;if(s==='POWER FAILURE')start=Date.now();if(lines[s])say(lines[s]);
+ if(s==='!! ANOMALY !!'){bigScare();setTimeout(()=>{const a=$('#alive');a.style.display='flex';setTimeout(()=>a.style.display='none',3600);const b=document.querySelector('#world a-sphere[animation]');if(b)b.setAttribute('visible',false)},1050)}}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+const endLine={'#failOverlay':'Containment lost.','#successOverlay':'Override accepted. The door is open.'};
+Object.keys(endLine).forEach(id=>{const o=$(id);new MutationObserver(()=>{if(!o.classList.contains('active')||o.dataset.done)return;o.dataset.done=1;
+ if(id==='#successOverlay'){const t=Math.round((Date.now()-start)/1000),r=t<600?'S':t<960?'A':t<1500?'B':'C',d=document.createElement('div');d.id='rank';d.textContent=`TIME ${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}  ·  RANK ${r}`;o.insertBefore(d,o.querySelector('button'));}}).observe(o,{attributes:true,attributeFilter:['class']})});
+/* contamination: fog thickens, warnings appear */
+const fired={};let lastB=-1,wasD=0;
+setInterval(()=>{const p=parseInt($('#meterPct').textContent)||0,b=Math.floor(p/5);
+ if(window.DARK){wasD=1}else if(b!==lastB||wasD){wasD=0;lastB=b;sc.setAttribute('fog',`type:exponential;color:${p<50?'#081216':p<75?'#0b1a10':'#240a0e'};density:${(.014+p*.0003).toFixed(4)}`)}
+ [[50,'Contamination is at 50%. Work faster.'],[75,'Danger! Contamination is at 75%.'],[90,'Almost out of time! 90% contaminated.']].forEach(([t,m])=>{if(p>=t&&!fired[t]){fired[t]=1;say(m,5000)}})},400);
+/* quiet background hum */
+const dg=A.createGain(),lp=A.createBiquadFilter();lp.type='lowpass';lp.frequency.value=260;dg.gain.value=.02;[55,55.6].forEach(f=>{const o=A.createOscillator();o.type='sine';o.frequency.value=f;o.connect(lp);o.start()});lp.connect(dg);dg.connect(A.destination);
+/* 1-second full-screen jumpscare */
+const jc=document.createElement('canvas');jc.id='jsc';document.body.appendChild(jc);
+function face(g,w,h,t){g.fillStyle='#000';g.fillRect(0,0,w,h);g.save();const j=(Math.random()-.5)*26*(1-t*.5);g.translate(w/2+j,h/2+j*.6);const k=(.8+.7*t)*h/330;g.scale(k,k);
+ const gr=g.createRadialGradient(0,-50,20,0,0,250);gr.addColorStop(0,'#a9c7c1');gr.addColorStop(1,'#1b2a2a');g.fillStyle=gr;g.beginPath();g.ellipse(0,0,150,205,0,0,6.3);g.fill();
+ [-1,1].forEach(m=>{g.save();g.translate(m*66,-40);g.rotate(m*.55);g.fillStyle='#02040a';g.beginPath();g.ellipse(0,0,72,34,0,0,6.3);g.fill();g.fillStyle='rgba(255,255,255,.8)';g.beginPath();g.arc(-20,-8,7,0,6.3);g.fill();g.restore()});
+ g.fillStyle='#000';g.fillRect(-6,10,12,30);
+ const o=34+t*85+Math.sin(t*50)*9;g.beginPath();g.ellipse(0,112,96,o,0,0,6.3);g.fill();
+ g.fillStyle='#efe9d2';for(let n=-8;n<=8;n++){const x=n*11,u=Math.sqrt(Math.max(0,1-(x/96)**2))*o,l=16+Math.abs(Math.sin(n*3.1))*24;g.beginPath();g.moveTo(x-6,112-u);g.lineTo(x,112-u+l);g.lineTo(x+6,112-u);g.fill();g.beginPath();g.moveTo(x-6,112+u);g.lineTo(x,112+u-l*.8);g.lineTo(x+6,112+u);g.fill()}
+ g.restore();g.fillStyle=`rgba(255,0,25,${.3*(1-t)})`;g.fillRect(0,0,w,h);for(let n=0;n<14;n++){g.fillStyle=`rgba(255,255,255,${Math.random()*.12})`;g.fillRect(0,Math.random()*h,w,1+Math.random()*3)}
+ if(t>.88){g.fillStyle=`rgba(255,255,255,${(t-.88)*8})`;g.fillRect(0,0,w,h)}}
+function scream(){const t=A.currentTime;[1500,1730,900].forEach(f=>{const o=A.createOscillator(),g=A.createGain();o.type='sawtooth';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*.3,t+.9);g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+1);o.connect(g);g.connect(A.destination);o.start(t);o.stop(t+1.05)});const b=A.createBuffer(1,A.sampleRate,A.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const n=A.createBufferSource(),g2=A.createGain();n.buffer=b;g2.gain.value=.4;n.connect(g2);g2.connect(A.destination);n.start(t)}
+function bigScare(){jc.width=innerWidth;jc.height=innerHeight;jc.style.display='block';const g=jc.getContext('2d'),t0=performance.now();scream();L.snd('bang');(function f(){const t=(performance.now()-t0)/1000;if(t>=1){jc.style.display='none';return}face(g,jc.width,jc.height,t);requestAnimationFrame(f)})()}
+}})();
+</script>
 
-function orb(n){if(st.stage!=='planets'||got.includes(n))return;if(n!==SEQ[got.length]){got=[];Object.values(orbs).forEach(o=>{o.setAttribute('material','emissiveIntensity',.25);o.setAttribute('scale','1 1 1');o.removeAttribute('light')});return wrong('The rack dims. Wrong order.',5)}
-got.push(n);orbs[n].setAttribute('material','emissiveIntensity',2.5);orbs[n].setAttribute('scale','1.4 1.4 1.4');orbs[n].setAttribute('light',`type:point;color:${PL[n]};intensity:.8;distance:3`);snd('ok');
-if(got.length===5){snd('chime');dome.set(true);toast('The planets wake and the lamps flare. The refractor swings toward the sky.',5000);tube.setAttribute('animation','property:rotation;to:0 0 -40;dur:1800');setStage('scope')}}
-function scopeUI(){if(st.stage==='planets')return toast('The refractor is dark. Wake the planets first.');if(st.stage!=='scope')return toast('You already found Vesper.');
-openM('GREAT REFRACTOR','Aim at Comet Vesper using the log and the compass.',c=>{const az=dial(c,'AZIMUTH',Array.from({length:24},(_,i)=>i*15),0,v=>v+'°'),al=dial(c,'ALTITUDE',[0,15,30,45,60,75,90],0,v=>v+'°');const r=document.createElement('div');r.className='row';
-btn('LOOK',()=>{if(az()===270&&al()===45){snd('chime');c.innerHTML='<p style="text-align:center;font-size:15px">A silver tail fills the eyepiece. On the lens ring:<br><br><b style="font-size:26px;color:#e8b04a;letter-spacing:5px">VESPER No. 61</b><br><br>A BRASS KEY falls from the ring into your hand.</p>';st.cat='61';st.key=true;setTimeout(()=>{closeM();setStage('keyd')},3600)}else{snd('bad');dawn(3);toast('Only black sky. Check your bearing and angle.')}},r);c.appendChild(r)})}
-function book(n,b){if(st.stage!=='books'||bk.includes(n))return;if(n!==bkOrder[bk.length]){bk=[];Object.values(bks).forEach(x=>x.setAttribute('material','emissive','#000'));return wrong('The shelf clunks. The books spring back out.',5)}
-bk.push(n);b.setAttribute('material','emissive','#ffd25a');b.setAttribute('material','emissiveIntensity',.8);snd('ok');if(bk.length===5){snd('chime');lectGlow.setAttribute('material','emissiveIntensity',3);toast('The shelf slides aside. The lectern lights up.',4500);setStage('cipher')}}
-function cipherUI(){if(st.stage==='books')return toast('The lectern is dark. Shelve the books first.');if(st.stage!=='cipher')return toast('The lectern is silent now.');
-openM('LECTERN','Decode the cipher page and enter the word.',c=>{const i=document.createElement('input');i.maxLength=5;i.placeholder='_____';c.appendChild(i);const r=document.createElement('div');r.className='row';btn('SPEAK',()=>{if(i.value.toUpperCase()==='GEARS'){snd('chime');closeM();trap.setAttribute('animation','property:position;to:0 -.8 -3.5;dur:1500');toast('The trapdoor grinds open.',4000);setStage('trap')}else{snd('bad');dawn(4);i.value='';toast('The lectern rejects the word.')}},r);c.appendChild(r);setTimeout(()=>i.focus(),80)})}
-function valveUI(){if(st.stage!=='valves')return toast(st.stage==='final'?'The valves are set.':'Nothing to do here yet.');
-openM('PRESSURE VALVES','Set each valve from 0 to 5.',c=>{const a=dial(c,'VALVE A',[0,1,2,3,4,5],0),b=dial(c,'VALVE B',[0,1,2,3,4,5],0),k=dial(c,'VALVE C',[0,1,2,3,4,5],0);const r=document.createElement('div');r.className='row';
-btn('SET',()=>{if(a()===3&&b()===4&&k()===2){snd('chime');closeM();st.vlv='342';toast('The engine roars. The final door begins to glow.',5000);setStage('final')}else{snd('bad');dawn(4);toast('The pipes shudder. Wrong pressures.')}},r);c.appendChild(r)})}
-function pinUI(){if(st.stage!=='final')return toast('The keypad is dead until the valves are set.');
-let v='';openM('FINAL DOOR','ENTER THE 5-DIGIT CODE',c=>{const d=document.createElement('div');d.className='disp';d.textContent='_ _ _ _ _';c.appendChild(d);const up=bad=>{d.textContent=v.padEnd(5,'_').split('').join(' ');d.classList.toggle('w',!!bad)};const g=document.createElement('div');g.className='grid';
-[1,2,3,4,5,6,7,8,9,'⌫',0,'↵'].forEach(k=>btn(k,()=>{if(k==='⌫')v=v.slice(0,-1);else if(k==='↵'){if(v==='61342'){closeM();st.stage='done';snd('chime');fdoor.setAttribute('animation','property:position;to:0 5.5 5.95;dur:2600');toast('The final door unwinds!',4000);setTimeout(()=>end('#win','ok'),2000)}else{up(1);snd('bad');dawn(5);setTimeout(()=>{v='';up()},500)}return}else if(v.length<5)v+=k;up()},g));c.appendChild(g)})}
-}});
-</script></body></html>
+<style>
+#objectiveBox{font-size:14px!important;max-width:540px!important;background:#071014f2!important;line-height:1.6!important}
+#crosshair.hot::after{content:'CLICK';position:absolute;left:24px;top:-4px;font:bold 11px 'Courier New',monospace;color:#2ee58a;letter-spacing:1px}
+</style>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&$('#world')&&$('#world').children.length>20){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||W).appendChild(e);return e};
+const M=(c)=>`color:${c};roughness:.65;metalness:.2`,E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1};fog:false`;
+document.querySelectorAll('a-text').forEach(t=>{if((t.getAttribute('value')||'').startsWith('UNSTABLE SAMPLE')){t.setAttribute('value','UNSTABLE SAMPLE\nCLICK IT');t.setAttribute('width',3.2);t.setAttribute('color','#ffe27a');t.setAttribute('position','-2 1.9 -3');t.setAttribute('look-at','[camera]')}});
+/* floating objective arrow */
+const mkr=mk('a-entity',{visible:false});
+mk('a-cone',{rotation:'180 0 0','radius-bottom':.22,'radius-top':0,height:.45,material:E('#ffd25a',2.2)},mkr);
+mk('a-torus',{position:'0 -.4 0',rotation:'90 0 0',radius:.3,'radius-tubular':.02,material:E('#ffd25a',2)},mkr);
+const ml=mk('a-text',{align:'center',width:3.6,color:'#ffe9a0',position:'0 .6 0','look-at':'[camera]'},mkr);
+const put=(x,y,z,t)=>{mkr.removeAttribute('animation');mkr.setAttribute('position',`${x} ${y} ${z}`);mkr.setAttribute('animation',`property:position;from:${x} ${y} ${z};to:${x} ${y+.25} ${z};dir:alternate;loop:true;dur:700;easing:easeInOutSine`);ml.setAttribute('value',t);mkr.setAttribute('visible',true)};
+const MK={'POWER FAILURE':[-6.2,2.7,-2,'POWER SWITCHES'],'SAMPLE UNSTABLE':[-2,2.4,-3,'CLICK THE SAMPLE'],'MIXTURE UNSTABLE':[4.5,2.4,-6.1,'PICK A BOTTLE'],'VENT UNSEALED':[6.2,2.8,-2,'PRESS THE 3 BUTTONS'],'OVERRIDE AVAILABLE':[0,3.3,6.0,'FINISH THE 4 PANELS'],'HALLWAY POWER':[-2.2,3.1,11.5,'FUSE BOX'],'GATE LOCK':[2.2,2.8,26.2,'GATE KEYPAD'],'FINAL EXIT':[1.8,2.8,34.5,'EXIT LOCK']};
+const OB={'POWER FAILURE':'STEP 1 of 8 — Turn on the power. Read the vial colours on the sample rack (left wall), left to right. Press the switches with the same dot colours, in that order. Never press X.',
+'SAMPLE UNSTABLE':'STEP 2 of 8 — Click the glowing green sample. Then put each coloured ball in its slot on the gene machine. Each slot names an element; the colour chart on the back wall shows its colour.',
+'MIXTURE UNSTABLE':'STEP 3 of 8 — The back-wall screen says PINK. On the colour chart, pink means ALKALI METAL (Li, Na, K). Click the bottle that is an alkali metal.',
+'VENT UNSEALED':'STEP 4 of 8 — Seal the vent. Press the buttons on the right wall in this order: He, then Ne, then Ar. (Lightest to heaviest: He is element 2, Ne is 10, Ar is 18.)',
+'OVERRIDE AVAILABLE':'STEP 5 of 8 — Finish the 4 panels on the big door: Hand Scan, Stabiliser, Lasers, Terminal. The notes on the walls tell you what to enter.',
+'HALLWAY POWER':'STEP 6 of 8 — The hallway is dark. Go to the FUSE BOX on the left wall. Press the fuses in the same order as the lamps, top to bottom.',
+'GATE LOCK':'STEP 7 of 8 — Read the BREACH LOG on the left wall. Enter its 4 digits on the gate keypad (right wall).',
+'FINAL EXIT':'STEP 8 of 8 — Last lock! Use the panel at the end of the hall: move all 3 discs to the RIGHT peg.'};
+/* checklist */
+const steps=[['POWER FAILURE','Turn on the power'],['SAMPLE UNSTABLE','Fix the sample'],['MIXTURE UNSTABLE','Pick the right bottle'],['VENT UNSEALED','Seal the vent'],['OVERRIDE AVAILABLE','Open the door'],['HALLWAY POWER','Light the hallway'],['GATE LOCK','Open the gate'],['FINAL EXIT','Escape!']];
+const tl=document.createElement('div');tl.className='box';tl.id='tasksBox';tl.style.cssText='position:fixed;top:18px;right:18px;z-index:5;pointer-events:none;font-size:12px;line-height:1.8;min-width:200px';document.body.appendChild(tl);
+const draw=c=>{const k=steps.findIndex(x=>x[0]===c);if(k<0){if(c==='')tl.style.display='none';return}tl.style.display='block';tl.innerHTML=`<div class="tk-top">Task ${k+1} of ${steps.length}</div><div class="tk-name">${steps[k][1]}</div><div class="tk-bar">${steps.map((x,i)=>`<i class="${i<k?'d':i===k?'c':''}"></i>`).join('')}</div>`};draw('');
+new MutationObserver(()=>{let s=$('#stageName').textContent;if(s==='!! ANOMALY !!'){mkr.setAttribute('visible',false);draw('MIXTURE UNSTABLE');return}draw(s);if(MK[s])put(...MK[s]);setTimeout(()=>{if(OB[s])$('#objectiveBox').textContent=OB[s]},450)}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+new MutationObserver(()=>{if(/Sample loaded/.test($('#toast').textContent))put(-3.6,2.7,-5.2,'PICK A BALL, THEN A SLOT')}).observe($('#toast'),{childList:true,characterData:true,subtree:true});
+/* extra props */
+mk('a-cylinder',{position:'6.88 1.2 4',radius:.08,height:.45,material:M('#c9303f')});mk('a-cylinder',{position:'6.88 1.5 4',radius:.03,height:.1,material:M('#111')});
+mk('a-text',{value:'NEXONYX BIOTECH',position:'6.93 3.3 -4.6',rotation:'0 -90 0',align:'center',width:3.4,color:'#27d3ff'});
+mk('a-box',{position:'6.95 3.0 -4.6',width:.03,height:.04,depth:2.8,material:E('#27d3ff',1.2)});
+}})();
+</script>
+
+
+<style>#fadeIn{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:60}</style><div id="fadeIn"></div>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&window.NEXUS&&$('#world')&&$('#world').children.length>25){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),cam=$('a-camera'),T=AFRAME.THREE,L=window.LAB;
+const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||W).appendChild(e);return e};
+const M=c=>`color:${c};roughness:.7;metalness:.2`,E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1}`;
+const AC=new (window.AudioContext||window.webkitAudioContext)();addEventListener('click',()=>AC.resume());
+const NB=(()=>{const b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;return b})();
+const nz=(f,q,ty,dur,vol)=>{const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain(),t=AC.currentTime;s.buffer=NB;fl.type=ty;fl.frequency.value=f;fl.Q.value=q;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(fl);fl.connect(g);g.connect(AC.destination);s.start(t,Math.random());s.stop(t+dur+.05)};
+const tn=(a,b,dur,vol,ty)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime;o.type=ty||'sine';o.frequency.setValueAtTime(a,t);o.frequency.exponentialRampToValueAtTime(b,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur+.02)};
+const live=()=>$('#stageName').textContent!=='SYSTEM BOOT'&&!L.st.over&&!$('#modal.active');
+/* intro fade */
+$('#enterBtn').addEventListener('click',()=>{const f=$('#fadeIn');f.style.transition='none';f.style.opacity=1;requestAnimationFrame(()=>{f.style.transition='opacity 2.8s';f.style.opacity=0})});
+/* footsteps */
+const pv=new T.Vector3(),lp=new T.Vector3();let ls=0;
+setInterval(()=>{cam.object3D.getWorldPosition(pv);const d=Math.hypot(pv.x-lp.x,pv.z-lp.z);lp.copy(pv);if(!live())return;const n=Date.now(),run=d>.32;if(d>.02&&n-ls>(run?290:460)){ls=n;nz(260+Math.random()*90,1,'lowpass',.09,.3);setTimeout(()=>tn(90,50,.09,.14),10);if(L.st.cont>25&&Math.random()<.1)setTimeout(()=>nz(240,1,'lowpass',.08,.1),650)}},80);
+/* floor grates + steam */
+const grates=[[-4,-.5],[4,-1.8],[-1.6,3.6]];
+grates.forEach(([x,z])=>{mk('a-box',{position:`${x} .015 ${z}`,width:1,height:.03,depth:.6,material:M('#0a0f11')});for(let i=-3;i<=3;i++)mk('a-box',{position:`${x+i*.13} .035 ${z}`,width:.04,height:.01,depth:.56,material:M('#2a3c45')})});
+function puff(){const [x,z]=grates[Math.random()*3|0];nz(5500,.6,'highpass',1.1,.1);for(let i=0;i<6;i++){const p=mk('a-sphere',{position:`${x+(Math.random()-.5)*.4} .1 ${z+(Math.random()-.5)*.3}`,radius:.2,material:'color:#dff6ff;opacity:.22;transparent:true;shader:flat'});p.setAttribute('animation__a',`property:position;to:${x+(Math.random()-.5)} 2.4 ${z+(Math.random()-.5)};dur:2800;delay:${i*120};easing:easeOutQuad`);p.setAttribute('animation__b','property:scale;from:.4 .4 .4;to:3 3 3;dur:2800;delay:'+i*120);p.setAttribute('animation__c','property:material.opacity;from:.22;to:0;dur:2800;delay:'+i*120);setTimeout(()=>p.remove(),3300+i*120)}}
+/* hanging cables + sparks */
+const sp=[[-5,-1],[5,3]].map(([x,z])=>{mk('a-cylinder',{position:`${x} 4.2 ${z}`,radius:.015,height:1.6,material:M('#0a0f11')});return mk('a-sphere',{position:`${x} 3.4 ${z}`,radius:.07,visible:false,material:E('#ffb040',4)})});
+function spark(){const s=sp[Math.random()*2|0];let n=0;const f=setInterval(()=>{s.setAttribute('visible',n%2===0);if(n%2===0)nz(3200,1,'bandpass',.1,.3);if(++n>5){clearInterval(f);s.setAttribute('visible',false)}},70)}
+/* volumetric light shafts (only once power is back) */
+const shafts=[];
+/* storytelling props: scattered papers, tipped chair, dropped tube */
+/* ambience */
+setInterval(()=>{if(!live())return;const r=Math.random();if(r<.28){tn(1900,900,.09,.06);setTimeout(()=>tn(2100,1000,.09,.04),110)}else if(r<.4){tn(220,200,1.3,.05,'triangle');tn(331,300,1.1,.03,'triangle')}else if(r<.57)puff();else if(r<.72)spark()},3500);
+/* stage reactions */
+function slime(){[[6,1,.5],[5.1,.7,.35],[4.3,.4,.25],[3.5,.9,.17]].forEach(([x,z,r])=>mk('a-circle',{position:`${x} .02 ${z}`,rotation:'-90 0 0',radius:r,material:E('#39ff88',1.4)+';opacity:.75;transparent:true'}));[0,1].forEach(i=>{const z=i*.4-.2,d=mk('a-sphere',{position:`6.5 1.6 ${z}`,radius:.03,material:E('#39ff88',2)});d.setAttribute('animation',`property:position;from:6.5 1.6 ${z};to:6.5 .03 ${z};dur:900;loop:true;delay:${i*500};easing:easeInQuad`)})}
+new MutationObserver(()=>{const s=$('#stageName').textContent;if(s!=='POWER FAILURE'&&s!=='SYSTEM BOOT')shafts.forEach(x=>x.setAttribute('visible',true));if(s==='!! ANOMALY !!')slime()}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+/* live vitals monitor (east wall) */
+const ec=document.createElement('canvas');ec.id='ecgC';ec.width=512;ec.height=288;ec.style.display='none';document.body.appendChild(ec);const eg=ec.getContext('2d');
+const ecs=mk('a-plane',{position:'6.93 2.9 3.9',rotation:'0 -90 0',width:1.6,height:.9,material:'shader:flat;src:#ecgC'});
+const tr=[];let ph=0,lost=false;
+new MutationObserver(()=>{if($('#stageName').textContent==='!! ANOMALY !!')lost=true}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+setInterval(()=>{const p=parseInt($('#meterPct').textContent)||0,bpm=60+Math.round(p*.8);ph+=bpm/600;const f=ph%1;let y=Math.random()*.02-.01;if(!lost){if(f>.42&&f<.46)y=-.15;else if(f>=.46&&f<.5)y=.9;else if(f>=.5&&f<.54)y=-.35;else if(f>.7&&f<.8)y=.12*Math.sin((f-.7)*31)}tr.push(y);if(tr.length>100)tr.shift();
+ const col=lost?'#ff3b4e':'#3ddc8a';eg.fillStyle='#02100a';eg.fillRect(0,0,512,288);eg.strokeStyle='#0e3a26';eg.lineWidth=1;for(let i=0;i<=512;i+=32){eg.beginPath();eg.moveTo(i,0);eg.lineTo(i,288);eg.stroke()}for(let i=0;i<=288;i+=32){eg.beginPath();eg.moveTo(0,i);eg.lineTo(512,i);eg.stroke()}
+ eg.strokeStyle=col;eg.lineWidth=3;eg.beginPath();tr.forEach((v,i)=>{const X=i*5.12,Y=190-v*110;i?eg.lineTo(X,Y):eg.moveTo(X,Y)});eg.stroke();eg.fillStyle=col;eg.font='bold 24px monospace';eg.fillText(lost?'SUBJECT 07 — SIGNAL LOST':'SUBJECT 07 — VITALS',16,36);eg.font='bold 44px monospace';eg.fillText(lost?'-- BPM':bpm+' BPM',16,262);
+ const m=ecs.getObject3D('mesh');if(m&&m.material.map)m.material.map.needsUpdate=true},100);
+/* data conduit with light pulses running from the server rack to the pod */
+mk('a-box',{position:'3.2 .025 -4.4',width:6.2,height:.04,depth:.14,material:M('#10181b')});mk('a-box',{position:'3.2 .048 -4.4',width:6.2,height:.01,depth:.05,material:E('#27d3ff',1)});
+/* exit door warning beacons */
+[-2.8,2.8].forEach(x=>{const b=mk('a-sphere',{position:`${x} 3.1 6.7`,radius:.12,material:E('#ffa51f',2)});b.setAttribute('animation','property:material.emissiveIntensity;dir:alternate;loop:true;from:.2;to:3;dur:600');mk('a-cylinder',{position:`${x} 2.95 6.78`,radius:.05,height:.2,material:M('#10181b')})});
+/* pipe valves + gauges */
+/* posters + floor ring */
+const poster=(x,c,t,tc)=>{mk('a-plane',{position:`${x} 2.5 6.93`,rotation:'0 180 0',width:1,height:1.3,material:M(c)});mk('a-text',{value:t,position:`${x} 2.5 6.91`,rotation:'0 180 0',align:'center',width:1.7,color:tc})};
+poster(-5.6,'#e8edf0','LAB RULES\n\n1. No running\n2. Wear gloves\n3. Report leaks\n4. Never open the\n   pod alone','#10181b');poster(5.5,'#ffd25a','CAUTION\n\nBIOHAZARD\nSUBLEVEL 4\n\nAUTHORISED\nSTAFF ONLY','#1a1a1a');
+mk('a-ring',{position:'0 .02 .5',rotation:'-90 0 0','radius-inner':1.55,'radius-outer':1.63,material:E('#ffa51f',.8)});
+
+}})();
+</script>
+
+
+<style>
+#stageBox{display:none!important}
+#meterBox{width:200px!important;padding:6px 10px!important;opacity:.9}
+#objectiveBox{font-size:13px!important;max-width:430px!important;transition:opacity .8s!important}
+a-scene canvas{filter:contrast(1.07) saturate(1.12)}
+#introOverlay{background:radial-gradient(ellipse at center,#0c202a 0%,#04080a 72%)!important}
+#introOverlay h1{font-size:clamp(28px,6vw,58px)!important;letter-spacing:6px!important;animation:fl 5s infinite}
+@keyframes fl{0%,90%,100%{opacity:1}92%{opacity:.35}94%{opacity:1}97%{opacity:.6}}
+</style>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&$('#world')&&$('#world').children.length>25){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||W).appendChild(e);return e};
+const tex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c.toDataURL()};
+const radial=rgb=>tex(128,128,g=>{const r=g.createRadialGradient(64,64,0,64,64,64);r.addColorStop(0,`rgba(${rgb},.85)`);r.addColorStop(.35,`rgba(${rgb},.28)`);r.addColorStop(1,`rgba(${rgb},0)`);g.fillStyle=r;g.fillRect(0,0,128,128)});
+const edge=rgb=>tex(8,128,g=>{const r=g.createLinearGradient(0,0,0,128);r.addColorStop(0,`rgba(${rgb},.38)`);r.addColorStop(1,`rgba(${rgb},0)`);g.fillStyle=r;g.fillRect(0,0,8,128)});
+const glow=(src,x,y,z,wd,ht,rot,look)=>{const e=mk('a-plane',{position:`${x} ${y} ${z}`,rotation:rot||'0 0 0',width:wd,height:ht||wd,material:{src,shader:'flat',transparent:true,blending:'additive',depthWrite:false,side:'double',fog:false}});if(look)e.setAttribute('look-at','[camera]');return e};
+/* soft light spilling onto the floor from the wall trim */
+const spill=edge('30,200,255');[[0,-6.5,0],[0,6.5,180],[-6.5,0,90],[6.5,0,-90]].forEach(([x,z,ry])=>{const g=mk('a-entity',{position:`${x} .012 ${z}`,rotation:`0 ${ry} 0`});mk('a-plane',{rotation:'-90 0 0',width:14,height:1.1,material:{src:spill,shader:'flat',transparent:true,blending:'additive',depthWrite:false,fog:false}},g)});
+/* fake bloom around the main light sources */
+glow(radial('57,255,136'),0,1.5,-5.8,3.6,3.6,'0 0 0',true);
+glow(radial('39,211,255'),0,1.7,.5,2.6,2.6,'0 0 0',true);
+glow(radial('31,200,120'),0,3.7,6.7,2.4,1.2,'0 180 0');
+glow(radial('57,255,136'),0,.016,-5.8,4.2,4.2,'-90 0 0');
+glow(radial('39,211,255'),0,.016,.5,3.8,3.8,'-90 0 0');
+glow(radial('57,255,136'),0,2.2,-6.9,5.5,4.4);
+const ceil=[[-3.5,-3],[3.5,-3],[-3.5,3],[3.5,3]].map(([x,z])=>{const e=glow(radial('210,235,255'),x,4.8,z,3.4,3.4,'90 0 0');e.setAttribute('visible',false);return e});
+new MutationObserver(()=>{const t=$('#stageName').textContent;if(t!=='POWER FAILURE'&&t!=='SYSTEM BOOT')ceil.forEach(e=>e.setAttribute('visible',true))}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+/* objective box dims after a while so the screen stays clean */
+const ob=$('#objectiveBox');let ot;new MutationObserver(()=>{ob.style.opacity='';clearTimeout(ot);ot=setTimeout(()=>{ob.style.opacity='.4'},16000)}).observe(ob,{childList:true,characterData:true,subtree:true});
+}})();
+</script>
+
+
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&$('#world')&&$('#world').children.length>25){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),L=window.LAB,ch=$('#crosshair');
+const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||W).appendChild(e);return e};
+const M=c=>`color:${c};roughness:.7;metalness:.15`;
+const tex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'),w,h);return c.toDataURL()};
+const fl=(e,msg)=>{e.classList.add('clickable');e.addEventListener('click',()=>L.toast(msg,7000));e.addEventListener('mouseenter',()=>ch.classList.add('hot'));e.addEventListener('mouseleave',()=>ch.classList.remove('hot'));return e};
+const hit=(x,y,z,w,h,d,msg)=>fl(mk('a-box',{position:`${x} ${y} ${z}`,width:w,height:h,depth:d,material:'opacity:0;transparent:true'}),msg);
+/* scattered papers, some readable */
+for(let i=0;i<14;i++)mk('a-plane',{position:`${-6+Math.random()*5.5} .014 ${.5+Math.random()*5.5}`,rotation:`-90 0 ${Math.random()*360}`,width:.3,height:.21,material:'color:#e8e4d0;roughness:1;metalness:0'});
+hit(-5.2,.1,4.4,.5,.2,.4,'A crumpled page: "Subject 07 — feeding schedule: none. It does not eat. It absorbs light."');
+hit(-3.8,.1,1.6,.5,.2,.4,'A torn page: "Mia\'s latest scan: no change. The board refused funding again."');
+hit(-1.2,.1,4.8,.5,.2,.4,'A printout: "Response to humans: curious, not hostile. Not yet."');
+mk('a-box',{position:'-5.4 .28 2.1',rotation:'0 20 90',width:.5,height:.06,depth:.5,material:M('#2a3c45')});mk('a-box',{position:'-5.4 .56 1.86',rotation:'0 20 90',width:.06,height:.6,depth:.5,material:M('#2a3c45')});
+hit(-5.4,.4,2.0,.7,.6,.6,'A tipped-over chair. Whoever sat here left in a hurry.');
+/* desk: family photo, mug, sticky note, teddy bear */
+const photo=tex(128,160,(g,w,h)=>{const s=g.createLinearGradient(0,0,0,h*.6);s.addColorStop(0,'#ff9a5a');s.addColorStop(1,'#ffd9a0');g.fillStyle=s;g.fillRect(0,0,w,h);g.fillStyle='#2a6a9a';g.fillRect(0,h*.6,w,h*.4);g.fillStyle='#fff3c0';g.beginPath();g.arc(w*.72,h*.45,16,0,6.3);g.fill();g.fillStyle='#2a2a3a';g.fillRect(36,70,14,40);g.beginPath();g.arc(43,62,9,0,6.3);g.fill();g.fillRect(62,88,10,22);g.beginPath();g.arc(67,82,7,0,6.3);g.fill()});
+mk('a-box',{position:'-6.74 .98 6.2',width:.03,height:.26,depth:.2,material:M('#10181b')});mk('a-plane',{position:'-6.72 .98 6.2',rotation:'0 90 0',width:.17,height:.22,material:{src:photo,shader:'flat'}});
+hit(-6.7,.98,6.2,.15,.3,.26,'A photo of Voss and a little girl on a beach. On the back: "Almost done, sweetheart. One more trial."');
+mk('a-cylinder',{position:'-6.2 .9 5.0',radius:.05,height:.09,material:M('#e8edf0')});mk('a-torus',{position:'-6.15 .9 5.0',rotation:'0 0 0',radius:.03,'radius-tubular':.008,material:M('#e8edf0')});
+hit(-6.2,.92,5.0,.16,.16,.16,'A cold mug of coffee: "WORLD\'S OKAYEST SCIENTIST". The coffee has been here for weeks.');
+mk('a-plane',{position:'-6.612 1.12 5.88',rotation:'0 90 0',width:.09,height:.09,material:'color:#ffe27a;roughness:1;metalness:0'});
+hit(-6.6,1.12,5.88,.1,.12,.12,'Sticky note on the monitor: "Password = her birthday. She turns 8 next month. DON\'T FORGET."');
+mk('a-sphere',{position:'-6.55 .93 5.15',radius:.05,material:M('#b07a4a')});mk('a-sphere',{position:'-6.55 1.0 5.15',radius:.035,material:M('#b07a4a')});[-.03,.03].forEach(z=>mk('a-sphere',{position:`-6.55 1.04 ${5.15+z}`,radius:.013,material:M('#b07a4a')}));
+hit(-6.55,.98,5.15,.14,.2,.14,'A tiny teddy bear. "For Mia" is written on its foot.');
+/* security badge on the cabinet */
+mk('a-box',{position:'-6.3 1.115 -5.55',width:.1,height:.01,depth:.065,material:M('#e8edf0')});mk('a-box',{position:'-6.3 1.122 -5.55',width:.1,height:.004,depth:.02,material:M('#2d8cff')});
+hit(-6.3,1.15,-5.55,.2,.12,.15,'Security badge: VOSS, ALDEN. CLEARANCE: REVOKED.');
+/* shredded hazmat suit */
+const Y=M('#e0a516');mk('a-cylinder',{position:'3.4 .9 6.58',radius:.02,height:1.8,material:M('#6b7f88')});
+mk('a-box',{position:'3.4 1.2 6.55',width:.42,height:.62,depth:.24,material:Y});mk('a-sphere',{position:'3.4 1.68 6.55',radius:.15,material:Y});mk('a-box',{position:'3.4 1.68 6.4',width:.2,height:.1,depth:.02,material:'color:#0a1418;metalness:.8;roughness:.1'});
+[-.1,.1].forEach(x=>mk('a-box',{position:`${3.4+x} .55 6.55`,width:.14,height:.6,depth:.14,material:Y}));
+mk('a-box',{position:'3.13 1.1 6.55',rotation:'0 0 10',width:.1,height:.55,depth:.1,material:Y});mk('a-box',{position:'3.67 1.1 6.55',rotation:'0 0 -10',width:.1,height:.55,depth:.1,material:Y});
+mk('a-box',{position:'3.12 1.12 6.48',rotation:'0 0 10',width:.04,height:.4,depth:.02,material:'color:#5a0a10'});
+hit(3.4,1.1,6.5,.7,1.7,.4,'A hazmat suit. The left sleeve is shredded — from the inside.');
+/* whiteboard + calendar */
+const wb=tex(512,300,(g,w,h)=>{g.fillStyle='#f4f4ee';g.fillRect(0,0,w,h);g.strokeStyle='#999';g.lineWidth=6;g.strokeRect(3,3,w-6,h-6);g.font='bold 34px cursive';g.fillStyle='#1a4f9a';g.fillText('PROJECT 07',20,50);g.font='24px cursive';['Day 12  reacts to light','Day 29  it\'s awake!','Day 38  my DNA = STABLE','Day 41  ???'].forEach((t,i)=>{g.fillStyle=i===3?'#c9303f':'#1a4f9a';g.fillText(t,20,100+i*42)});g.fillStyle='#fff7a8';g.fillRect(300,30,190,120);g.fillStyle='#c9303f';g.font='bold 20px sans-serif';g.fillText('MEMO: PROJECT 07',310,62);g.fillText('CANCELLED.',310,88);g.font='15px sans-serif';g.fillStyle='#333';g.fillText('Destroy all samples.',310,115);g.fillStyle='#c9303f';g.font='bold 30px cursive';g.fillText('NO NO NO NO',290,215);g.fillStyle='#e06a8a';g.font='bold 34px cursive';g.fillText('♥ MIA',330,270)});
+mk('a-plane',{position:'-6.94 2.7 -5.5',rotation:'0 90 0',width:1.9,height:1.1,material:{src:wb,shader:'flat'}});
+fl(mk('a-box',{position:'-6.93 2.7 -5.5',width:.04,height:1.2,depth:2,material:'opacity:0;transparent:true'}),'Whiteboard: a memo reads "PROJECT 07 CANCELLED". Someone wrote "NO NO NO" underneath, over and over.');
+const cal=tex(280,330,(g,w,h)=>{g.fillStyle='#f4f4ee';g.fillRect(0,0,w,h);g.fillStyle='#c9303f';g.fillRect(0,0,w,50);g.fillStyle='#fff';g.font='bold 28px sans-serif';g.fillText('DAY COUNT',60,36);g.font='16px sans-serif';for(let i=0;i<42;i++){const x=12+(i%7)*38,y=84+Math.floor(i/7)*40;g.fillStyle='#333';g.fillText(i+1,x,y);if(i<41){g.strokeStyle='#c9303f';g.lineWidth=3;g.beginPath();g.moveTo(x-3,y-14);g.lineTo(x+22,y+4);g.moveTo(x+22,y-14);g.lineTo(x-3,y+4);g.stroke()}}g.strokeStyle='#c9303f';g.lineWidth=4;g.beginPath();g.arc(12+6*38+8,84+5*40-6,18,0,6.3);g.stroke()});
+mk('a-plane',{position:'6.4 3.0 -6.94',width:.55,height:.65,material:{src:cal,shader:'flat'}});
+fl(mk('a-box',{position:'6.4 3.0 -6.92',width:.6,height:.7,depth:.06,material:'opacity:0;transparent:true'}),'A calendar. Every day is crossed off up to day 41, and the last one is circled in red.');
+/* spilled sample + broken tube near the pod */
+[[1.4,-4.6,.35],[1.05,-4.9,.2],[1.75,-4.9,.14]].forEach(([x,z,r])=>mk('a-circle',{position:`${x} .02 ${z}`,rotation:'-90 0 0',radius:r,material:'color:#39ff88;emissive:#39ff88;emissiveIntensity:.9;opacity:.6;transparent:true'}));
+[[1.2,-4.5,20],[1.5,-4.7,-50]].forEach(([x,z,r])=>mk('a-cylinder',{position:`${x} .04 ${z}`,rotation:`0 ${r} 90`,radius:.03,height:.25,material:'color:#cfe;opacity:.45;transparent:true'}));
+/* claw marks around the vent appear after the creature escapes */
+const claws=[[1.3,15],[1.0,-10],[.7,20]].map(([z,r])=>mk('a-box',{position:`6.96 1.9 ${z}`,rotation:`${r} 0 0`,width:.012,height:.9,depth:.025,visible:false,material:'color:#050707;roughness:1'}));
+new MutationObserver(()=>{if($('#stageName').textContent==='!! ANOMALY !!')claws.forEach(c=>c.setAttribute('visible',true))}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+}})();
+</script>
+
+
+<style>
+#introOverlay{overflow-y:auto;justify-content:safe center!important}
+#relock{position:fixed;bottom:150px;left:50%;transform:translateX(-50%);background:#071014f0;border:1px solid #ffd25a;color:#ffe9a0;padding:8px 20px;font:bold 13px 'Courier New',monospace;letter-spacing:1px;z-index:11;pointer-events:none;display:none}
+</style>
+<div id="relock">CLICK ON THE ROOM TO LOOK AROUND AGAIN</div>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&window.NEXUS&&$('#world')&&$('#world').children.length>25){clearInterval(w);go()}},300);
+function go(){
+const L=window.LAB,W=$('#world');
+/* tell the player when they need to click to look around again */
+setInterval(()=>{const need=!document.pointerLockElement&&!document.querySelector('.overlay.active')&&!$('#modal.active')&&$('#stageName').textContent!=='SYSTEM BOOT'&&!L.st.over&&$('#jsc').style.display!=='block';$('#relock').style.display=need?'block':'none'},400);
+/* gentle hints if the player is stuck */
+const H={'POWER FAILURE':[[120,'The vials on the left wall sit in a coloured row. Copy that colour order on the switches.'],[240,'Order: blue, orange, red. Press the switch with the matching dot colour each time.']],
+'SAMPLE UNSTABLE':[[120,'Click the glowing green sample first. Then pick balls from the small table on the left.'],[240,'He needs the BLUE ball, F the YELLOW ball, Li the RED ball. The periodic table legend explains why.']],
+'MIXTURE UNSTABLE':[[120,'On the periodic table legend, pink means alkali metal. Check the bottle labels.'],[240,'The answer is the bottle labelled Na. Sodium is an alkali metal.']],
+'VENT UNSEALED':[[120,'Press the vent buttons in this order: He, Ne, Ar.'],[240,'He is element 2, Ne is 10, Ar is 18. Press them lightest first.']],
+'OVERRIDE AVAILABLE':[[180,'The notes near the exit door explain the hand scan and the lasers. Voss\'s log and the microscope give the code.'],[420,'Scan: 7-5-3-1-9. Stabiliser: 6. Lasers: right, left, down. Code: 41 then the two digits under the microscope.']]};
+let tms=[];
+/* the periodic table is your friend */
+const pt=[...document.querySelectorAll('a-text')].find(t=>(t.getAttribute('value')||'').startsWith('PERIODIC TABLE OF'));if(pt)pt.setAttribute('value','PERIODIC TABLE — YOUR FRIEND! (use it for the puzzles)');
+const mk=(t,a)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);W.appendChild(e);return e};
+const fr=[[-4.2,4.33,4.9,.05],[-4.2,2.47,4.9,.05],[-6.62,3.4,.05,1.9],[-1.78,3.4,.05,1.9]].map(([x,y,w,h])=>{const e=mk('a-box',{position:`${x} ${y} -6.93`,width:w,height:h,depth:.04,visible:false,material:'color:#ffd25a;emissive:#ffd25a;emissiveIntensity:2'});e.setAttribute('animation','property:material.emissiveIntensity;dir:alternate;loop:true;from:.4;to:3;dur:900');return e});
+Object.assign(H,{'HALLWAY POWER':[[0,'Look at the three coloured lamps on the left wall, top to bottom. Press the fuses in that colour order.'],[0,'The order is green, blue, red.']],'GATE LOCK':[[0,'The BREACH LOG tells you when the alarm started. The clock in Lab 07 stopped at that time.'],[0,'The code is 0314.']],'FINAL EXIT':[[0,'Always move the smallest disc first. Never put a big disc on a small one.'],[0,'Moves (left=1, middle=2, right=3): 1>3, 1>2, 3>2, 1>3, 2>1, 2>3, 1>3.']]});
+let lvl=0;
+new MutationObserver(()=>{const s=$('#stageName').textContent;tms.forEach(clearTimeout);tms=[];lvl=0;tms.push(setTimeout(()=>{if(!L.st.over&&H[s])window.NEXUS('Stuck? Press H if you want an optional hint.',7000)},150000));
+ const on=['SAMPLE UNSTABLE','MIXTURE UNSTABLE','VENT UNSEALED'].includes(s);fr.forEach(e=>e.setAttribute('visible',on))}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+addEventListener('keydown',e=>{if(e.code!=='KeyH'||L.st.over||e.target.tagName==='TEXTAREA')return;const rhh=window.ROOMHINT&&window.ROOMHINT();if(rhh){window.NEXUS('HINT: '+rhh,10000);return}const a=H[$('#stageName').textContent];if(!a)return window.NEXUS('No hint needed right now.',3000);window.NEXUS('HINT: '+a[Math.min(lvl,a.length-1)][1].replace('{CIRC}',window.CIRCUIT_SOL||''),10000);lvl++});
+}})();
+</script>
+
+
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&window.NEXUS&&$('#world')&&$('#world').children.length>25){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),L=window.LAB,sc=$('#scene'),ch=$('#crosshair');
+const fs=W.children[0].getAttribute('material').src,ws=W.children[2].getAttribute('material').src;
+const HW=document.createElement('a-entity');HW.setAttribute('visible',false);W.appendChild(HW);
+const mk=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||HW).appendChild(e);return e};
+const M=(c,o)=>`color:${c};roughness:.7;metalness:.2;${o||''}`,E=(c,i)=>`color:${c};emissive:${c};emissiveIntensity:${i||1};roughness:.5`;
+const B=(x,y,z,w,h,d,m,ry,p)=>mk('a-box',{position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,width:w,height:h,depth:d,material:m},p);
+const T=(v,x,y,z,ry,w,c,p)=>mk('a-text',{value:v,position:`${x} ${y} ${z}`,rotation:`0 ${ry||0} 0`,align:'center',width:w||2,color:c||'#a8d0dc'},p);
+const cl=(e,fn)=>{e.classList.add('clickable');e.addEventListener('click',fn);e.addEventListener('mouseenter',()=>ch.classList.add('hot'));e.addEventListener('mouseleave',()=>ch.classList.remove('hot'));return e};
+const hit=(x,y,z,w,h,d,fn)=>cl(B(x,y,z,w,h,d,'opacity:0;transparent:true'),typeof fn==='string'?()=>L.toast(fn,6500):fn);
+const fade=e=>{e.setAttribute('animation__g','property:scale;to:0 0 0;dur:600;easing:easeInQuad');setTimeout(()=>e.remove(),700)};
+const note=(t,b)=>L.openM(t,'',c=>{const p=document.createElement('p');p.textContent=b;c.appendChild(p)});
+/* shell */
+mk('a-plane',{position:'0 0 21',rotation:'-90 0 0',width:5,height:28,material:{src:fs,repeat:'2.5 14',roughness:.45,metalness:.5}});
+mk('a-plane',{position:'0 4 21',rotation:'90 0 0',width:5,height:28,material:M('#0d1417')});
+const OPS={'-1':[],'1':[]};
+const segs=sd=>{const o=OPS[sd],out=[];let z0=7;o.forEach(oz=>{out.push([z0,oz-.6]);z0=oz+.6});out.push([z0,35]);return out};
+[-1,1].forEach(sd=>{segs(sd).forEach(([a,b])=>{const len=b-a;mk('a-plane',{position:`${sd*2.5} 2 ${(a+b)/2}`,rotation:`0 ${-sd*90} 0`,width:len,height:4,material:{src:ws,repeat:`${len/2} 1.6`,roughness:.85,metalness:.2}})});OPS[sd].forEach(oz=>mk('a-plane',{position:`${sd*2.5} 3.2 ${oz}`,rotation:`0 ${-sd*90} 0`,width:1.2,height:1.6,material:{src:ws,repeat:'.6 .64',roughness:.85,metalness:.2}}))});
+
+[[-1.85,2,1.3,4,'.65 1.6'],[1.85,2,1.3,4,'.65 1.6'],[0,3.5,2.4,1,'1.2 .4']].forEach(([x,y,wd,ht,rp])=>mk('a-plane',{position:`${x} ${y} 35`,rotation:'0 180 0',width:wd,height:ht,material:{src:ws,repeat:rp,roughness:.85,metalness:.2}}));
+[-1,1].forEach(sd=>{const x=sd*2.46;segs(sd).forEach(([a,b])=>{const c=(a+b)/2,l=b-a;B(x,.07,c,.06,.1,l,E('#1ec8ff',.9));B(x,3.5,c,.06,.07,l,E('#ff9d1a',.7));B(x,.4,c,.06,.5,l,M('#0b1215'))});mk('a-cylinder',{position:`${x*.92} 3.7 21`,rotation:'90 0 0',radius:.07,height:28,material:M(sd<0?'#4a5e66':'#6b7f88')})});
+const strips=[10,14,18,22,26,30,33.5].map(z=>B(0,3.95,z,1.6,.05,.4,E('#eaf8ff',.05)));
+const lamps=[12,22,31].map(z=>mk('a-entity',{position:`0 3.4 ${z}`,light:'type:point;color:#dff4ff;intensity:0;distance:14;decay:2'}));
+/* decorative lab doors (locked) */
+const door=(side,z,label,msg)=>{const x=side*2.45,d=-side;B(x,1.15,z,.1,2.3,1.3,M('#141d21'));B(x+d*.04,1.1,z,.06,2.1,1.1,M('#2a363c','metalness:.6'));mk('a-plane',{position:`${x+d*.075} 1.6 ${z}`,rotation:`0 ${d*90} 0`,width:.5,height:.4,material:'color:#0a1418;emissive:#0e2a33;emissiveIntensity:.6'});mk('a-sphere',{position:`${x+d*.08} 1.15 ${z+.45}`,radius:.03,material:E('#ff3b4e',1.5)});T(label,x+d*.09,2.4,z,d*90,1.7,'#ffd25a');hit(x+d*.1,1.1,z,.3,2.3,1.3,msg)};
+[[9.5,'BIO STORAGE','Locked. Shelves of sample jars, all empty.'],[14.5,'CRYO LAB 2','Locked. Frost covers the window from the inside.'],[20,'DECON A','Locked. A shower is still running inside.'],[25,'SPECIMEN ARCHIVE','Locked. A sticker reads: "Project 07 files - DESTROYED".'],[31,'SERVER ROOM','Locked. A fan is spinning behind the door.']].forEach(([z,l,m])=>door(-1,z,l,m));
+[[9.5,'STAFF LOUNGE','Locked. A TV flickers inside.'],[14.5,'DR. VOSS — OFFICE','Locked. A child\'s drawing is taped to the door: "Come home, Daddy."'],[20,'DECON B','Locked. The window is smeared with green handprints.'],[25,'CLEAN ROOM 3','Locked. A warning light inside says: CONTAMINATED.'],[31,'SAFETY OFFICE','Locked. A sign reads: "Report all leaks."']].forEach(([z,l,m])=>door(1,z,l,m));
+/* gates */
+const gate=(z,label)=>{const g=B(0,1.8,z,5,3.6,.2,M('#202c31','metalness:.7'));for(let i=0;i<6;i++)B(0,-1.5+i*.6,-.12,4.9,.1,.02,i%2?E('#ffa51f',.5):M('#111'),0,g);T(label,0,1.5,-.13,180,3,'#ffd25a',g);for(let i=0;i<14;i++)B(-1.4+i*.2,.012,z-.5,.2,.01,.14,i%2?M('#111'):E('#ffa51f',.6));return g};
+const g1=gate(17,'SECURITY GATE 1'),g2=gate(27,'SECURITY GATE 2');
+/* puzzle 1: fuse box + lamps */
+B(-2.4,1.15,11.5,.14,.9,.75,M('#2a363c','metalness:.5'));B(-2.32,1.15,11.5,.02,.8,.65,M('#10181b'));T('FUSE BOX — HALL POWER',-2.36,2.8,11.5,90,1.8,'#ffd25a');
+[['#2ee58a',2.45],['#2d8cff',2.2],['#ff3b4e',1.95]].forEach(([c,y])=>mk('a-sphere',{position:`-2.38 ${y} 11.5`,radius:.06,material:E(c,2.4)}));
+/* gate keypad (puzzle 2) and exit keypad (puzzle 3) */
+B(2.4,1.3,26.2,.12,.5,.4,M('#10181b'));mk('a-plane',{position:'2.33 1.4 26.2',rotation:'0 -90 0',width:.3,height:.15,material:E('#0f6b4a',1)});T('GATE 2\nKEYPAD',2.32,1.85,26.2,-90,1.2,'#ffd25a');
+B(1.8,1.3,34.9,.4,.5,.12,M('#10181b'));mk('a-plane',{position:'1.8 1.4 34.83',rotation:'0 180 0',width:.3,height:.15,material:E('#0f6b4a',1)});T('EXIT LOCK\nTOWER PUZZLE',1.8,1.9,34.8,180,1.5,'#ffd25a');
+const exitD=B(0,1.5,34.88,2.4,3,.2,M('#2a3a42','metalness:.7'));for(let i=0;i<5;i++)B(0,-1.2+i*.6,-.12,2.3,.08,.02,i%2?E('#ffa51f',.4):M('#111'),0,exitD);
+B(0,3.45,34.8,1,.28,.05,E('#1f9d5c',1.5));T('EXIT',0,3.45,34.76,180,1.3,'#eafff2');
+const skyT=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d'),r=g.createRadialGradient(64,64,4,64,64,90);r.addColorStop(0,'#ffffff');r.addColorStop(.5,'#fff7dc');r.addColorStop(1,'#ffe9a8');g.fillStyle=r;g.fillRect(0,0,128,128);return c.toDataURL()})();
+const outside=mk('a-entity',{visible:false});
+mk('a-plane',{position:'0 2 38',rotation:'0 180 0',width:14,height:9,material:{src:skyT,shader:'flat',fog:false}},outside);
+mk('a-plane',{position:'0 .01 36',rotation:'-90 0 0',width:2.4,height:2,material:'color:#fff;emissive:#fff;emissiveIntensity:1.5;shader:flat;fog:false'},outside);
+mk('a-plane',{position:'0 1.5 35.2',rotation:'0 180 0',width:2.8,height:3.4,material:{src:skyT,shader:'flat',transparent:true,blending:'additive',depthWrite:false,fog:false}},outside);
+mk('a-entity',{position:'0 1.8 33.5',light:'type:point;color:#fff6dc;intensity:2.4;distance:12;decay:1.5'},outside);
+/* clue signs */
+const bs1=mk('a-plane',{position:'-2.47 1.9 22.5',rotation:'0 90 0',width:1.5,height:1.1,material:M('#3a0f14')});const bs2=T('BREACH LOG\n\nAlarm: 03:14\n(the Lab 07 clock\nstopped at this time)\n\nGATE CODE = this time\n(4 digits, no colon)',-2.45,1.9,22.5,90,1.3,'#ffd9d9');
+mk('a-plane',{position:'2.47 1.9 29',rotation:'0 -90 0',width:1.5,height:1.3,material:M('#e8edf0')});T('EXIT LOCK RULES\n\nMove all 3 discs\nto the RIGHT peg.\n\n1 disc at a time.\nNever put a big disc\non a small one.',2.45,1.9,29,-90,1.35,'#10181b');
+const bh=hit(-2.4,1.9,22.5,.2,1.1,1.5,()=>note('BREACH LOG','Alarm triggered at 03:14.\n(The clock in Lab 07 stopped at that time.)\n\nGATE CODE = the breach time.\n4 digits, no colon.'));
+hit(2.4,1.9,29,.2,1.3,1.5,()=>note('EXIT LOCK RULES','Move all 3 discs to the RIGHT peg.\n\nMove 1 disc at a time. Never put a big disc on a small one.'));
+T('SUBLEVEL 4 — EAST CORRIDOR',-2.45,3.0,8.2,90,2.2,'#6b8f9a');T('QUARANTINE ZONE',2.45,3.0,17.2,-90,2,'#ff5e6c');
+/* props: gurney, extinguisher, floor arrows, slime footprints */
+B(1.6,.4,22.3,.7,.1,1.9,M('#9aa4a6'));B(1.6,.5,22.3,.66,.12,1.8,M('#dfe8ea'));[[-.3,-.85],[.3,-.85],[-.3,.85],[.3,.85]].forEach(([x,z])=>mk('a-cylinder',{position:`${1.6+x} .18 ${22.3+z}`,radius:.025,height:.36,material:M('#6b7f88')}));mk('a-circle',{position:'1.6 .565 22.1',rotation:'-90 0 0',radius:.2,material:'color:#2a6a3a;emissive:#1a4a28;emissiveIntensity:.5'});
+hit(1.6,.6,22.3,.8,.5,2,'An empty gurney. The straps have been torn open.');
+mk('a-cylinder',{position:'-2.38 1.0 16.2',radius:.09,height:.45,material:M('#c9303f')});
+[9,18.5,28.5].forEach(z=>mk('a-text',{value:'▼ EXIT ▼',position:`0 .02 ${z}`,rotation:'-90 180 0',align:'center',width:3,color:'#ffa51f'}));
+for(let z=8,i=0;z<34;z+=1.3,i++)mk('a-circle',{position:`${i%2?.35:-.35} .02 ${z}`,rotation:'-90 0 0',radius:.11,scale:'1 1.7 1',material:'color:#39ff88;emissive:#39ff88;emissiveIntensity:.8;opacity:.55;transparent:true'});
+window.HB=[[1.25,1.95,21.3,23.3]];
+/* puzzle windows */
+const pin=(title,sub,len,code,ok)=>{let v='';L.openM(title,sub,c=>{const d=document.createElement('div');d.className='disp';d.textContent=Array(len).fill('_').join(' ');c.appendChild(d);const up=bad=>{d.textContent=v.padEnd(len,'_').split('').join(' ');d.classList.toggle('wrong',!!bad)};const g=document.createElement('div');g.className='grid';[1,2,3,4,5,6,7,8,9,'⌫',0,'↵'].forEach(k=>L.btn(k,()=>{if(k==='⌫')v=v.slice(0,-1);else if(k==='↵'){if(v===code){L.closeM();ok()}else{up(1);L.snd('error');L.cont(2);setTimeout(()=>{v='';up()},500)}return}else if(v.length<len)v+=k;up()},'',g));c.appendChild(g)})};
+const fuses=()=>{let q=[];const need=['green','blue','red'];L.openM('FUSE BOX','Press the fuses in the same order as the lamps on the wall (top to bottom).',c=>{const r=document.createElement('div');r.className='row';[['red','#ff3b4e'],['green','#2ee58a'],['blue','#2d8cff']].forEach(([n,col])=>{const b=L.btn(n.toUpperCase(),()=>{q.push(n);b.style.background=col;b.style.color='#041014';if(n!==need[q.length-1]){L.snd('error');L.cont(2);L.toast('Wrong fuse. The panel resets.');setTimeout(()=>{q=[];r.querySelectorAll('button').forEach(x=>{x.style.background='';x.style.color=''})},500);return}if(q.length===3){L.closeM();powerUp()}},'',r)});c.appendChild(r)})};
+const hanoi=()=>{let pegs=[[3,2,1],[],[]],sel=-1,mv=0;L.openM('EXIT LOCK','Move all 3 discs to the RIGHT peg. One disc at a time. A big disc can never sit on a small one. Click a peg to pick up its top disc, then click where to put it.',c=>{const row=document.createElement('div');row.style.cssText='display:flex;gap:12px;justify-content:center;margin:12px 0 6px';const info=document.createElement('div');info.className='sub';const cols=[0,1,2].map(i=>{const b=document.createElement('div');b.style.cssText='width:92px;height:150px;border:2px solid #1d4452;border-radius:10px;display:flex;flex-direction:column-reverse;align-items:center;padding:8px 0;gap:4px;cursor:pointer;background:#0b1a20';b.onclick=()=>pick(i);row.appendChild(b);return b});
+ const lab=document.createElement('div');lab.className='sub';lab.textContent='LEFT peg  ·  MIDDLE peg  ·  RIGHT peg';
+ const draw=()=>{cols.forEach((b,i)=>{b.innerHTML='';b.style.borderColor=sel===i?'#ffd25a':'#1d4452';pegs[i].forEach(d=>{const e=document.createElement('div');e.style.cssText=`height:24px;width:${24+d*20}px;border-radius:6px;background:${['','#2ee58a','#27d3ff','#ffa51f'][d]}`;b.appendChild(e)})});info.textContent='Moves: '+mv};
+ const pick=i=>{if(sel<0){if(pegs[i].length)sel=i;draw();return}if(sel===i){sel=-1;draw();return}const d=pegs[sel][pegs[sel].length-1],t=pegs[i][pegs[i].length-1];if(t&&t<d){L.toast('A big disc cannot sit on a small one.');sel=-1;draw();return}pegs[sel].pop();pegs[i].push(d);mv++;sel=-1;draw();if(pegs[2].length===3)setTimeout(()=>{L.closeM();L.snd('success');finish()},400)};
+ c.appendChild(row);c.appendChild(lab);c.appendChild(info);draw()})};
+hit(-2.3,1.15,11.5,.2,.9,.9,()=>{if(ph!==1)return L.toast('The fuse box is already working.');fuses()});
+hit(2.3,1.3,26.2,.2,.6,.5,()=>{if(ph<2)return L.toast('Locked. Light the hallway first.');if(ph>2)return L.toast('This gate is already open.');pin('GATE 2 KEYPAD','The 4-digit time from the BREACH LOG.',4,'0314',gate2)});
+hit(1.8,1.3,34.8,.5,.6,.2,()=>{if(ph<3)return L.toast('Locked. Open the gate first.');hanoi()});
+/* the story beats */
+let ph=0,fl;
+const open=(g,y)=>g.setAttribute('animation',`property:position;to:0 ${y} ${g.getAttribute('position').z};dur:1800;easing:easeInOutQuad`);
+function powerUp(){ph=2;window.DARK=false;clearInterval(fl);strips.forEach(e=>e.setAttribute('material','emissiveIntensity',1.6));lamps.forEach(l=>l.setAttribute('light','intensity',1));open(g1,5.6);window.HE=26.4;L.snd('power');L.toast('Lights on! Gate 1 is opening.',5000);L.setStage('GATE LOCK','Open the second gate.')}
+function gate2(){ph=3;[bs1,bs2,bh].forEach(fade);open(g2,5.6);window.HE=34.4;L.snd('success');L.toast('Gate 2 is open! The exit is at the end of the corridor.',5000);L.setStage('FINAL EXIT','Open the exit door.')}
+function finish(){ph=4;L.snd('success');open(exitD,5);outside.setAttribute('visible',true);L.toast('The exit door opens. Daylight!',4000);const f=$('#fadeIn');setTimeout(()=>{f.style.transition='opacity 3.6s ease-in';f.style.background='#fff';f.style.opacity=1},900);setTimeout(()=>L.end('#successOverlay','success'),2600);setTimeout(()=>{f.style.transition='opacity 1.6s ease-out';f.style.opacity=0},5400);setTimeout(()=>{f.style.transition='none';f.style.background='#000'},7200)}
+window.HX={mk,B,T,M,E,hit,note,pin,HW};window.HALL={start(){if(ph)return;ph=1;L.st.stage='hall';L.cont(Math.min(0,20-L.st.cont));const k=[...W.children];
+ const blast=k.find(e=>e.tagName==='A-BOX'&&+e.getAttribute('width')===4.2&&+e.getAttribute('height')===3.2);
+ k.filter(e=>e.tagName==='A-BOX'&&+e.getAttribute('width')===4.1&&+e.getAttribute('height')===.08).forEach(e=>e.setAttribute('visible',false));
+ const fin=k.find(e=>e.tagName==='A-ENTITY'&&e.getAttribute('position')&&e.getAttribute('position').z===6.78&&e.getAttribute('position').y===1.3);if(fin)fin.setAttribute('visible',false);
+ const gd=k.find(e=>e.tagName==='A-PLANE'&&+e.getAttribute('height')===3.6);if(gd)gd.setAttribute('visible',false);
+ k[3].setAttribute('visible',false);
+ k.filter(e=>{const p=e.tagName==='A-BOX'&&+e.getAttribute('width')===14&&e.getAttribute('position');return p&&Math.abs(p.z-6.96)<.01&&p.y<1}).forEach(e=>{const p=e.getAttribute('position');e.setAttribute('visible',false);[-4.55,4.55].forEach(x=>mk('a-box',{position:`${x} ${p.y} 6.96`,width:4.9,height:e.getAttribute('height'),depth:.06,material:p.y<.2?E('#1ec8ff',.9):M('#0b1215')},W))});const mw=(x,y,wd,ht,rx,ry)=>mk('a-plane',{position:`${x} ${y} 7`,rotation:'0 180 0',width:wd,height:ht,material:{src:ws,repeat:`${rx} ${ry}`,roughness:.85,metalness:.2}},W);
+ mw(-4.55,2.5,4.9,5,2.45,2);mw(4.55,2.5,4.9,5,2.45,2);mw(0,4.15,4.2,1.7,2.1,.68);
+ if(blast)blast.setAttribute('animation','property:position;to:0 4.9 6.95;dur:2200;easing:easeInOutQuad');
+ window.HO=true;window.HE=16.4;window.DARK=true;sc.setAttribute('fog','type:exponential;color:#010306;density:.2');HW.setAttribute('visible',true);
+ L.snd('power');L.toast('The blast door slides open. Beyond it, the hallway is pitch black.',6000);L.setStage('HALLWAY POWER','Find the fuse box in the dark hallway.');
+ let n=0;fl=setInterval(()=>{const e=strips[Math.random()*3|0];e.setAttribute('material','emissiveIntensity',1.4);setTimeout(()=>e.setAttribute('material','emissiveIntensity',.05),90)},2600)}};
+}})();
+</script>
+
+
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&window.NEXUS&&window.HB&&$('#world')){clearInterval(w);go()}},300);
+function go(){
+const W=$('#world'),L=window.LAB;
+/* clue notes disappear once their puzzle is finished */
+const grp=(x,y,z)=>[...W.children].find(e=>{const p=e.tagName==='A-ENTITY'&&e.getAttribute('position');return p&&Math.abs(p.x-x)<.01&&Math.abs(p.y-y)<.01&&Math.abs(p.z-z)<.01});
+const away=e=>{if(!e)return;e.setAttribute('animation__gone','property:scale;to:0 0 0;dur:700;easing:easeInQuad');setTimeout(()=>e.remove(),800)};
+const RM=[[/Sequence complete/,[[-5.3,1.9,-6.94]]],[/Vent sealed/,[[6.95,2.2,-3.3]]],[/SCAN confirmed/,[[-3.9,1.9,6.9]]],[/LASERS confirmed/,[[3.9,1.9,6.9]]],[/STABILISER confirmed/,[[6.2,1.9,-6.94]]],[/CODE confirmed/,[[6.95,2.1,2.6]]]];
+const done=new Set();let told=false;
+new MutationObserver(()=>{const t=$('#toast').textContent;let any=false;
+ RM.forEach(([re,l])=>{if(re.test(t)&&!done.has(re)){done.add(re);l.forEach(q=>away(grp(...q)));any=true}});
+ if(/Compound stabilized/.test(t)&&!done.has('c')){done.add('c');const ro=[...document.querySelectorAll('a-text')].find(x=>(x.getAttribute('value')||'').startsWith('READOUT'));if(ro){away(ro.previousElementSibling);away(ro);any=true}}
+ if(any&&!told){told=true;setTimeout(()=>window.NEXUS('That clue note was put away. Press N to read it again in your notebook.',6000),1800)}}).observe($('#toast'),{childList:true,characterData:true,subtree:true});
+/* notebook (N): your own notes + every clue note you read */
+const clues=[];let mine='';try{mine=localStorage.getItem('lab07notes')||''}catch(e){}
+new MutationObserver(()=>{if(!$('#modal').classList.contains('active'))return;const t=$('#mt').textContent,p=$('#mc p');if(!p||t==='NOTEBOOK')return;if(!clues.find(c=>c[0]===t))clues.push([t,p.textContent])}).observe($('#modal'),{attributes:true,attributeFilter:['class']});
+function nb(){if($('#modal.active')||L.st.over||document.querySelector('.overlay.active')||$('#stageName').textContent==='SYSTEM BOOT')return;
+ L.openM('NOTEBOOK','Write what you want to remember. Notes you read are saved below.',c=>{const ta=document.createElement('textarea');ta.value=mine;ta.rows=6;ta.placeholder='Your notes...';ta.style.cssText="width:100%;box-sizing:border-box;background:#04090b;color:#d8f3fa;border:1px solid #1d4452;font:13px 'Courier New',monospace;padding:8px;resize:vertical";ta.addEventListener('input',()=>{mine=ta.value;try{localStorage.setItem('lab07notes',mine)}catch(e){}});c.appendChild(ta);setTimeout(()=>ta.focus(),60);
+  const d=document.createElement('div');d.style.cssText='margin-top:14px;text-align:left;font-size:12px;line-height:1.5;color:#9ab9c2';const h=document.createElement('b');h.style.color='#27d3ff';h.textContent=clues.length?'CLUES YOU READ':'No clues read yet.';d.appendChild(h);
+  clues.forEach(([t,b])=>{const x=document.createElement('div');x.style.marginTop='9px';const y=document.createElement('b');y.style.color='#ffd25a';y.textContent=t;const z=document.createElement('div');z.style.whiteSpace='pre-line';z.textContent=b;x.appendChild(y);x.appendChild(z);d.appendChild(x)});if(L.st.cont>=40&&clues.length){const q=document.createElement('div');q.style.cssText='margin-top:12px;color:#ff6a7a';const src=clues[Math.random()*clues.length|0][1];q.textContent='[CORRUPTED ENTRY] '+src.split(' ').map(w=>Math.random()<.35?'▒'.repeat(w.length):w).join(' ')+' ... 07 remembers you.';d.appendChild(q)}c.appendChild(d)})}
+addEventListener('keydown',e=>{if(e.code==='KeyN'&&e.target.tagName!=='TEXTAREA')nb()});
+}})();
+</script>
+
+
+
+
+
+<script>
+/* hallway props: locked / broken things that add atmosphere */
+(function(){const w=setInterval(()=>{if(window.HX){clearInterval(w);go()}},300);
+function go(){const {mk,B,T,M,E,hit}=window.HX;
+B(-2.42,1.3,33.6,.1,2.6,1.4,M('#6b7f88','metalness:.8'));B(-2.36,1.3,33.6,.02,2.6,.03,M('#111'));T('ELEVATOR\nOUT OF ORDER',-2.35,2.9,33.6,90,1.4,'#ff5e6c');hit(-2.33,1.3,33.6,.3,2.6,1.5,'The elevator is dead. Cables swing in the dark shaft.');
+B(2.42,1.3,33.6,.1,2.6,1.4,M('#4a4a4a'));B(1.9,.2,33.5,.9,.4,1.3,M('#555','roughness:1'));B(1.7,.5,34.1,.6,.3,.5,M('#444','roughness:1'));T('STAIRWELL B\nBLOCKED',2.35,2.9,33.6,-90,1.4,'#ff5e6c');hit(2.2,1.0,33.6,.6,2.4,1.5,'Stairwell B. The stairs have collapsed. No way up.');
+B(-2.43,1.3,18.3,.1,.3,.2,M('#10181b'));const sp=mk('a-sphere',{position:'-2.37 1.4 18.3',radius:.025,material:E('#ffb040',4)});sp.setAttribute('animation','property:material.emissiveIntensity;dir:alternate;loop:true;from:0;to:5;dur:300');hit(-2.35,1.3,18.3,.2,.4,.4,'A broken badge reader. It sparks and repeats: "WELCOME, DR. VOSS."');
+T('IT SINGS WHEN IT IS ALONE',2.46,1.6,12.7,-90,1.4,'#7a1018');T('DO NOT TRUST THE ELEVATOR',-2.46,1.5,17.9,90,1.5,'#7a1018');
+[[2.47,1.5,12.2,-90,'If the lights flicker, it is NOT the wiring. - Maintenance'],[-2.47,1.5,16.2,90,'Fuse lamps: read them from the TOP down. - Tom'],[2.47,1.5,22,-90,'Gate 2 code is a time. No colon. Think clock. - Security']].forEach(([x,y,z,ry,m])=>{mk('a-plane',{position:`${x} ${y} ${z}`,rotation:`0 ${ry} 0`,width:.2,height:.2,material:'color:#ffe27a;roughness:1'});hit(x*.97,y,z,.2,.3,.3,m)});
+}})();
+</script>
+
+<style>
+#crosshair.shaky{animation:chs .25s infinite}@keyframes chs{0%,100%{margin:-7px 0 0 -7px}25%{margin:-9px 0 0 -5px}50%{margin:-5px 0 0 -9px}75%{margin:-8px 0 0 -8px}}
+a-scene.shake canvas{animation:sk .6s}@keyframes sk{0%,100%{transform:none}15%{transform:translate(-12px,5px)}30%{transform:translate(10px,-7px)}45%{transform:translate(-8px,-4px)}60%{transform:translate(6px,5px)}80%{transform:translate(-3px,2px)}}
+</style>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const w=setInterval(()=>{if(window.LAB&&window.NEXUS&&window.HX&&$('#world')){clearInterval(w);go()}},300);
+function mkSnd(){const AC=new (window.AudioContext||window.webkitAudioContext)();addEventListener('click',()=>AC.resume());
+ const ping=(f,d,w,v,ty)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(w||0);o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.2,t);g.gain.exponentialRampToValueAtTime(.001,t+(d||.4));o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+(d||.4)+.05)};
+ const NB=(()=>{const b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;return b})();
+ const nz=(f,q,ty,d,v)=>{const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain(),t=AC.currentTime;s.buffer=NB;fl.type=ty;fl.frequency.value=f;fl.Q.value=q;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(fl);fl.connect(g);g.connect(AC.destination);s.start(t,Math.random());s.stop(t+d+.05)};
+ return{ping,nz}}
+function go(){
+const L=window.LAB,W=$('#world'),sc=$('#scene'),{ping,nz}=mkSnd(),{mk,B,M,E,HW}=window.HX,cam=$('a-camera');
+const stage=()=>$('#stageName').textContent,cont=()=>parseInt($('#meterPct').textContent)||0;
+const mkw=(t,a,p)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);(p||W).appendChild(e);return e};
+const shake=()=>{sc.classList.remove('shake');void sc.offsetWidth;sc.classList.add('shake')};
+/* ---- contamination reactions ---- */
+const shut=[-3.2,3.2].map(x=>{const e=mkw('a-entity',{position:`${x} 3.6 6.9`});for(let i=0;i<5;i++)mkw('a-box',{position:`0 ${i*.13-.26} 0`,width:1.6,height:.09,depth:.05,material:'color:#1c262b;roughness:.5;metalness:.6'},e);return e});
+let sirenAt=0,twitching=false;
+setInterval(()=>{const c=cont(),st=stage();$('#crosshair').classList.toggle('shaky',c>=60);
+ if(st!=='POWER FAILURE'&&st!=='SYSTEM BOOT'&&st!=='!! ANOMALY !!'&&!L.st.over){const a=Math.max(1.15,1.7-c*.006)-(c>=75&&Math.random()<.18?.7:0);$('#amb').setAttribute('light','intensity',a)}
+ if(c>=75&&!L.st.over&&Date.now()-sirenAt>4200){sirenAt=Date.now();ping(660,.25,0,.1,'triangle');ping(520,.25,.3,.1,'triangle');L.flash('#ff1030',200);if(!twitching){twitching=true;shut.forEach((e,i)=>{const y=e.getAttribute('position').y;e.setAttribute('animation',`property:position;dir:alternate;loop:true;from:${e.getAttribute('position').x} ${y} 6.9;to:${e.getAttribute('position').x} ${y-.12} 6.9;dur:${180+i*70}`)})}}
+},700);
+/* ---- extra ambient sounds: groans, cracks, surges, scratches, breathing ---- */
+setInterval(()=>{if(stage()==='SYSTEM BOOT'||L.st.over||$('#modal.active'))return;const r=Math.random();
+ if(r<.18){ping(90,1.6,0,.07,'triangle');ping(70,1.8,.2,.06,'triangle')}
+ else if(r<.3){nz(5200,1,'highpass',.12,.25);setTimeout(()=>nz(4300,1,'highpass',.1,.18),120)}
+ else if(r<.42){ping(120,.9,0,.1,'sine');ping(240,.7,.1,.06,'sine');L.flash('#dff4ff',120)}
+ else if(r<.52){for(let i=0;i<4;i++)setTimeout(()=>nz(3500,2,'bandpass',.08,.12),i*140)}
+ else if(r<.58)nz(500,.7,'lowpass',2.2,.04)},9000);
+/* ---- mid-game lockdown cinematic ---- */
+const jets=[[-3,-2],[3,2],[-2,4],[4,-3]];
+function jet(x,z){nz(5000,.6,'highpass',1.4,.12);for(let i=0;i<6;i++){const p=mkw('a-sphere',{position:`${x+(Math.random()-.5)*.3} .1 ${z}`,radius:.2,material:'color:#dff6ff;opacity:.25;transparent:true;shader:flat'});p.setAttribute('animation__a',`property:position;to:${x+(Math.random()-.5)} 2.6 ${z+(Math.random()-.5)};dur:2600;delay:${i*100};easing:easeOutQuad`);p.setAttribute('animation__b','property:scale;from:.4 .4 .4;to:3.2 3.2 3.2;dur:2600;delay:'+i*100);p.setAttribute('animation__c','property:material.opacity;from:.25;to:0;dur:2600;delay:'+i*100);setTimeout(()=>p.remove(),3000+i*100)}}
+function lockdown(){window.NEXUS('LOCKDOWN! Doors are sealing. Seal the vent to end it.',6500);L.snd('bang');setTimeout(()=>{L.snd('bang');shake()},700);for(let i=0;i<6;i++){setTimeout(()=>{ping(i%2?520:700,.3,0,.12,'triangle');L.flash('#ff1030',260)},i*650)}jets.forEach(([x,z],i)=>setTimeout(()=>jet(x,z),600+i*500))}
+/* ---- final corridor: the lights die, one by one ---- */
+let dying=null;
+function corridor(){const strips=[...window.HX.HW.children].filter(e=>e.tagName==='A-BOX'&&+e.getAttribute('width')===1.6&&+e.getAttribute('height')===.05).sort((a,b)=>a.object3D.position.z-b.object3D.position.z);let i=0;clearInterval(dying);dying=setInterval(()=>{if(stage()!=='FINAL EXIT'||i>=strips.length-1){clearInterval(dying);return}strips[i].setAttribute('material','emissiveIntensity',.05);i++;nz(2500,1,'bandpass',.1,.2);ping(70,.6,0,.08,'triangle')},2600)}
+new MutationObserver(()=>{const s=stage();if(s==='VENT UNSEALED')lockdown();if(s==='FINAL EXIT')corridor()}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+/* ---- music swell when the exit opens + ending variants ---- */
+new MutationObserver(()=>{if(!/Daylight/.test($('#toast').textContent))return;[261,329,392,523].forEach((f,i)=>{const o=ping;ping(f,5,i*.5,.07,'sine')});shake()}).observe($('#toast'),{childList:true,characterData:true,subtree:true});
+const so=$('#successOverlay');new MutationObserver(()=>{if(!so.classList.contains('active')||so.dataset.v)return;so.dataset.v=1;const p=so.querySelector('p');
+ if(cont()>=50)p.innerHTML+="<br><br><em>You made it out — but your hands glow faintly green. The contamination came with you.</em>"}).observe(so,{attributes:true,attributeFilter:['class']});
+/* ---- Subject 07 presence (never chases): helix colours, glowing vial, 03:14 ghost ---- */
+const helix=[...W.children].find(e=>e.tagName==='A-ENTITY'&&e.getAttribute('animation')&&e.getAttribute('animation').dur===9000);
+const HC={'POWER FAILURE':['#27d3ff','#ff4fd8'],'SAMPLE UNSTABLE':['#39ff88','#9affc0'],'MIXTURE UNSTABLE':['#ffa51f','#ffd25a'],'VENT UNSEALED':['#ff3b4e','#ff8a9a'],'OVERRIDE AVAILABLE':['#ffffff','#9fd8ff']};
+let t0=0;new MutationObserver(()=>{const s=stage();if(s==='POWER FAILURE')t0=Date.now();const c=HC[s];if(c&&helix)[...helix.children].forEach((e,i)=>{if(e.tagName==='A-SPHERE'){const col=c[i%2];e.setAttribute('material','color',col);e.setAttribute('material','emissive',col)}})}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+const vial=[...W.children].find(e=>e.tagName==='A-CYLINDER'&&e.getAttribute('position')&&Math.abs(e.getAttribute('position').x-6.3)<.01&&Math.abs(e.getAttribute('position').y-1.16)<.01);if(vial)vial.setAttribute('animation__g','property:material.emissiveIntensity;dir:alternate;loop:true;from:1.2;to:3.6;dur:1500;easing:easeInOutSine');
+const gh=mkw('a-entity',{position:'-3.3 0 1.6',visible:false});const gm='color:#0a0e10;opacity:.5;transparent:true;roughness:1';mkw('a-cone',{position:'0 1.0 0','radius-top':.18,'radius-bottom':.07,height:.9,material:gm},gh);mkw('a-sphere',{position:'0 1.7 0',radius:.17,scale:'.9 1.3 1',material:gm},gh);[-.1,.1].forEach(x=>mkw('a-cylinder',{position:`${x} .4 0`,radius:.03,height:.8,material:gm},gh));
+setInterval(()=>{const t=(Date.now()-t0)/1000;gh.setAttribute('visible',t0>0&&t>194&&t<214&&!L.st.over)},1000);
+}})();
+</script>
+
+
+<style>
+body,button,.box,#modal,.overlay,#nexus,#relock,#toast,#objectiveBox,#meterBox,#startHint,textarea,input,.mb{font-family:'Inter','Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif!important}
+.box{background:rgba(9,17,22,.78)!important;border:1px solid rgba(140,210,235,.16)!important;border-radius:10px!important;box-shadow:0 6px 24px rgba(0,0,0,.35)!important;backdrop-filter:blur(8px)!important}
+#meterBox{top:18px!important;left:18px!important;width:210px!important;padding:10px 14px!important}
+#meterLabel{font-size:10px!important;letter-spacing:1.6px!important;color:#7fb6c6!important;margin-bottom:8px!important}
+#meterPct{color:#eef7fa;font-weight:600}
+#meterTrack{height:5px!important;border:none!important;border-radius:4px!important;background:rgba(255,255,255,.09)!important}
+#meterFill{border-radius:4px!important;box-shadow:none!important}
+#tasksBox{top:18px!important;right:18px!important;width:230px!important;padding:12px 14px!important;font-size:13px!important;line-height:1.4!important;min-width:0!important}
+.tk-top{font-size:10px;letter-spacing:1.6px;color:#7fb6c6;text-transform:uppercase}
+.tk-name{font-size:15px;color:#f0f7fa;margin-top:5px;font-weight:600}
+.tk-bar{display:flex;gap:3px;margin-top:10px}.tk-bar i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.12)}.tk-bar i.d{background:#2ee58a}.tk-bar i.c{background:#ffd25a}
+#logsHud,#roomsHud{padding:6px 12px!important;border-radius:999px!important;font-size:11px!important}
+#objectiveBox{left:18px!important;bottom:18px!important;max-width:420px!important;padding:12px 16px!important;font-size:13px!important;line-height:1.6!important;color:#e4f1f5!important;border-left:3px solid #ffd25a!important}
+#nexus{border:1px solid rgba(140,210,235,.22)!important;border-radius:10px!important;background:rgba(9,17,22,.9)!important;font-size:14px!important;bottom:128px!important;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#nexus b{color:#7fb6c6!important;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;display:block;margin:0 0 3px!important}
+#toast{border-radius:999px!important;padding:9px 20px!important;font-size:13px!important;border:1px solid rgba(140,210,235,.3)!important;background:rgba(9,17,22,.92)!important;bottom:76px!important}
+#relock{border-radius:999px!important;font-size:12px!important;letter-spacing:1.2px!important;padding:8px 20px!important;top:18px!important;bottom:auto!important;background:rgba(9,17,22,.92)!important}
+#startHint{font-size:11px!important;color:#7fb6c6!important}
+#crosshair{width:8px!important;height:8px!important;margin:-4px 0 0 -4px!important;border-width:1.5px!important}
+#crosshair.hot{transform:scale(1.8)!important}
+#crosshair.hot::after{left:14px!important;top:-6px!important;font:600 10px 'Inter','Segoe UI',system-ui,sans-serif!important;letter-spacing:1.4px!important}
+.mb{background:#0b161c!important;border:1px solid rgba(140,210,235,.18)!important;border-radius:14px!important;box-shadow:0 24px 70px rgba(0,0,0,.65)!important;width:360px!important;padding:26px 28px!important}
+.mb h2{font-size:12px!important;letter-spacing:2.2px!important;color:#7fd8f0!important}
+.sub{font-size:12px!important;color:#7f9fab!important}
+.mb p{font-size:14px!important;line-height:1.65!important;color:#d4e4ea!important}
+button{border-radius:8px;border:1px solid rgba(39,211,255,.45);background:rgba(39,211,255,.07);letter-spacing:1px;transition:background .15s,color .15s}
+button:hover{background:#27d3ff;color:#04141a}
+.grid button{border-radius:10px;background:#10222a;border:1px solid rgba(140,210,235,.18)}
+.grid button.done,.grid button.done:hover{background:#2ee58a;color:#041014;border-color:#2ee58a}
+.grid button.wrong,.grid button.wrong:hover{background:#ff3b4e;color:#fff;border-color:#ff3b4e}
+.mclose{border:none!important;background:none!important;color:#7f9fab!important}.mclose:hover{background:none!important;color:#fff!important}
+.disp{border-radius:10px!important;border:1px solid rgba(140,210,235,.18)!important}
+.overlay{background:radial-gradient(ellipse at center,#0c1d26 0%,#04080a 75%)!important}
+.overlay h1{letter-spacing:5px!important;font-weight:700!important}
+.overlay p{font-size:16px!important;line-height:1.75!important;color:#b6ccd4!important}
+#introOverlay div{border-radius:12px!important;background:rgba(10,20,26,.85)!important;border:1px solid rgba(140,210,235,.18)!important}
+#introOverlay button,#enterBtn{padding:14px 34px!important;font-size:14px!important;letter-spacing:3px!important}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#1d4452;border-radius:4px}
+</style>
+
+
+<script>
+/* make the small 3D labels easier to read */
+setTimeout(()=>{document.querySelectorAll('#world a-text').forEach(t=>{const v=t.getAttribute('value')||'',w=parseFloat(t.getAttribute('width'));if(v.length>3&&w>0&&w<=3)t.setAttribute('width',(w*1.25).toFixed(2))})},3000);
+</script>
+<!-- ==================================================================
+     SUBLEVEL 5 + SUBLEVEL 6  ·  FULL EXTENSION FOR "LAB 07"
+     Paste this whole block directly underneath your original game code
+     (after the last </script>, before </body>). Use it INSTEAD of the
+     earlier level2 add-on — it contains both floors.
+
+     Floor 1 (Sublevel 5): hallway elevator -> Voss's private wing.
+     Floor 2 (Sublevel 6): reached from the Sublevel 5 vault (harder).
+     Press L at any time to use an elevator if you cannot click it.
+     ================================================================== -->
+<style>
+body.l2 #tasksBox{display:none!important}
+#l2Card{position:fixed;top:18px;right:18px;z-index:6;pointer-events:none;width:236px;padding:12px 14px!important;display:none}
+#l2Card .t{font-size:10px;letter-spacing:1.6px;color:#7fb6c6;text-transform:uppercase}
+#l2Card .n{font-size:15px;color:#f0f7fa;margin-top:5px;font-weight:600}
+#l2Card .b{display:flex;gap:3px;margin-top:10px}#l2Card .b i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.12)}#l2Card .b i.d{background:#2ee58a}
+.mt{display:grid;gap:3px;font-size:11px;color:#9fd0dc;text-align:left;margin:10px 0}.mt span b{color:#ffd25a;margin-right:4px}
+</style>
+<script>
+(function(){const $=s=>document.querySelector(s);
+const banner=(m,bad)=>{const d=document.createElement('div');d.style.cssText=`position:fixed;left:18px;bottom:18px;z-index:99;padding:8px 14px;border-radius:8px;font:12px system-ui,sans-serif;color:#fff;background:${bad?'#a01828':'#0b6a45'};pointer-events:none`;d.textContent=m;document.body.appendChild(d);if(!bad)setTimeout(()=>d.remove(),5000)};
+let started=false;const wt=setInterval(()=>{if(window.LAB&&window.HX&&$('#world')&&$('#world').children.length>20){clearInterval(wt);started=true;setTimeout(()=>{try{go();banner('Sublevels 5 + 6 add-on loaded')}catch(e){console.error(e);banner('Add-on error: '+e.message,1)}},600)}},300);
+setTimeout(()=>{if(!started)banner('Add-on: the game code was not found. Paste this block AFTER the game code (before </body>).',1)},20000);
+function go(){
+const {mk,B,T,M,E,hit,note,pin}=window.HX,L=window.LAB,W=$('#world'),cam=$('a-camera'),rig=$('#rig'),sc=$('#scene'),HB=window.HB||(window.HB=[]);
+const NX=(m,ms)=>{if(window.NEXUS)window.NEXUS(m,ms);else L.toast(m,ms)};
+const fadeEl=document.createElement('div');fadeEl.style.cssText='position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;z-index:70';document.body.appendChild(fadeEl);
+/* ---------- sound ---------- */
+const AC=new (window.AudioContext||window.webkitAudioContext)();addEventListener('click',()=>AC.resume());
+const ping=(f,d,w,v,ty)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+(w||0);o.type=ty||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.2,t);g.gain.exponentialRampToValueAtTime(.001,t+(d||.4));o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+(d||.4)+.05)};
+const NB=(()=>{const b=AC.createBuffer(1,AC.sampleRate*2,AC.sampleRate),x=b.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;return b})();
+const nz=(f,q,ty,d,v)=>{const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain(),t=AC.currentTime;s.buffer=NB;fl.type=ty;fl.frequency.value=f;fl.Q.value=q;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(fl);fl.connect(g);g.connect(AC.destination);s.start(t,Math.random());s.stop(t+d+.05)};
+const rowOf=c=>{const r=document.createElement('div');r.className='row';r.style.marginTop='12px';c.appendChild(r);return r};
+const mkc=(p,t,a)=>{const e=document.createElement(t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e};
+/* ---------- level builder ---------- */
+const FS=W.children[0].getAttribute('material').src,WS=W.children[2].getAttribute('material').src,H=3.4,RECTS=[];
+const inRects=(x,z)=>RECTS.some(r=>r.on()&&x>r.x0&&x<r.x1&&z>r.z0&&z<r.z1);
+const others=[];if(typeof window.INR==='function')others.push(window.INR);
+Object.defineProperty(window,'INR',{configurable:true,get:()=>(x,z)=>inRects(x,z)||others.some(f=>{try{return f(x,z)}catch(e){return false}}),set:f=>{if(typeof f==='function')others.push(f)}});
+function room(x0,x1,z0,z1,o){const cx=(x0+x1)/2,cz=(z0+z1)/2,wd=x1-x0,dp=z1-z0,wl=l=>({src:WS,repeat:`${l/2} 1.4`,roughness:.85,metalness:.2,color:o.wall||'#ffffff'});
+ mk('a-plane',{position:`${cx} .005 ${cz}`,rotation:'-90 0 0',width:wd,height:dp,material:{src:FS,repeat:`${wd/2} ${dp/2}`,roughness:.45,metalness:.5,color:o.floor||'#ffffff'}});
+ mk('a-plane',{position:`${cx} ${H} ${cz}`,rotation:'90 0 0',width:wd,height:dp,material:'color:#0d1417;roughness:.9'});
+ B(cx,H-.05,cz,Math.min(wd-1.5,3.2),.06,Math.min(dp-1.5,1.4),E(o.glow||'#eaf8ff',1.5));
+ const ac=o.ac||'#1ec8ff';B(cx,.04,z0+.25,wd-.6,.02,.05,E(ac,1));B(cx,.04,z1-.25,wd-.6,.02,.05,E(ac,1));B(x0+.25,.04,cz,.05,.02,dp-.6,E(ac,1));B(x1-.25,.04,cz,.05,.02,dp-.6,E(ac,1));
+ ['S','N','W','E'].forEach(s=>{const hz=s==='S'||s==='N',a=hz?x0:z0,b=hz?x1:z1,fx=s==='S'?z0:s==='N'?z1:s==='W'?x0:x1,ry=s==='S'?0:s==='N'?180:s==='W'?90:-90,pos=(m,y)=>hz?`${m} ${y} ${fx}`:`${fx} ${y} ${m}`;
+  const seg=(p,q)=>{if(q-p>.05)mk('a-plane',{position:pos((p+q)/2,H/2),rotation:`0 ${ry} 0`,width:q-p,height:H,material:wl(q-p)})};let cur=a;
+  (o.gaps||[]).filter(g=>g.s===s).sort((p,q)=>p.c-q.c).forEach(g=>{seg(cur,g.c-g.w/2);mk('a-plane',{position:pos(g.c,(H+2.4)/2),rotation:`0 ${ry} 0`,width:g.w,height:H-2.4,material:wl(g.w)});cur=g.c+g.w/2});seg(cur,b)});
+ RECTS.push({x0:x0+.3,x1:x1-.3,z0:z0+.3,z1:z1-.3,on:()=>true});return{cx,cz,x0,x1,z0,z1}}
+function door(o){const z=o.axis==='z',ac=o.ac||'#ffa51f';
+ const pn=z?B(o.c,1.2,o.mid,1.3,2.4,.18,M('#2a363c','metalness:.6')):B(o.mid,1.2,o.c,.18,2.4,1.3,M('#2a363c','metalness:.6'));
+ [-.72,.72].forEach(k=>z?B(o.c+k,1.2,o.mid,.14,2.4,.26,E(ac,1)):B(o.mid,1.2,o.c+k,.26,2.4,.14,E(ac,1)));z?B(o.c,2.43,o.mid,1.58,.12,.26,E(ac,1)):B(o.mid,2.43,o.c,.26,.12,1.58,E(ac,1));
+ const d={open:false};RECTS.push(z?{x0:o.c-.5,x1:o.c+.5,z0:o.lo,z1:o.hi,on:()=>d.open}:{x0:o.lo,x1:o.hi,z0:o.c-.5,z1:o.c+.5,on:()=>d.open});
+ d.unlock=()=>{if(d.open)return;d.open=true;const t=z?`${o.c} 3.6 ${o.mid}`:`${o.mid} 3.6 ${o.c}`;pn.setAttribute('animation',`property:position;to:${t};dur:1100;easing:easeInOutQuad`);nz(900,.5,'lowpass',.7,.18);ping(330,.4,0,.1)};
+ const click=()=>{if(d.open)return;if(o.lock&&!o.lock()){L.toast(o.msg||'Locked.');return}d.unlock()};
+ [-.45,.45].forEach(k=>z?hit(o.c,1.2,o.mid+k,1.4,2.4,.35,click):hit(o.mid+k,1.2,o.c,.35,2.4,1.4,click));return d}
+/* ---------- state ---------- */
+let cur=null;                                   /* null | 'l2' | 'l3' */
+const F={cipher:false,arch:0,reac:0,cold:0,vault:false,riddle:false};      /* Sublevel 5 */
+const G={morse:false,pipes:0,sudoku:0,lights:0,door:false,heart:false};     /* Sublevel 6 */
+const fr2=()=>[F.arch,F.reac,F.cold].filter(Boolean).length,fr3=()=>[G.pipes,G.sudoku,G.lights].filter(Boolean).length;
+const card=document.createElement('div');card.className='box';card.id='l2Card';document.body.appendChild(card);
+let board2=null,board3=null;
+function status(){if(!cur)return;const l3=cur==='l3',list=l3?[G.morse,G.pipes,G.sudoku,G.lights,G.door,G.heart]:[F.cipher,F.arch,F.reac,F.cold,F.vault,F.riddle];
+ const name=l3?(!G.morse?'Decode the Morse door code':fr3()<3?`Find the 3 lab codes (${fr3()}/3)`:!G.door?'Open the nest door':'Calm Subject 07'):(!F.cipher?'Decode the access terminal':fr2()<3?`Find the keycard fragments (${fr2()}/3)`:!F.vault?'Open the vault':'Answer Voss\u2019s question');
+ card.innerHTML=`<div class="t">Sublevel ${l3?6:5}</div><div class="n">${name}</div><div class="b">${list.map(v=>`<i class="${v?'d':''}"></i>`).join('')}</div>`;
+ const ob=$('#objectiveBox'),txt=l3?(!G.morse?'SUBLEVEL 6 — Use the terminal beside the door. Decode the Morse code with the chart to get the password.':fr3()<3?'SUBLEVEL 6 — Three labs each hide a code digit: Pipes (left), Sudoku (right), Lights (ahead). Solve them all. The board in the middle room keeps track.':!G.door?'SUBLEVEL 6 — Open the nest door in the Lights lab. Type the 3 digits in order: Pipes, Sudoku, Lights.':'SUBLEVEL 6 — Use the heartbeat console in the nest. Repeat the 6-note pattern to calm Subject 07.'):
+ (!F.cipher?'SUBLEVEL 5 — Use the terminal beside the door to decode the password. Shift every letter back until it makes a word.':fr2()<3?'SUBLEVEL 5 — Each side room hides one keycard fragment (Archive, Reactor, Cold Storage). Solve their puzzles to get all 3. The board in the middle room keeps track.':!F.vault?'SUBLEVEL 5 — Open the vault in Cold Storage. Type the 3 fragments in order: Archive, Reactor, Cold Storage.':'SUBLEVEL 5 — Use the console in the vault. Answer Voss\u2019s last question.');
+ if(ob){ob.textContent=txt;ob.classList.add('show');ob.style.opacity=''}
+ if(board2)board2.setAttribute('value',`KEYCARD FRAGMENTS\n\nARCHIVE      ${F.arch||'?'}\nREACTOR      ${F.reac||'?'}\nCOLD STORE   ${F.cold||'?'}`);
+ if(board3)board3.setAttribute('value',`LAB CODES\n\nPIPES    ${G.pipes||'?'}\nSUDOKU   ${G.sudoku||'?'}\nLIGHTS   ${G.lights||'?'}`)}
+function reward(flags,k,d,title,text,total){flags[k]=d;L.snd('success');status();note(title,`CODE: ${d}\n\n${text}`);if(total()===3)setTimeout(()=>NX('You have all 3 codes! Now find the door keypad.',8000),1500)}
+const R2=(k,d,t,x)=>reward(F,k,d,t,x,fr2),R3=(k,d,t,x)=>reward(G,k,d,t,x,fr3);
+/* =================================================================
+   SUBLEVEL 5  (Voss's private wing)
+   ================================================================= */
+const lobby=room(-4,4,56,64,{wall:'#c0a690',floor:'#d8c8b8',ac:'#ffa51f',glow:'#ffe2b0',gaps:[{s:'N',c:0,w:1.4}]});
+const hub=room(-7,7,64.6,76,{wall:'#9fb0c4',ac:'#27d3ff',gaps:[{s:'S',c:0,w:1.4},{s:'W',c:70.3,w:1.4},{s:'E',c:70.3,w:1.4},{s:'N',c:0,w:1.4}]});
+room(-15,-7.6,66.5,74,{wall:'#a8c0a4',floor:'#c8d8c4',ac:'#2ee58a',glow:'#e8ffe8',gaps:[{s:'E',c:70.3,w:1.4}]});
+room(7.6,15,66.5,74,{wall:'#d09a88',floor:'#e0c8c0',ac:'#ff7a2a',glow:'#ffd0b0',gaps:[{s:'W',c:70.3,w:1.4}]});
+room(-4,4,76.6,84,{wall:'#94c6dc',floor:'#d0e4ee',ac:'#9fe0ff',glow:'#dff4ff',gaps:[{s:'S',c:0,w:1.4},{s:'N',c:0,w:1.4}]});
+room(-4,4,84.6,92,{wall:'#c8b46a',floor:'#e0d4a8',ac:'#ffd25a',glow:'#fff2c0',gaps:[{s:'S',c:0,w:1.4}]});
+const dLobby=door({axis:'z',c:0,lo:63.6,hi:65,mid:64.3,lock:()=>F.cipher,msg:'Locked. Use the access terminal next to the door.'});
+door({axis:'x',c:70.3,lo:-8,hi:-6.6,mid:-7.3,ac:'#2ee58a'});door({axis:'x',c:70.3,lo:6.6,hi:8,mid:7.3,ac:'#ff7a2a'});door({axis:'z',c:0,lo:75.6,hi:77,mid:76.3,ac:'#9fe0ff'});
+const dVault=door({axis:'z',c:0,lo:83.6,hi:85,mid:84.3,lock:()=>F.vault,msg:'Locked. Use the vault keypad beside the door.'});
+/* lobby */
+T('SUBLEVEL 5\nVOSS PRIVATE WING',-3.9,2.4,60,90,3.6,'#ffa51f');
+B(3.88,1.3,60,.2,2.6,2.2,M('#6b7f88','metalness:.8'));B(3.78,1.3,60,.02,2.6,.04,M('#111'));T('SERVICE ELEVATOR\n(click to go UP)',3.76,2.8,60,-90,1.8,'#9fe8c9');
+const upMenu=()=>L.openM('SERVICE ELEVATOR',cur==='l3'?'Go back up to Sublevel 5?':'Go back up to the hallway?',c=>{const r=rowOf(c);L.btn('GO UP',()=>{L.closeM();ride(cur==='l3'?'l2v':'hall')},'',r);L.btn('STAY',()=>L.closeM(),'',r)});
+hit(3.55,1.3,60,.4,2.6,2.2,upMenu);
+T('DOOR PASSWORD (ENCRYPTED)\nR S H Q',0,2.9,63.9,180,2.4,'#ffd25a');
+B(-2.4,1.2,63.88,.9,1.1,.14,M('#10181b'));mk('a-plane',{position:'-2.4 1.3 63.8',rotation:'0 180 0',width:.7,height:.5,material:E('#0f6b4a',1)});T('ACCESS\nTERMINAL',-2.4,1.9,63.8,180,1.2,'#3ddc8a');
+mk('a-plane',{position:'2.4 1.4 63.93',rotation:'0 180 0',width:.4,height:.4,material:'color:#ffe27a;roughness:1'});
+hit(2.4,1.4,63.8,.5,.5,.2,()=>note('STICKY NOTE','Voss always shifted his passwords by the number of discs in the exit tower.'));
+const cipher=()=>{if(F.cipher)return L.toast('The door is already unlocked.');const enc='RSHQ';let sh=0;L.openM('ACCESS TERMINAL','The password is scrambled. Shift every letter BACK by the same number until it makes a word.',c=>{
+  const dec=()=>enc.split('').map(ch=>String.fromCharCode((ch.charCodeAt(0)-65-sh+26)%26+65)).join('');
+  const a=mkc(c,'div',{});a.className='disp';a.textContent=enc.split('').join(' ');const lab=mkc(c,'div',{});lab.className='sub';lab.textContent='shift back by:';const r=rowOf(c);const val=mkc(r,'div',{});val.className='disp';val.style.cssText='margin:0;padding:8px 18px;font-size:22px';val.textContent='0';
+  const out=mkc(c,'div',{});out.className='disp';out.style.marginTop='12px';out.textContent=dec().split('').join(' ');const up=()=>{val.textContent=sh;out.textContent=dec().split('').join(' ')};
+  r.insertBefore(L.btn('-',()=>{sh=(sh+25)%26;up()},'',r),val);L.btn('+',()=>{sh=(sh+1)%26;up()},'',r);const r2=rowOf(c);
+  L.btn('SUBMIT',()=>{if(dec()==='OPEN'){F.cipher=true;L.closeM();L.snd('success');dLobby.unlock();status()}else{L.snd('error');L.toast('That is not a word. Keep shifting.')}},'',r2)})};
+hit(-2.4,1.2,63.7,.9,1.1,.3,cipher);
+/* hub */
+B(0,.4,70.3,1.2,.8,1.2,M('#17232a'));B(0,.81,70.3,1.3,.04,1.3,M('#2a3c45'));HB.push([-.6,.6,69.7,70.9]);
+const hg=mk('a-entity',{position:'0 1.7 70.3'});for(let i=0;i<22;i++){const a=i*.55,y=(i-11)*.09;mk('a-sphere',{position:`${Math.cos(a)*.3} ${y} ${Math.sin(a)*.3}`,radius:.04,material:E('#27d3ff',2)},hg);mk('a-sphere',{position:`${-Math.cos(a)*.3} ${y} ${-Math.sin(a)*.3}`,radius:.04,material:E('#ff4fd8',2)},hg)}hg.setAttribute('animation','property:rotation;to:0 360 0;dur:7000;loop:true;easing:linear');
+mk('a-torus',{position:'0 .05 70.3',rotation:'90 0 0',radius:1.5,'radius-tubular':.03,material:E('#27d3ff',1.2)});
+board2=T('KEYCARD FRAGMENTS\n\nARCHIVE      ?\nREACTOR      ?\nCOLD STORE   ?',-3.5,2.0,64.7,0,2.8,'#ffd25a');
+T('ARCHIVE',-6.9,2.8,70.3,90,2.2,'#a8e8c0');T('REACTOR',6.9,2.8,70.3,-90,2.2,'#ffb08a');T('COLD STORAGE',0,2.8,75.9,180,2.6,'#9fe0ff');T('VOSS\u2019S PRIVATE RESEARCH WING',3.6,2.4,64.7,0,2.8,'#9fd8e6');
+/* archive: balance scale */
+for(let i=0;i<6;i++){B(-14.5,.9,67+i*1.1,.8,1.8,.9,M('#5a6a5c'));B(-14.08,1.5,67+i*1.1,.04,.3,.7,M('#2a3a2c'))}HB.push([-15,-13.9,66.5,73.8]);
+hit(-14.2,1.0,68,.6,1.8,2,'Case file 07: "Donor: A. Voss. Recipient: M. Voss, age 7. Treatment: incomplete."');hit(-14.2,1.0,70.5,.6,1.8,2,'Case file 03: "Cell rejection rate 100%. Every donor failed."');hit(-14.2,1.0,72.8,.6,1.8,2,'Case file 11: "Funding: DENIED. Continue anyway."');
+B(-11,.45,70.3,.9,.9,.9,M('#3a4d56'));B(-11,1.35,70.3,.1,.9,.1,M('#9aa4a6'));
+const beamE=B(-11,1.8,70.3,.1,.06,2.4,M('#cfe4d0'));beamE.setAttribute('animation','property:rotation;from:-5 0 0;to:5 0 0;dir:alternate;loop:true;dur:3200;easing:easeInOutSine');
+[-1.2,1.2].forEach(zz=>B(-11,1.65,70.3+zz,.7,.05,.7,M('#9aa4a6')));B(-11,1.85,69.1,.5,.4,.5,M('#8a6a3a'));T('13 kg',-10.74,2.0,69.1,-90,.9,'#fff');HB.push([-11.6,-10.4,69.5,71.1]);
+T('WEIGHING STATION\n(click the scale)',-7.9,2.7,70.3,-90,2,'#a8e8c0');
+const balance=()=>{if(F.arch)return note('ARCHIVE FRAGMENT','CODE: '+F.arch);const ws=[1,2,4,8],on=new Set();L.openM('ARCHIVE SCALE','The crate weighs 13 kg. Click weights to put them on the right side until the scale balances.',c=>{
+  const bm=mkc(c,'div',{});bm.style.cssText='height:10px;width:240px;background:#7fd8f0;margin:34px auto 8px;border-radius:5px;transition:transform .3s';const info=mkc(c,'div',{});info.className='sub';const row=rowOf(c);
+  const upd=()=>{const s=[...on].reduce((a,b)=>a+b,0);bm.style.transform=`rotate(${Math.max(-14,Math.min(14,(s-13)*2.2))}deg)`;info.textContent=`Left: crate 13 kg  ·  Right: ${s} kg`;if(s===13)setTimeout(()=>{if(F.arch)return;L.closeM();R2('arch',7,'ARCHIVE SCALE','The scale balances. A drawer clicks open: a keycard half with a number on it.')},500)};
+  ws.forEach(v=>{const b=L.btn(v+' kg',()=>{if(on.has(v)){on.delete(v);b.style.background='';b.style.color=''}else{on.add(v);b.style.background='#ffd25a';b.style.color='#041014'}upd()},'',row);b.style.padding='12px 14px'});upd()})};
+hit(-11,1.1,70.3,1.2,2,2.6,balance);
+/* reactor: slide puzzle */
+const core=mk('a-cylinder',{position:'11.3 1.3 70.3',radius:.7,height:2.6,material:E('#ff7a2a',1.6)});core.setAttribute('animation','property:material.emissiveIntensity;dir:alternate;loop:true;from:.8;to:2.4;dur:1100;easing:easeInOutSine');
+[.9,1.25].forEach((r,i)=>{const t=mk('a-torus',{position:'11.3 1.3 70.3',rotation:'90 0 0',radius:r,'radius-tubular':.04,material:E('#ffb040',1.4)});t.setAttribute('animation',`property:rotation;to:${i?'90 360 0':'90 -360 0'};dur:${5000+i*2500};loop:true;easing:linear`)});HB.push([10.4,12.2,69.4,71.2]);
+for(let i=0;i<10;i++)B(8.2+i*.6,.015,66.9,.3,.01,.2,i%2?M('#111'):E('#ffa51f',.7));
+B(11.3,.55,67.0,1.4,1.1,.4,M('#3a2a2a'));mk('a-plane',{position:'11.3 1.2 67.22',width:1,height:.6,material:E('#6a2a0a',1.2)});T('REACTOR\nSCHEMATIC',11.3,1.95,67.2,0,1.6,'#ffd0a0');HB.push([10.5,12.1,66.5,67.5]);
+hit(11.3,1.1,67.4,1.4,1.2,.6,()=>slide());hit(13.5,1.4,66.7,.5,.5,.3,'Reactor log: "The core powers all of Sublevel 5. I rerouted it to keep the cryo pods cold for Mia\u2019s cell lines."');
+let tiles=null;
+function slide(){if(F.reac)return note('REACTOR FRAGMENT','CODE: '+F.reac);if(!tiles){tiles=[1,2,3,4,5,6,7,8,0];let b=8,last=-1;for(let k=0;k<70;k++){const o=[],r=Math.floor(b/3),c=b%3;if(r>0)o.push(b-3);if(r<2)o.push(b+3);if(c>0)o.push(b-1);if(c<2)o.push(b+1);const cd=o.filter(v=>v!==last),n=cd[Math.random()*cd.length|0];tiles[b]=tiles[n];tiles[n]=0;last=b;b=n}}
+ L.openM('REACTOR SCHEMATIC','Slide the tiles into order, 1 to 8, with the empty space last. Click a tile next to the gap.',c=>{const g=mkc(c,'div',{});g.className='grid';const bs=[];const paint=()=>bs.forEach((b,i)=>{b.textContent=tiles[i]||'';b.style.visibility=tiles[i]?'visible':'hidden'});
+  for(let i=0;i<9;i++){const b=L.btn('',()=>{const z=tiles.indexOf(0),r=Math.floor(i/3),cc=i%3,zr=Math.floor(z/3),zc=z%3;if(Math.abs(r-zr)+Math.abs(cc-zc)!==1)return;tiles[z]=tiles[i];tiles[i]=0;paint();if(tiles.every((v,k)=>v===(k<8?k+1:0)))setTimeout(()=>{L.closeM();R2('reac',2,'REACTOR','The schematic locks into place. A panel pops open and a keycard half slides out.')},400)},'',g);b.style.height='64px';bs.push(b)}paint()})}
+/* cold storage: memory pairs (console is now beside the door, NOT in front of it) + vault keypad */
+[-3.1,3.1].forEach(x=>[79,80.6,82.2].forEach(z=>{B(x,.15,z,.7,.3,.7,M('#10181b'));mk('a-cylinder',{position:`${x} 1.05 ${z}`,radius:.3,height:1.8,material:'color:#bfe8ff;opacity:.25;transparent:true;metalness:.9;roughness:.05'});mk('a-sphere',{position:`${x} .95 ${z}`,radius:.2,scale:'1 1.8 1',material:E('#2d8cff',1.1)})}));HB.push([-3.7,-2.4,78.6,82.6],[2.4,3.7,78.6,82.6]);
+hit(-3.1,1.0,80.6,.8,1.8,3.2,'Cryo pods. Labels read: "M. VOSS - CELL LINE 1" ... "CELL LINE 6". Frost covers every window.');
+B(2.4,.55,76.85,1.4,1.1,.4,M('#17232a'));mk('a-plane',{position:'2.4 1.2 77.07',width:1.1,height:.6,material:E('#1a5a8a',1)});T('COLD STORAGE\nLOCK',2.4,1.95,77.05,0,1.7,'#bfe8ff');HB.push([1.7,3.1,76.6,77.1]);
+let mem=null;const memory=()=>{if(F.cold)return note('COLD STORAGE FRAGMENT','CODE: '+F.cold);const sy=['\u25C6','\u25CF','\u25B2','\u25A0','\u2605','\u2665'];if(!mem)mem=[...sy,...sy].sort(()=>Math.random()-.5).map(v=>({v,up:false,ok:false}));mem.forEach(m=>m.up=false);
+ L.openM('COLD STORAGE LOCK','Find all 6 matching pairs. Click two cards at a time.',c=>{const g=mkc(c,'div',{});g.className='grid';g.style.gridTemplateColumns='repeat(4,1fr)';let first=-1,lock=false;const bs=[];
+  const paint=()=>bs.forEach((b,i)=>{const m=mem[i],s=m.up||m.ok;b.textContent=s?m.v:'?';b.style.background=m.ok?'#2ee58a':m.up?'#ffd25a':'';b.style.color=s?'#041014':''});
+  mem.forEach((m,i)=>{const b=L.btn('?',()=>{if(lock||m.up||m.ok)return;m.up=true;paint();if(first<0){first=i;return}const f=mem[first];if(f.v===m.v){f.ok=m.ok=true;f.up=m.up=false;first=-1;paint();if(mem.every(x=>x.ok))setTimeout(()=>{L.closeM();R2('cold',5,'COLD STORAGE','Every pair matches. The lock hisses and a keycard half drops into the tray.')},500)}else{lock=true;setTimeout(()=>{f.up=m.up=false;first=-1;lock=false;paint()},700)}},'',g);b.style.height='62px';b.style.fontSize='24px';bs.push(b)});paint()})};
+hit(2.4,1.1,77.3,1.6,1.2,.6,memory);
+B(-2.4,1.2,83.88,.9,1.1,.14,M('#10181b'));mk('a-plane',{position:'-2.4 1.3 83.8',rotation:'0 180 0',width:.7,height:.5,material:E('#0f6b4a',1)});T('VAULT DOOR\nKEYPAD',-2.4,1.9,83.8,180,1.3,'#ffd25a');T('CODE ORDER:\nARCHIVE, REACTOR, COLD',2.3,1.6,83.85,180,1.6,'#ffe9a0');
+hit(-2.4,1.2,83.7,.9,1.1,.3,()=>{if(F.vault)return L.toast('The vault is already open.');if(fr2()<3)return L.toast(`The keypad needs 3 digits. You have ${fr2()}/3 fragments.`);pin('VAULT DOOR','Type the 3 fragments in order: Archive, Reactor, Cold Storage.',3,`${F.arch}${F.reac}${F.cold}`,()=>{F.vault=true;status();dVault.unlock();L.toast('The vault door grinds open.',4000)})});
+/* vault */
+B(0,.5,88,.9,1,.9,M('#3a3320'));const hv=mk('a-cylinder',{position:'0 1.2 88',radius:.25,height:.9,material:'color:#ffe9a0;emissive:#ffd25a;emissiveIntensity:1.4;opacity:.55;transparent:true'});hv.setAttribute('animation','property:rotation;to:0 360 0;dur:6000;loop:true;easing:linear');HB.push([-.5,.5,87.5,88.5]);T('VOSS\u2019S LAST RECORDING\n(click)',0,2.1,88,0,1.8,'#ffe9a0');
+hit(0,1.1,88,1,1.6,1,()=>note('VOSS \u2014 FINAL RECORDING',"If you made it this far, you know why.\n\nMia\u2019s treatment depends on the cell lines in the cold pods. Subject 07 was never a monster. I built it from my own cells to carry her cure.\n\nTake the lift. Tell Mia I kept my promise. Almost.\n\n\u2014 Dr. Alden Voss"));
+const liftL=B(-.65,1.3,91.8,1.3,2.6,.2,M('#d4b84a','metalness:.7')),liftR=B(.65,1.3,91.8,1.3,2.6,.2,M('#d4b84a','metalness:.7'));B(0,2.85,91.85,2.8,.3,.3,E('#ffd25a',1));T('LIFTS',0,2.85,91.7,180,2.2,'#041014');
+const glow=mk('a-plane',{position:'0 1.3 91.92',rotation:'0 180 0',width:2.6,height:2.6,visible:false,material:'color:#fff;emissive:#fff;emissiveIntensity:2;shader:flat;fog:false'});
+B(-3.7,1.2,88,.14,1.1,.9,M('#10181b'));mk('a-plane',{position:'-3.62 1.3 88',rotation:'0 90 0',width:.7,height:.5,material:E('#0f6b4a',1)});T('LIFT\nCONSOLE',-3.6,1.9,88,90,1.2,'#3ddc8a');
+const liftMenu=()=>L.openM('LIFT CONSOLE','Voss\u2019s lifts are online. Where to?',c=>{const mkb=(t,fn)=>{const b=L.btn(t,fn,'',c);b.style.cssText='display:block;margin:8px auto;width:100%;padding:12px';return b};
+  mkb('SURFACE LIFT \u2014 escape now (ends the game)',()=>{L.closeM();finishEnding('surface')});mkb('DEEP LIFT \u2014 Sublevel 6 (much harder)',()=>{L.closeM();ride('l3')});mkb('STAY',()=>L.closeM())});
+hit(-3.5,1.2,88,.4,1.1,1,()=>{if(!F.vault)return;if(F.riddle)return liftMenu();riddle()});
+const riddle=()=>{L.openM('VOSS\u2019S LAST PASSWORD','One word unlocks the lifts. Who was it all for? (Think of the photo on Voss\u2019s desk and the whiteboard in Lab 07.)',c=>{const i=mkc(c,'input',{type:'text',maxlength:12,placeholder:'Type the name'});i.style.cssText='width:100%;box-sizing:border-box;padding:12px;background:#04090b;color:#d8f3fa;border:1px solid #1d4452;border-radius:8px;font-size:18px;text-align:center;letter-spacing:4px;text-transform:uppercase';const r=rowOf(c);
+  const go2=()=>{if(i.value.trim().toUpperCase()==='MIA'){F.riddle=true;L.closeM();status();L.snd('success');setTimeout(liftMenu,400)}else{L.snd('error');L.toast('That is not right. Who is Voss doing all of this for?')}};L.btn('UNLOCK',go2,'',r);i.addEventListener('keydown',e=>{if(e.key==='Enter')go2()});setTimeout(()=>i.focus(),80)})};
+/* =================================================================
+   SUBLEVEL 6  (Subject 07's habitat) — harder puzzles
+   ================================================================= */
+const Z=104;                                      /* z offset of the whole floor */
+room(-4,4,Z,Z+8,{wall:'#7fb09a',floor:'#a8c8b8',ac:'#39ff88',glow:'#c8ffe0',gaps:[{s:'N',c:0,w:1.4}]});
+room(-7,7,Z+8.6,Z+20,{wall:'#6aa890',ac:'#39ff88',gaps:[{s:'S',c:0,w:1.4},{s:'W',c:Z+14.3,w:1.4},{s:'E',c:Z+14.3,w:1.4},{s:'N',c:0,w:1.4}]});
+room(-15,-7.6,Z+10.5,Z+18,{wall:'#7ab8a4',floor:'#b0d0c0',ac:'#2ee58a',glow:'#e0fff0',gaps:[{s:'E',c:Z+14.3,w:1.4}]});
+room(7.6,15,Z+10.5,Z+18,{wall:'#a898c8',floor:'#d0c8e0',ac:'#b36bff',glow:'#f0e8ff',gaps:[{s:'W',c:Z+14.3,w:1.4}]});
+room(-4,4,Z+20.6,Z+28,{wall:'#88b0c8',floor:'#c0d8e8',ac:'#7fd8f0',glow:'#e0f4ff',gaps:[{s:'S',c:0,w:1.4},{s:'N',c:0,w:1.4}]});
+room(-4,4,Z+28.6,Z+36,{wall:'#c8b4a0',floor:'#e0d0c0',ac:'#ff9ad8',glow:'#ffe8f4',gaps:[{s:'S',c:0,w:1.4}]});
+const d3L=door({axis:'z',c:0,lo:Z+7.6,hi:Z+9,mid:Z+8.3,ac:'#39ff88',lock:()=>G.morse,msg:'Locked. Decode the Morse code at the terminal beside the door.'});
+door({axis:'x',c:Z+14.3,lo:-8,hi:-6.6,mid:-7.3,ac:'#2ee58a'});door({axis:'x',c:Z+14.3,lo:6.6,hi:8,mid:7.3,ac:'#b36bff'});door({axis:'z',c:0,lo:Z+19.6,hi:Z+21,mid:Z+20.3,ac:'#7fd8f0'});
+const d3N=door({axis:'z',c:0,lo:Z+27.6,hi:Z+29,mid:Z+28.3,ac:'#ff9ad8',lock:()=>G.door,msg:'Locked. Use the keypad beside the nest door.'});
+/* a little organic decoration: glowing spores, vines and pods */
+const spores=(x0,x1,z0,z1,n,c)=>{for(let i=0;i<n;i++){const x=x0+Math.random()*(x1-x0),y=.5+Math.random()*2.2,z=z0+Math.random()*(z1-z0),s=mk('a-sphere',{position:`${x} ${y} ${z}`,radius:.03+Math.random()*.04,material:`color:${c};emissive:${c};emissiveIntensity:2;opacity:.7;transparent:true`});s.setAttribute('animation',`property:position;to:${x+.3} ${y+.5} ${z+.2};dir:alternate;loop:true;dur:${3000+Math.random()*3000};easing:easeInOutSine`)}};
+const vines=(x,z,ry)=>{for(let i=0;i<3;i++)mk('a-cylinder',{position:`${x+i*.18} 1.6 ${z}`,rotation:`0 ${ry} ${(i-1)*6}`,radius:.03,height:3,material:'color:#1d6a44;roughness:1'})};
+spores(-3,3,Z+1,Z+7,8,'#9affc0');spores(-6,6,Z+9.5,Z+19,10,'#9affc0');spores(-14,-8.5,Z+11,Z+17.5,8,'#b0ffd8');spores(8.5,14,Z+11,Z+17.5,8,'#d8b8ff');spores(-3,3,Z+21.5,Z+27.5,8,'#9fe8ff');spores(-3,3,Z+29.5,Z+35.5,12,'#ffb8e8');
+/* lobby */
+T('SUBLEVEL 6\nTHE HABITAT',-3.9,2.4,Z+4,90,3.6,'#39ff88');
+B(3.88,1.3,Z+4,.2,2.6,2.2,M('#6b7f88','metalness:.8'));B(3.78,1.3,Z+4,.02,2.6,.04,M('#111'));T('LIFT UP\n(click)',3.76,2.8,Z+4,-90,1.8,'#9fe8c9');hit(3.55,1.3,Z+4,.4,2.6,2.2,upMenu);
+T('DOOR CODE (MORSE)\n-.   .   ...   -',0,2.9,Z+7.9,180,2.6,'#9affc0');
+B(-2.4,1.2,Z+7.88,.9,1.1,.14,M('#10181b'));mk('a-plane',{position:`-2.4 1.3 ${Z+7.8}`,rotation:'0 180 0',width:.7,height:.5,material:E('#0f6b4a',1)});T('MORSE\nTERMINAL',-2.4,1.9,Z+7.8,180,1.2,'#3ddc8a');
+const MORSE={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..'};
+const morse=()=>{if(G.morse)return L.toast('The door is already unlocked.');L.openM('MORSE TERMINAL','The door code is written in Morse code. Use the chart to decode the word.',c=>{
+  const a=mkc(c,'div',{});a.className='disp';a.style.cssText='font-size:24px;letter-spacing:6px';a.textContent='-.   .   ...   -';
+  const ch=mkc(c,'div',{});ch.className='mt';ch.style.gridTemplateColumns='repeat(4,1fr)';Object.keys(MORSE).forEach(k=>{const s=mkc(ch,'span',{});s.innerHTML=`<b>${k}</b>${MORSE[k]}`});
+  const i=mkc(c,'input',{type:'text',maxlength:8,placeholder:'Type the word'});i.style.cssText='width:100%;box-sizing:border-box;padding:12px;background:#04090b;color:#d8f3fa;border:1px solid #1d4452;border-radius:8px;font-size:18px;text-align:center;letter-spacing:4px;text-transform:uppercase';const r=rowOf(c);
+  const sub=()=>{if(i.value.trim().toUpperCase()==='NEST'){G.morse=true;L.closeM();L.snd('success');d3L.unlock();status()}else{L.snd('error');L.toast('That does not spell a word. Check the chart.')}};L.btn('SUBMIT',sub,'',r);i.addEventListener('keydown',e=>{if(e.key==='Enter')sub()})})};
+hit(-2.4,1.2,Z+7.7,.9,1.1,.3,morse);
+/* hub */
+B(0,.35,Z+14.3,1.6,.7,1.6,M('#17342a'));HB.push([-.8,.8,Z+13.5,Z+15.1]);
+const egg=mk('a-sphere',{position:`0 1.3 ${Z+14.3}`,radius:.55,scale:'1 1.3 1',material:'color:#9affc0;emissive:#39ff88;emissiveIntensity:1.4;opacity:.6;transparent:true'});egg.setAttribute('animation','property:scale;dir:alternate;loop:true;from:1 1.3 1;to:1.12 1.45 1.12;dur:1400;easing:easeInOutSine');
+board3=T('LAB CODES\n\nPIPES    ?\nSUDOKU   ?\nLIGHTS   ?',-3.5,2.0,Z+8.7,0,2.8,'#ffd25a');
+T('PIPES LAB',-6.9,2.8,Z+14.3,90,2.2,'#a8e8c0');T('SUDOKU LAB',6.9,2.8,Z+14.3,-90,2.4,'#d8c0ff');T('LIGHTS LAB',0,2.8,Z+19.9,180,2.4,'#b8ecff');T('SUBJECT 07\u2019S HABITAT',3.6,2.4,Z+8.7,0,2.8,'#9affc0');
+hit(0,1.2,Z+14.3,1.6,2,1.6,'A glowing egg-shaped pod hums on the pedestal. Something inside seems to move when you look away.');
+/* ---- pipes lab (west): rotate the pipes so water flows from the SOURCE to the DRAIN ---- */
+vines(-14.8,Z+12,90);vines(-14.8,Z+16,90);B(-11,.55,Z+14.3,.5,1.1,2.2,M('#2a4a3c'));mk('a-plane',{position:`-10.74 1.1 ${Z+14.3}`,rotation:'0 90 0',width:1.8,height:.8,material:E('#0a4a2a',1.2)});T('PIPE NETWORK\n(click)',-10.7,1.85,Z+14.3,90,1.6,'#a8ffd0');HB.push([-11.4,-10.4,Z+13.1,Z+15.5]);
+hit(-10.6,1.1,Z+14.3,.6,1.4,2.4,()=>pipesUI());
+const DIRS=[[-1,0],[0,1],[1,0],[0,-1]],BASE={S:[0,2],C:[0,1]},opens=(t,r)=>BASE[t].map(d=>(d+r)%4);
+const PATH=[[0,0,[1,3]],[0,1,[3,2]],[1,1,[0,1]],[1,2,[3,2]],[2,2,[0,1]],[2,3,[3,2]],[3,3,[0,1]]];let pg=null;
+function pgInit(){pg=Array.from({length:4},()=>Array(4).fill(null));PATH.forEach(([r,c,need])=>{let f=null;for(const t of['S','C'])for(let rot=0;rot<4;rot++){const o=opens(t,rot);if(!f&&need.every(n=>o.includes(n)))f={t,rot}}pg[r][c]={t:f.t,rot:(f.rot+1+Math.floor(Math.random()*3))%4}});for(let r=0;r<4;r++)for(let c=0;c<4;c++)if(!pg[r][c])pg[r][c]={t:Math.random()<.5?'S':'C',rot:Math.floor(Math.random()*4)}}
+const flow=()=>{let r=0,c=0,from=3;for(let k=0;k<20;k++){const t=pg[r][c],o=opens(t.t,t.rot);if(!o.includes(from))return false;const out=o.find(d=>d!==from);if(r===3&&c===3&&out===1)return true;const nr=r+DIRS[out][0],nc=c+DIRS[out][1];if(nr<0||nr>3||nc<0||nc>3)return false;r=nr;c=nc;from=(out+2)%4}return false};
+const glyph=t=>({'02':'\u2502','13':'\u2500','01':'\u2514','12':'\u250C','23':'\u2510','03':'\u2518'})[opens(t.t,t.rot).slice().sort().join('')];
+function pipesUI(){if(G.pipes)return note('PIPES FRAGMENT','CODE: '+G.pipes);if(!pg)pgInit();L.openM('PIPE NETWORK','Click a pipe to turn it. Connect the SOURCE on the left to the DRAIN on the right.',c=>{
+  const info=mkc(c,'div',{});info.className='sub';info.textContent='\u25B6 SOURCE (top-left)                DRAIN \u25B6 (bottom-right)';const g=mkc(c,'div',{});g.className='grid';g.style.gridTemplateColumns='repeat(4,1fr)';const bs=[];
+  const paint=()=>bs.forEach((b,i)=>{b.textContent=glyph(pg[Math.floor(i/4)][i%4])});
+  for(let i=0;i<16;i++){const b=L.btn('',()=>{const t=pg[Math.floor(i/4)][i%4];t.rot=(t.rot+1)%4;paint();if(flow())setTimeout(()=>{L.closeM();R3('pipes',3,'PIPES LAB','Water rushes through the pipes. A hatch opens and a glowing tag reads a number.')},350)},'',g);b.style.cssText='height:58px;font-size:30px';bs.push(b)}paint()})}
+/* ---- sudoku lab (east): 4x4 sudoku ---- */
+vines(14.8,Z+12,90);vines(14.8,Z+16,90);B(11,.55,Z+14.3,.5,1.1,2.2,M('#3a2a4a'));mk('a-plane',{position:`10.74 1.1 ${Z+14.3}`,rotation:'0 -90 0',width:1.8,height:.8,material:E('#3a0a6a',1.2)});T('LOGIC PANEL\n(click)',10.7,1.85,Z+14.3,-90,1.6,'#e0c8ff');HB.push([10.4,11.4,Z+13.1,Z+15.5]);
+hit(10.6,1.1,Z+14.3,.6,1.4,2.4,()=>sudokuUI());
+const SOL=[1,2,3,4,3,4,1,2,2,1,4,3,4,3,2,1],GIV=[1,0,0,4,0,4,1,0,2,0,0,3,0,3,2,0];let su=GIV.slice();
+function sudokuUI(){if(G.sudoku)return note('SUDOKU FRAGMENT','CODE: '+G.sudoku);L.openM('LOGIC PANEL','Fill the grid with 1, 2, 3 and 4. Every row, every column and every 2x2 box must contain each number once. Click a cell to change it.',c=>{
+  const g=mkc(c,'div',{});g.className='grid';g.style.gridTemplateColumns='repeat(4,1fr)';const bs=[];const paint=()=>bs.forEach((b,i)=>{b.textContent=su[i]||'';b.style.background=GIV[i]?'#2a3a4a':'';b.style.color=GIV[i]?'#ffd25a':''});
+  for(let i=0;i<16;i++){const b=L.btn('',()=>{if(GIV[i])return;su[i]=(su[i]+1)%5;paint();if(su.every((v,k)=>v===SOL[k]))setTimeout(()=>{L.closeM();R3('sudoku',8,'SUDOKU LAB','The panel accepts the grid. A drawer slides out with a number written inside.')},350)},'',g);b.style.cssText='height:58px;font-size:26px';bs.push(b)}paint()})}
+/* ---- lights lab (north): 4x4 lights-out + the nest door keypad ---- */
+[-3.4,3.4].forEach(x=>[Z+22.5,Z+24.3,Z+26.1].forEach(z=>{B(x,.3,z,.7,.6,.7,M('#2a4a4c'));mk('a-sphere',{position:`${x} .85 ${z}`,radius:.3,scale:'1 1.2 1',material:'color:#9fe8ff;emissive:#7fd8f0;emissiveIntensity:1;opacity:.7;transparent:true'})}));HB.push([-3.8,-3,Z+22,Z+26.8],[3,3.8,Z+22,Z+26.8]);
+B(2.4,.55,Z+20.85,1.4,1.1,.4,M('#17323a'));mk('a-plane',{position:`2.4 1.2 ${Z+21.07}`,width:1.1,height:.6,material:E('#1a5a6a',1)});T('LIGHTS\nPANEL',2.4,1.95,Z+21.05,0,1.5,'#b8ecff');HB.push([1.7,3.1,Z+20.6,Z+21.1]);
+hit(2.4,1.1,Z+21.3,1.6,1.2,.6,()=>lightsUI());
+let lo=null,loSol=[];function loPress(a,i){const r=Math.floor(i/4),c=i%4;[[0,0],[1,0],[-1,0],[0,1],[0,-1]].forEach(([dr,dc])=>{const rr=r+dr,cc=c+dc;if(rr>=0&&rr<4&&cc>=0&&cc<4)a[rr*4+cc]^=1})}
+function loInit(){lo=Array(16).fill(0);const set=new Set();while(set.size<7)set.add(Math.floor(Math.random()*16));loSol=[...set];loSol.forEach(i=>loPress(lo,i))}
+function lightsUI(){if(G.lights)return note('LIGHTS FRAGMENT','CODE: '+G.lights);if(!lo)loInit();L.openM('LIGHTS PANEL','Turn ALL the lights OFF. Each click also flips the lights next to it (up, down, left, right).',c=>{
+  const g=mkc(c,'div',{});g.className='grid';g.style.gridTemplateColumns='repeat(4,1fr)';const bs=[];const paint=()=>bs.forEach((b,i)=>{b.textContent=lo[i]?'ON':'';b.style.background=lo[i]?'#ffd25a':'#10222a';b.style.color='#041014'});
+  for(let i=0;i<16;i++){const b=L.btn('',()=>{loPress(lo,i);paint();if(lo.every(v=>!v))setTimeout(()=>{L.closeM();R3('lights',1,'LIGHTS LAB','The room goes dark, then every pod glows softly. A small screen shows a number.')},350)},'',g);b.style.height='56px';bs.push(b)}paint()})}
+B(-2.4,1.2,Z+27.88,.9,1.1,.14,M('#10181b'));mk('a-plane',{position:`-2.4 1.3 ${Z+27.8}`,rotation:'0 180 0',width:.7,height:.5,material:E('#0f6b4a',1)});T('NEST DOOR\nKEYPAD',-2.4,1.9,Z+27.8,180,1.3,'#ffd25a');T('CODE ORDER:\nPIPES, SUDOKU, LIGHTS',2.3,1.6,Z+27.85,180,1.7,'#ffe9a0');
+hit(-2.4,1.2,Z+27.7,.9,1.1,.3,()=>{if(G.door)return L.toast('The nest door is already open.');if(fr3()<3)return L.toast(`The keypad needs 3 digits. You have ${fr3()}/3 codes.`);pin('NEST DOOR','Type the 3 codes in order: Pipes, Sudoku, Lights.',3,`${G.pipes}${G.sudoku}${G.lights}`,()=>{G.door=true;status();d3N.unlock();L.toast('The nest door opens. Something warm glows beyond.',4500)})});
+/* ---- the nest (final room): heartbeat lock ---- */
+const nest=mk('a-entity',{position:`0 0 ${Z+33.5}`});for(let i=0;i<14;i++){const a=i*.9,r=.5+(i%3)*.35;mk('a-sphere',{position:`${Math.cos(a)*r} ${.2+(i%4)*.12} ${Math.sin(a)*r}`,radius:.25+(i%3)*.08,material:'color:#c8a88a;roughness:1'},nest)}
+const heart=mk('a-sphere',{position:`0 .85 ${Z+33.5}`,radius:.28,material:'color:#ff5a8a;emissive:#ff2a6a;emissiveIntensity:1.6;opacity:.85;transparent:true'});heart.setAttribute('animation','property:scale;dir:alternate;loop:true;from:1 1 1;to:1.35 1.35 1.35;dur:700;easing:easeInOutSine');HB.push([-1.2,1.2,Z+32.3,Z+34.7]);
+hit(0,.8,Z+33.5,1.8,1.4,1.8,'Subject 07 sleeps in the nest. It looks smaller than you expected. Its chest glows with each heartbeat.');
+T('SUBJECT 07\nASLEEP',0,2.3,Z+33.5,0,2.4,'#ffb8e0');B(-3.7,1.2,Z+31.5,.14,1.1,.9,M('#10181b'));mk('a-plane',{position:`-3.62 1.3 ${Z+31.5}`,rotation:'0 90 0',width:.7,height:.5,material:E('#6a0a2a',1)});T('HEARTBEAT\nCONSOLE',-3.6,1.9,Z+31.5,90,1.3,'#ffb8d8');HB.push([-4,-3.2,Z+30.9,Z+32.1]);
+hit(-3.5,1.2,Z+31.5,.4,1.1,1,()=>{if(!G.door)return;heartUI()});
+const PADS=[['#ff3b4e',196],['#ffa51f',262],['#2ee58a',330],['#27d3ff',392]],HSEQ=[0,2,1,3,0,3];
+function heartUI(){if(G.heart)return endChoice();let inp=[],lock=false;L.openM('HEARTBEAT CONSOLE','Press PLAY. Listen and watch the six pulses, then repeat them in the same order.',c=>{const g=mkc(c,'div',{});g.className='grid';g.style.gridTemplateColumns='repeat(2,1fr)';
+  const bs=PADS.map(([col,f],i)=>{const b=L.btn('\u2665',()=>{if(lock)return;fl(i);inp.push(i);if(i!==HSEQ[inp.length-1]){inp=[];L.snd('error');L.toast('Wrong pulse. Press PLAY to hear it again.');return}if(inp.length===HSEQ.length){G.heart=true;status();L.closeM();L.snd('success');setTimeout(endChoice,500)}},'',g);b.style.cssText=`background:${col};color:#041014;height:70px;font-size:26px`;return b});
+  const fl=i=>{ping(PADS[i][1],.5,0,.25,'sine');ping(PADS[i][1]/2,.5,0,.2,'triangle');bs[i].style.opacity='.35';setTimeout(()=>bs[i].style.opacity='1',280)};const r=rowOf(c);L.btn('PLAY',()=>{lock=true;inp=[];HSEQ.forEach((k,j)=>setTimeout(()=>{fl(k);if(j===HSEQ.length-1)setTimeout(()=>lock=false,500)},400+j*700))},'',r)})}
+function endChoice(){L.openM('THE LAST CHOICE','Subject 07 stirs. Its habitat door can be opened, or sealed forever. What do you do?',c=>{const mkb=(t,fn)=>{const b=L.btn(t,fn,'',c);b.style.cssText='display:block;margin:8px auto;width:100%;padding:12px';return b};
+  mkb('OPEN THE HABITAT \u2014 set Subject 07 free',()=>{L.closeM();finishEnding('free')});mkb('SEAL IT \u2014 leave on the surface lift',()=>{L.closeM();finishEnding('sealed')});mkb('NOT YET',()=>L.closeM())})}
+/* =================================================================
+   ENDINGS, ELEVATORS, MOVEMENT, HINTS
+   ================================================================= */
+function finishEnding(kind){const p=$('#successOverlay p'),t={surface:'The surface lift rises through the dark. Light pours in as the doors open. You carry Voss\u2019s recording and the cell lines that might save a little girl named Mia. Behind you, Subject 07 watches the lift leave \u2014 and it waves.',
+  free:'The habitat door slides open. Subject 07 steps out, blinking in the light. It does not attack. It takes your hand, and together you ride the lift to the surface. Mia\u2019s cure is safe, and her father\u2019s creation finally has somewhere to go.',
+  sealed:'You seal the habitat and ride the surface lift alone, carrying Voss\u2019s recording. The door closes behind you. Somewhere far below, a heartbeat keeps going. It is waiting for someone to come back.'}[kind];if(p)p.innerHTML=t;
+ const lf=cur==='l3'?null:[liftL,liftR];if(lf){liftL.setAttribute('animation','property:position;to:-1.9 1.3 91.8;dur:2200;easing:easeInOutQuad');liftR.setAttribute('animation','property:position;to:1.9 1.3 91.8;dur:2200;easing:easeInOutQuad');glow.setAttribute('visible',true)}
+ nz(300,1,'lowpass',2,.25);[261,329,392,523].forEach((f,i)=>ping(f,5,i*.5,.07));L.toast('The lift opens. Daylight!',4000);const f=fadeEl;
+ setTimeout(()=>{f.style.transition='opacity 3.6s ease-in';f.style.background='#fff';f.style.opacity=1},900);setTimeout(()=>L.end('#successOverlay','success'),2600);setTimeout(()=>{f.style.transition='opacity 1.6s ease-out';f.style.opacity=0},5400);setTimeout(()=>{f.style.transition='none';f.style.background='#000'},7200)}
+/* hallway elevator */
+const old=[...window.HX.HW.querySelectorAll('a-text')].find(t=>(t.getAttribute('value')||'').startsWith('ELEVATOR'));if(old)old.setAttribute('visible',false);
+const eLabel=T('SERVICE ELEVATOR\nNO POWER',-2.3,2.9,33.6,90,1.6,'#ff5e6c');const eLed=mk('a-sphere',{position:'-2.28 1.4 32.7',radius:.05,material:E('#ff3b4e',2)});
+const online=()=>$('#stageName').textContent==='FINAL EXIT';
+new MutationObserver(()=>{if(online()){eLabel.setAttribute('value','SERVICE ELEVATOR\nONLINE (click or press L)');eLabel.setAttribute('color','#9fe8c9');eLed.setAttribute('material','color','#2ee58a');eLed.setAttribute('material','emissive','#2ee58a');setTimeout(()=>NX('The service elevator at the end of the hall has power. It goes to Voss\u2019s private wing. (Optional.)',9000),4000)}}).observe($('#stageName'),{childList:true,characterData:true,subtree:true});
+const downMenu=()=>{if(!online())return L.toast('The elevator has no power.');L.openM('SERVICE ELEVATOR','Go down to Sublevel 5? Voss kept his private research there. (Optional: the exit is still at the end of the hall.)',c=>{const r=rowOf(c);L.btn('GO DOWN',()=>{L.closeM();ride('l2')},'',r);L.btn('STAY',()=>L.closeM(),'',r)})};
+hit(-2.18,1.3,33.6,.3,2.6,1.5,downMenu);
+/* elevator ride */
+function tp(x,z,yaw){const rp=rig.object3D.position;cam.object3D.position.set(x-rp.x,1.6,z-rp.z);try{const lc=cam.components['look-controls'];if(lc&&lc.yawObject){lc.yawObject.rotation.y=yaw;lc.pitchObject.rotation.x=0}}catch(e){}}
+function ride(to){const f=fadeEl;f.style.transition='opacity .7s';f.style.background='#000';f.style.opacity=1;sc.classList.remove('shake');void sc.offsetWidth;sc.classList.add('shake');nz(120,.7,'lowpass',2.2,.35);ping(90,2,0,.12,'triangle');
+ setTimeout(()=>{cur=to==='l2'||to==='l2v'?'l2':to==='l3'?'l3':null;document.body.classList.toggle('l2',!!cur);card.style.display=cur?'block':'none';
+  if(to==='l2'){L.cont(Math.min(0,15-L.st.cont));tp(0,59,Math.PI)}else if(to==='l2v')tp(0,87,Math.PI);else if(to==='l3'){L.cont(Math.min(0,10-L.st.cont));tp(0,Z+3,Math.PI)}else tp(-1.3,33.6,-Math.PI/2);status()},900);
+ setTimeout(()=>{ping(880,.6,0,.18);f.style.transition='opacity 1.2s';f.style.opacity=0;if(to==='l2')setTimeout(()=>NX('SUBLEVEL 5. Voss\u2019s private wing. Decode the terminal to enter.',7000),800);if(to==='l3')setTimeout(()=>NX('SUBLEVEL 6. Subject 07\u2019s habitat. The puzzles here are harder.',8000),800)},2000);setTimeout(()=>{f.style.transition='none'},3400)}
+/* hints (H) */
+const lvl={};
+function hint(){const p=new AFRAME.THREE.Vector3();cam.object3D.getWorldPosition(p);let k,h;
+ if(cur==='l2'){
+  if(!F.cipher){k='c';h=['The terminal shows a scrambled word. Shift each letter back until it makes a word.','Voss shifted by the number of discs in the exit tower: 3. The password is OPEN.']}
+  else{const here=p.x<-7.6?'arch':p.x>7.6?'reac':(p.z>76.6&&p.z<84.2)?'cold':null;const pick=(here&&!F[here])?here:!F.arch?'arch':!F.reac?'reac':!F.cold?'cold':null;
+   if(pick==='arch'){k='a';h=['Click weights to add up to 13 kg on the right side.','Use the 8 kg, 4 kg and 1 kg weights.']}
+   else if(pick==='reac'){k='r';h=['Slide tiles next to the gap. Build the top row (1-2-3) first.','Then fix the middle row, then the bottom row.']}
+   else if(pick==='cold'){k='o';h=['Flip two cards at a time and remember where each symbol is.','There are 6 pairs. Match them all.']}
+   else if(!F.vault){k='v';h=['The vault keypad is in Cold Storage. Type the 3 fragments in order: Archive, Reactor, Cold.','The code is 7 2 5.']}
+   else{k='f';h=['The answer is a name from Voss\u2019s story. Check the photo and the whiteboard in Lab 07.','The name is MIA.']}}}
+ else{
+  if(!G.morse){k='m';h=['Dots are short signals and dashes are long ones. Find each group of dots and dashes on the chart.','The four letters spell NEST.']}
+  else{const here=p.x<-7.6?'pipes':p.x>7.6?'sudoku':(p.z>Z+20.6&&p.z<Z+28.2)?'lights':null;const pick=(here&&!G[here])?here:!G.pipes?'pipes':!G.sudoku?'sudoku':!G.lights?'lights':null;
+   if(pick==='pipes'){k='p';h=['Turn the pipes until one unbroken pipe runs from the top-left source to the bottom-right drain. It zigzags.','The route goes right, down, right, down, right, down, right in a staircase from corner to corner.']}
+   else if(pick==='sudoku'){k='s';h=['Each row, column and 2x2 box must hold 1, 2, 3 and 4 once. Start with the row that has the most numbers.','The finished rows are 1234, 3412, 2143, 4321.']}
+   else if(pick==='lights'){k='l';h=['Clicking a light flips it and its neighbours. Work row by row from the top, turning off the lights in the row above.',loSol.length?'Press these cells (row, column): '+loSol.sort((a,b)=>a-b).map(i=>`(${Math.floor(i/4)+1},${i%4+1})`).join(' '):'Open the panel once, then ask again.']}
+   else if(!G.door){k='d';h=['The nest door keypad is in the Lights lab. Type the 3 codes in order: Pipes, Sudoku, Lights.','The code is 3 8 1.']}
+   else{k='h';h=['Press PLAY, listen to the six pulses, then repeat them in the same order.','The pads (left to right, top row first) are pressed: 1, 3, 2, 4, 1, 4.']}}}
+ NX('HINT: '+h[Math.min(lvl[k]||0,h.length-1)],10000);lvl[k]=(lvl[k]||0)+1}
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'){e.stopImmediatePropagation();return}if(e.code==='KeyH'&&cur&&!L.st.over){e.stopImmediatePropagation();hint()}},true);
+/* key L = elevator fallback */
+addEventListener('keydown',e=>{if(e.code!=='KeyL'||e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||document.querySelector('#modal.active')||L.st.over)return;if(cur)upMenu();else if(online()&&window.HO)downMenu()});
+/* collision while down here (does not depend on any hook in the game code) */
+try{const C=window.AFRAME&&AFRAME.components&&AFRAME.components.labcollide;if(C&&C.Component&&!C.Component.prototype.__l2){const P=C.Component.prototype,orig=P.tick;P.__l2=1;
+ P.tick=function(){if(!cur)return orig.apply(this,arguments);const p=this.el.object3D.position,r=this.el.parentNode.object3D.position;p.y=1.6;
+  const bl=(x,z)=>!inRects(x,z)||HB.some(b=>x>b[0]-.3&&x<b[1]+.3&&z>b[2]-.3&&z<b[3]+.3);
+  if(!this.l2||this.l2c!==cur){this.l2={x:p.x,z:p.z};this.l2c=cur;return}
+  if(bl(p.x+r.x,p.z+r.z)){if(!bl(this.l2.x+r.x,p.z+r.z))p.x=this.l2.x;else if(!bl(p.x+r.x,this.l2.z+r.z))p.z=this.l2.z;else{p.x=this.l2.x;p.z=this.l2.z}}
+  this.l2.x=p.x;this.l2.z=p.z}}}catch(e){console.warn('collision patch skipped',e)}
+/* safety net: if the player ever ends up outside the level, send them back to its lobby */
+setInterval(()=>{if(!cur)return;const p=new AFRAME.THREE.Vector3();cam.object3D.getWorldPosition(p);if(!inRects(p.x,p.z)){const rp=rig.object3D.position;cam.object3D.position.set(0-rp.x,1.6,(cur==='l3'?Z+3:59)-rp.z)}},1500);
+/* ambience */
+setInterval(()=>{if(!cur||L.st.over||document.querySelector('#modal.active'))return;const r=Math.random();if(r<.3){ping(80,1.8,0,.06,'triangle')}else if(r<.5){nz(4800,1,'highpass',.15,.2);setTimeout(()=>nz(4000,1,'highpass',.1,.15),130)}else if(r<.62)nz(5500,.6,'highpass',1.1,.1)},7000);
+}})();
+</script>
+</body></html>
